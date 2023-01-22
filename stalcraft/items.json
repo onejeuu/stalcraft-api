@@ -1,0 +1,2922 @@
+{
+    "BnNl": {
+        "ru": "куртка",
+        "en": "coat"
+    },
+    "k9D9": {
+        "ru": "кожаная куртка",
+        "en": "leather jacket"
+    },
+    "lYQO": {
+        "ru": "бандитская куртка",
+        "en": "bandit coat"
+    },
+    "yLb9": {
+        "ru": "куртка с повязкой",
+        "en": "coat with face covering"
+    },
+    "5L9J": {
+        "ru": "лечебный берилл",
+        "en": "healing berill"
+    },
+    "7jK6": {
+        "ru": "плащ",
+        "en": "cloak"
+    },
+    "8jkn": {
+        "ru": "бронекостюм гоплит",
+        "en": "hoplite armored suit"
+    },
+    "ebAG": {
+        "ru": "экзоброня егерь",
+        "en": "jaeger exoarmor"
+    },
+    "ERg1": {
+        "ru": "бронекостюм берилл-5м",
+        "en": "berill-5m armored suit"
+    },
+    "GQxw": {
+        "ru": "костюм траппер",
+        "en": "trapper suit"
+    },
+    "gw2B": {
+        "ru": "броня репортера",
+        "en": "reporter’s armor"
+    },
+    "gwrR": {
+        "ru": "защитный бронекостюм йорш",
+        "en": "yorsh protective armored suit"
+    },
+    "jqNN": {
+        "ru": "бандитский плащ",
+        "en": "bandit cloak"
+    },
+    "k939": {
+        "ru": "бронекостюм страйкер",
+        "en": "striker armored suit"
+    },
+    "KQN5": {
+        "ru": "костюм скаут",
+        "en": "scout suit"
+    },
+    "LQDm": {
+        "ru": "бронекостюм червь",
+        "en": "worm armored suit"
+    },
+    "lYVO": {
+        "ru": "защитный костюм псарь",
+        "en": "houndmaster protective suit"
+    },
+    "nb6M": {
+        "ru": "куртка с бронежилетом",
+        "en": "coat with body armor"
+    },
+    "njGr": {
+        "ru": "бронекостюм кз-2",
+        "en": "cd-2 armored suit"
+    },
+    "rbJ0": {
+        "ru": "тяжелый бронекостюм легионер",
+        "en": "legionnaire heavy armored suit"
+    },
+    "wQmy": {
+        "ru": "защитный костюм ош",
+        "en": "osh protective suit"
+    },
+    "wQww": {
+        "ru": "маскировочный костюм",
+        "en": "ghillie suit"
+    },
+    "xQ1j": {
+        "ru": "охотничий плащ",
+        "en": "hunter’s cloak"
+    },
+    "yLx9": {
+        "ru": "маскировочный костюм смородина",
+        "en": "currant ghillie suit"
+    },
+    "zxdq": {
+        "ru": "защитный костюм ворса",
+        "en": "fleece protective suit"
+    },
+    "0jRE": {
+        "ru": "указ спаннер",
+        "en": "raps spanner"
+    },
+    "3j7Z": {
+        "ru": "зк-1 отмычка",
+        "en": "ps-1 picklock"
+    },
+    "8jZn": {
+        "ru": "указ ао-4 рейдер",
+        "en": "raps ah-4 raider"
+    },
+    "Bn3l": {
+        "ru": "костюм ао-1 бродяга",
+        "en": "ah-1 drifter suit"
+    },
+    "D05a": {
+        "ru": "костюм ао-3 искатель",
+        "en": "ah-3 seeker suit"
+    },
+    "GQRw": {
+        "ru": "указ ао-5 пилигрим",
+        "en": "raps ah-5 pilgrim"
+    },
+    "NQmA": {
+        "ru": "костюм ао-2 странник",
+        "en": "ah-2 nomad suit"
+    },
+    "3Z5l": {
+        "ru": "пнв о1м",
+        "en": "nvg o1m"
+    },
+    "BL7r": {
+        "ru": "кустарный пнв",
+        "en": "home-made nvg"
+    },
+    "kqQN": {
+        "ru": "nvd-11 export",
+        "en": "nvd-11 export"
+    },
+    "l6or": {
+        "ru": "пнв 2-го поколения",
+        "en": "2nd generation nvg"
+    },
+    "y805": {
+        "ru": "прибор ночного видения",
+        "en": "night-vision goggles"
+    },
+    "0j1N": {
+        "ru": "tяжелый бронекостюм громила",
+        "en": "thug heavy armored suit"
+    },
+    "7jX6": {
+        "ru": "бронекостюм псз-10",
+        "en": "psz-10 armored suit"
+    },
+    "9j3O": {
+        "ru": "комбинезон заря",
+        "en": "zarya suit"
+    },
+    "AVk2": {
+        "ru": "костюм клептоман",
+        "en": "kleptomaniac suit"
+    },
+    "awZd": {
+        "ru": "экзоскелет",
+        "en": "exoskeleton"
+    },
+    "gwyB": {
+        "ru": "tяжелый бронекостюм восход",
+        "en": "voshod heavy armored suit"
+    },
+    "JQG3": {
+        "ru": "костюм горка-3",
+        "en": "gorka-3 suit"
+    },
+    "jqkN": {
+        "ru": "бронекостюм пахан",
+        "en": "kingpin armored suit"
+    },
+    "JQP3": {
+        "ru": "бронекостюм сокол",
+        "en": "hawk armored suit"
+    },
+    "OL6j": {
+        "ru": "бандитский костюм",
+        "en": "bandit suit"
+    },
+    "oO0A": {
+        "ru": "экзоскелет масть",
+        "en": "trump exoskeleton"
+    },
+    "PQxn": {
+        "ru": "бронекостюм пересмешник",
+        "en": "mockingbird armored suit"
+    },
+    "qb5L": {
+        "ru": "бандитский костюм с противогазом",
+        "en": "bandit suit with gas mask"
+    },
+    "rbG0": {
+        "ru": "комбинезон заря с противогазом",
+        "en": "zarya suit with gas mask"
+    },
+    "ZAbr": {
+        "ru": "комбинезон турист",
+        "en": "tourist suit"
+    },
+    "2jdo": {
+        "ru": "ким-99м малахит",
+        "en": "mis-99 malachite"
+    },
+    "6Xr7": {
+        "ru": "ким-116 изумруд",
+        "en": "mis-116 emerald"
+    },
+    "BLJj": {
+        "ru": "продвинутый озк",
+        "en": "improved hazmat suit"
+    },
+    "drgm": {
+        "ru": "ип-4м",
+        "en": "ip-4m"
+    },
+    "mbnZ": {
+        "ru": "ким-113 иолит",
+        "en": "mis-113 iolite"
+    },
+    "nbgM": {
+        "ru": "комбинезон жнец",
+        "en": "reaper suit"
+    },
+    "Q1zP": {
+        "ru": "ким-105 топаз",
+        "en": "mis-105 topaz"
+    },
+    "RQ8G": {
+        "ru": "ким-99 янтарь",
+        "en": "mis-99 amber"
+    },
+    "VqMV": {
+        "ru": "комбинезон сева",
+        "en": "seva suit"
+    },
+    "VqrV": {
+        "ru": "дождевик",
+        "en": "raincoat"
+    },
+    "xQ6j": {
+        "ru": "ким-122 аметист",
+        "en": "mis-122 amethyst"
+    },
+    "XqZk": {
+        "ru": "комбинезон заря-б",
+        "en": "zarya-b suit"
+    },
+    "Yq1A": {
+        "ru": "бандитский костюм с баллонами",
+        "en": "bandit suit with gas tanks"
+    },
+    "0Qk7": {
+        "ru": "слизняк",
+        "en": "slug"
+    },
+    "2XVa": {
+        "ru": "светляк",
+        "en": "firefly"
+    },
+    "B19r": {
+        "ru": "колючка",
+        "en": "thorn"
+    },
+    "D1eX": {
+        "ru": "многогранник",
+        "en": "polyhedron"
+    },
+    "gKaN": {
+        "ru": "слизь",
+        "en": "slime"
+    },
+    "JkdV": {
+        "ru": "улитка",
+        "en": "snail"
+    },
+    "k5VN": {
+        "ru": "стальной колобок",
+        "en": "steel kolobok"
+    },
+    "KmgX": {
+        "ru": "колобок",
+        "en": "kolobok"
+    },
+    "lLnr": {
+        "ru": "морской ёж",
+        "en": "urchin"
+    },
+    "n8Bk": {
+        "ru": "кисель",
+        "en": "lollipop"
+    },
+    "NMyK": {
+        "ru": "плёнка",
+        "en": "pellicle"
+    },
+    "PRKE": {
+        "ru": "пузырь",
+        "en": "bubble"
+    },
+    "Rg37": {
+        "ru": "слюда",
+        "en": "mica"
+    },
+    "Vz0G": {
+        "ru": "кислый кристалл",
+        "en": "acid crystal"
+    },
+    "yZz5": {
+        "ru": "кристальная колючка",
+        "en": "crystal thorn"
+    },
+    "0QKe": {
+        "ru": "призма",
+        "en": "prism"
+    },
+    "31K1": {
+        "ru": "пустышка",
+        "en": "shell"
+    },
+    "B16j": {
+        "ru": "частотный кристалл",
+        "en": "electric crystal"
+    },
+    "gKMn": {
+        "ru": "гелий",
+        "en": "helium"
+    },
+    "gKz3": {
+        "ru": "осколок",
+        "en": "shard"
+    },
+    "k5b2": {
+        "ru": "снежинка",
+        "en": "snowflake"
+    },
+    "Kmoj": {
+        "ru": "батарейка",
+        "en": "battery"
+    },
+    "lLBw": {
+        "ru": "вспышка",
+        "en": "flare"
+    },
+    "n813": {
+        "ru": "зеркало",
+        "en": "mirror"
+    },
+    "n8l9": {
+        "ru": "лунный свет",
+        "en": "moonlight"
+    },
+    "RgOz": {
+        "ru": "атом",
+        "en": "atom"
+    },
+    "VzgA": {
+        "ru": "дезинтегратор",
+        "en": "disintegrator"
+    },
+    "Vzkw": {
+        "ru": "спираль",
+        "en": "spiral"
+    },
+    "yZP6": {
+        "ru": "бенгальский огонь",
+        "en": "sparkler"
+    },
+    "0Qak": {
+        "ru": "жильник",
+        "en": "veiner"
+    },
+    "2X11": {
+        "ru": "протомедуза",
+        "en": "proto-jellyfish"
+    },
+    "31kB": {
+        "ru": "пружина",
+        "en": "spring"
+    },
+    "31y7": {
+        "ru": "криоген",
+        "en": "cryogen"
+    },
+    "B1QQ": {
+        "ru": "выверт",
+        "en": "quirk"
+    },
+    "B1xn": {
+        "ru": "кровь камня",
+        "en": "stone blood"
+    },
+    "gKLe": {
+        "ru": "тёмная медуза",
+        "en": "dark jellyfish"
+    },
+    "Jkme": {
+        "ru": "браслет",
+        "en": "bracelet"
+    },
+    "k51k": {
+        "ru": "душа",
+        "en": "soul"
+    },
+    "k58D": {
+        "ru": "янтарник",
+        "en": "amberite"
+    },
+    "Km1A": {
+        "ru": "болотный гнилец",
+        "en": "swamp rot"
+    },
+    "KmMq": {
+        "ru": "золотистый грави",
+        "en": "gold gravi"
+    },
+    "lLbd": {
+        "ru": "желчь камня",
+        "en": "stone bile"
+    },
+    "lLGM": {
+        "ru": "золотая рыбка",
+        "en": "goldfish"
+    },
+    "n8Aw": {
+        "ru": "медуза",
+        "en": "jellyfish"
+    },
+    "RgMD": {
+        "ru": "ночная звезда",
+        "en": "night star"
+    },
+    "Vz5w": {
+        "ru": "чёрный кристалл",
+        "en": "black crystal"
+    },
+    "Vzbg": {
+        "ru": "каменный цветок",
+        "en": "stone flower"
+    },
+    "VznG": {
+        "ru": "остов",
+        "en": "frame"
+    },
+    "yZR8": {
+        "ru": "ломоть мяса",
+        "en": "meat chunk"
+    },
+    "yZXl": {
+        "ru": "грави",
+        "en": "gravi"
+    },
+    "0QwO": {
+        "ru": "волчьи слёзы",
+        "en": "wolf tears"
+    },
+    "0QZb": {
+        "ru": "вихрь",
+        "en": "whirlwind"
+    },
+    "2XMR": {
+        "ru": "глаз",
+        "en": "eye"
+    },
+    "2Xqg": {
+        "ru": "бритва",
+        "en": "razor"
+    },
+    "gK2w": {
+        "ru": "корка",
+        "en": "crust"
+    },
+    "gKQn": {
+        "ru": "капля",
+        "en": "droplet"
+    },
+    "Jk6Q": {
+        "ru": "пламя",
+        "en": "flame"
+    },
+    "JkGK": {
+        "ru": "каблук",
+        "en": "heel"
+    },
+    "n86x": {
+        "ru": "хрусталь",
+        "en": "crystal"
+    },
+    "n8w9": {
+        "ru": "огненный шар",
+        "en": "fireball"
+    },
+    "NMaj": {
+        "ru": "глаз бури",
+        "en": "eye of the storm"
+    },
+    "PR1M": {
+        "ru": "куриный бог",
+        "en": "chicken god"
+    },
+    "PReY": {
+        "ru": "солнце",
+        "en": "sun"
+    },
+    "Rgay": {
+        "ru": "мамины бусы",
+        "en": "mama’s beads"
+    },
+    "Rgdl": {
+        "ru": "фаренгейт",
+        "en": "fahrenheit"
+    },
+    "VzdA": {
+        "ru": "кристалл",
+        "en": "crystal"
+    },
+    "Vzr3": {
+        "ru": "иней",
+        "en": "frost"
+    },
+    "0gYJ": {
+        "ru": "глушитель fa556 mini",
+        "en": "fa556 mini silencer"
+    },
+    "10Y7": {
+        "ru": "дтк-1",
+        "en": "mbc-1"
+    },
+    "2RYz": {
+        "ru": "глушитель kac style qd",
+        "en": "kac style qd silencer"
+    },
+    "3m8G": {
+        "ru": "3 port mini compensator",
+        "en": "3 port mini compensator"
+    },
+    "3mJB": {
+        "ru": "рукоятка для оц-14 гроза",
+        "en": "grip for ots-14 groza"
+    },
+    "7mYL": {
+        "ru": "стандартный ствол аш-12",
+        "en": "ash-12 standard barrel"
+    },
+    "9mgQ": {
+        "ru": "глушитель атг",
+        "en": "atg silencer"
+    },
+    "amPr": {
+        "ru": "дтк косой",
+        "en": "kosoi mbc"
+    },
+    "BkX2": {
+        "ru": "пламегаситель noveske kx3",
+        "en": "noveske kx3 flash suppressor"
+    },
+    "bM35": {
+        "ru": "дтк цитадель 5.45",
+        "en": "citadel 5.45 mbc"
+    },
+    "dJnq": {
+        "ru": "удлиненный ствол 9 мм",
+        "en": "9 mm barrel extension"
+    },
+    "DVKJ": {
+        "ru": "глушитель surefire socom556-rc2",
+        "en": "surefire socom556-rc2 silencer"
+    },
+    "gJRX": {
+        "ru": "глушитель scar-sd",
+        "en": "scar-sd silencer"
+    },
+    "j7YO": {
+        "ru": "пбс-4",
+        "en": "pbs-4"
+    },
+    "K5Xe": {
+        "ru": "hera arms cc compensator",
+        "en": "hera arms cc compensator"
+    },
+    "kxw6": {
+        "ru": "пламегаситель lonewolf",
+        "en": "lonewolf flash suppressor"
+    },
+    "lze1": {
+        "ru": "resistance armament compensator",
+        "en": "resistance armament compensator"
+    },
+    "M7XQ": {
+        "ru": "пламегаситель akademia тьма",
+        "en": "akademia t’ma flash suppressor"
+    },
+    "nxaD": {
+        "ru": "vg6 epsilon 762 muzzle brake",
+        "en": "vg6 epsilon 762 muzzle brake"
+    },
+    "nxmD": {
+        "ru": "глушитель osprey",
+        "en": "osprey silencer"
+    },
+    "o7jn": {
+        "ru": "дтк вихрь",
+        "en": "whirlwind mbc"
+    },
+    "O8dD": {
+        "ru": "глушитель аш-12/мц-558",
+        "en": "ash-12/mts-558 silencer"
+    },
+    "qeVw": {
+        "ru": "глушитель мц-558",
+        "en": "mts-558 silencer"
+    },
+    "Romn": {
+        "ru": "глушитель salvo 12",
+        "en": "salvo 12 silencer"
+    },
+    "rwnB": {
+        "ru": "глушитель для оц-14 гроза",
+        "en": "silencer for ots-14 groza"
+    },
+    "Vo8a": {
+        "ru": "глушитель js",
+        "en": "js silencer"
+    },
+    "Vola": {
+        "ru": "vg6 epsilon 556 muzzle brake",
+        "en": "vg6 epsilon 556 muzzle brake"
+    },
+    "wDjk": {
+        "ru": "удлиненный ствол d-eagle",
+        "en": "d-eagle barrel extension"
+    },
+    "XEdO": {
+        "ru": "iмкас псузв–11тм.12",
+        "en": "psuzv-11tm.12 imkas"
+    },
+    "yEjG": {
+        "ru": "diamondhead compensator",
+        "en": "diamondhead compensator"
+    },
+    "0gBq": {
+        "ru": "приклад m4 buttstock",
+        "en": "m4 buttstock"
+    },
+    "2RlP": {
+        "ru": "приклад апс",
+        "en": "aps stock"
+    },
+    "3mln": {
+        "ru": "облегчённый приклад m4",
+        "en": "m4 lightweight stock"
+    },
+    "Bkmy": {
+        "ru": "приклад mossberg",
+        "en": "mossberg stock"
+    },
+    "gJMm": {
+        "ru": "приклад деревянный рамочный",
+        "en": "wooden skeleton stock"
+    },
+    "JAaG": {
+        "ru": "пластиковый приклад рпд",
+        "en": "rpd plastic stock"
+    },
+    "K5ax": {
+        "ru": "приклад mp5 нескладной",
+        "en": "mp5 fixed stock"
+    },
+    "kxB1": {
+        "ru": "приклад-весло m4",
+        "en": "m4 paddle stock"
+    },
+    "nxlA": {
+        "ru": "приклад ижмаш полимерный",
+        "en": "izhmash plastic stock"
+    },
+    "P8lx": {
+        "ru": "приклад оц-33",
+        "en": "ots-33 stock"
+    },
+    "RokO": {
+        "ru": "приклад zm high standard ak",
+        "en": "zm high standard ak stock"
+    },
+    "Vogx": {
+        "ru": "приклад ижмаш деревянный",
+        "en": "izhmash wooden stock"
+    },
+    "0g7k": {
+        "ru": "прицел оптический посп",
+        "en": "posp optical sight"
+    },
+    "0gxk": {
+        "ru": "прицел оптический elcan",
+        "en": "elcan optical sight"
+    },
+    "2Rak": {
+        "ru": "прицел коллиматорный bering optics",
+        "en": "bering optics collimator sight"
+    },
+    "2RG1": {
+        "ru": "прицел оптический псо",
+        "en": "pso optical sight"
+    },
+    "2Rw1": {
+        "ru": "прицел оптический acecare",
+        "en": "acecare optical sight"
+    },
+    "3mwl": {
+        "ru": "прицел оптический trijicon accupoint",
+        "en": "trijicon accupoint optical sight"
+    },
+    "3mz7": {
+        "ru": "прицел коллиматорный окп-7",
+        "en": "okp-7 collimator sight"
+    },
+    "61a2": {
+        "ru": "прицел коллиматорный пк-01(т)",
+        "en": "pk-01(t) collimator sight"
+    },
+    "86oE": {
+        "ru": "прицел коллиматорный dm",
+        "en": "dm collimator sight"
+    },
+    "BkPQ": {
+        "ru": "прицел коллиматорный micro",
+        "en": "micro collimator sight"
+    },
+    "Bkwr": {
+        "ru": "прицел оптический susat",
+        "en": "susat scope"
+    },
+    "DVam": {
+        "ru": "прицел коллиматорный trijicon",
+        "en": "trijicon collimator sight"
+    },
+    "G0O3": {
+        "ru": "прицел коллиматорный кобра",
+        "en": "kobra collimator sight"
+    },
+    "gJ0e": {
+        "ru": "прицел оптический 1п77",
+        "en": "1p77 optical sight"
+    },
+    "gJg3": {
+        "ru": "прицел коллиматорный barska",
+        "en": "barska collimator sight"
+    },
+    "gJX3": {
+        "ru": "прицел коллиматорный пк-ас",
+        "en": "pk-as collimator sight"
+    },
+    "JAlB": {
+        "ru": "прицел коллиматорный bering optics",
+        "en": "bering optics collimator sight"
+    },
+    "JAye": {
+        "ru": "прицел оптический пу для свт",
+        "en": "pu optical sight for svt"
+    },
+    "K5bq": {
+        "ru": "прицел коллиматорный trijicon",
+        "en": "trijicon collimator sight"
+    },
+    "K5VX": {
+        "ru": "прицел оптический trijicon acog",
+        "en": "trijicon acog optical sight"
+    },
+    "kx6N": {
+        "ru": "прицел оптический sig sauer",
+        "en": "sig sauer optical sight"
+    },
+    "kxRD": {
+        "ru": "прицел коллиматорный larue",
+        "en": "larue collimator sight"
+    },
+    "lz2M": {
+        "ru": "прицел коллиматорный eotech",
+        "en": "eotech collimator sight"
+    },
+    "lzxr": {
+        "ru": "прицел оптический elcan",
+        "en": "elcan optical sight"
+    },
+    "mxNO": {
+        "ru": "прицел коллиматорный sig sauer",
+        "en": "sig sauer collimator sight"
+    },
+    "N539": {
+        "ru": "прицел оптический пилад 3.5х20",
+        "en": "pilad 3.5x20 optical sight"
+    },
+    "N5Vb": {
+        "ru": "прицел коллиматорный vortex",
+        "en": "vortex collimator sight"
+    },
+    "nxD3": {
+        "ru": "прицел коллиматорный кобра",
+        "en": "kobra collimator sight"
+    },
+    "nxP3": {
+        "ru": "прицел коллиматорный валдай",
+        "en": "valday collimator sight"
+    },
+    "nxQw": {
+        "ru": "прицел оптический псо",
+        "en": "pso optical sight"
+    },
+    "nxyw": {
+        "ru": "прицел оптический elcan m145",
+        "en": "elcan m145 optical sight"
+    },
+    "P8gR": {
+        "ru": "прицел коллиматорный vortex",
+        "en": "vortex collimator sight"
+    },
+    "P8nq": {
+        "ru": "прицел оптический тюльпан",
+        "en": "tulip optical sight"
+    },
+    "Q80r": {
+        "ru": "прицел коллиматорный trijicon",
+        "en": "trijicon collimator sight"
+    },
+    "Ro0D": {
+        "ru": "прицел оптический пу на боковой кронштейн",
+        "en": "pu optical sight on side bracket"
+    },
+    "RoPD": {
+        "ru": "прицел оптический барс",
+        "en": "bars optical sight"
+    },
+    "RoRz": {
+        "ru": "прицел коллиматорный barska",
+        "en": "barska collimator sight"
+    },
+    "Voaw": {
+        "ru": "прицел коллиматорный bsa reflex",
+        "en": "bsa reflex collimator sight"
+    },
+    "Vomg": {
+        "ru": "прицел оптический trijicon acog",
+        "en": "trijicon acog optical sight"
+    },
+    "VoNw": {
+        "ru": "прицел коллиматорный обзор",
+        "en": "obzor collimator sight"
+    },
+    "VoPg": {
+        "ru": "прицел широкоугольный ракурс",
+        "en": "rakurs wide-angle sight"
+    },
+    "wD7l": {
+        "ru": "прицел коллиматорный панорама",
+        "en": "panorama collimator sight"
+    },
+    "xL7L": {
+        "ru": "прицел коллиматорный пк-01(т/з)",
+        "en": "pk-01(t/z) collimator sight"
+    },
+    "yEJ5": {
+        "ru": "прицел оптический leupold",
+        "en": "leupold optical sight"
+    },
+    "yEOl": {
+        "ru": "прицел коллиматорный eotech",
+        "en": "eotech collimator sight"
+    },
+    "z57x": {
+        "ru": "прицел коллиматорный русак",
+        "en": "rusak collimator sight"
+    },
+    "0gNO": {
+        "ru": "цевье fab defence ак",
+        "en": "fab defense ak handguard"
+    },
+    "0grE": {
+        "ru": "кронштейн скс - ласточкин хвост",
+        "en": "sks bracket—dovetail joint"
+    },
+    "0gzO": {
+        "ru": "цевье m1a с планкой пикатинни",
+        "en": "m1a with picatinny rail handguard"
+    },
+    "2R6R": {
+        "ru": "цевье ris lr-300",
+        "en": "handguard ris lr-300"
+    },
+    "2RQR": {
+        "ru": "цевье б-10м и крышка ствольной коробки б-33",
+        "en": "b-10m handguard and b-33 receiver cover"
+    },
+    "3mr1": {
+        "ru": "fal quad rail",
+        "en": "fal quad rail"
+    },
+    "3myD": {
+        "ru": "направляющая ris для дробовиков",
+        "en": "guiding ris for shotgun"
+    },
+    "61k0": {
+        "ru": "крепление прицела для m16a2",
+        "en": "sight mount for m16a2"
+    },
+    "61KD": {
+        "ru": "цевье б-10м (нижняя планка)",
+        "en": "b-10m handguard (bottom rail)"
+    },
+    "Bk2j": {
+        "ru": "цевьё ris l85",
+        "en": "ris l85 handguard"
+    },
+    "BkQw": {
+        "ru": "надствольное крепление бм",
+        "en": "bm barrel mount"
+    },
+    "DV62": {
+        "ru": "планка ris на пп-91 кедр",
+        "en": "ris rail for smg-91 kedr"
+    },
+    "DVdZ": {
+        "ru": "цевьё для сайга-12к",
+        "en": "handguard for saiga-12k"
+    },
+    "ePQX": {
+        "ru": "крышка ствольной коробки вал/всс",
+        "en": "val/vss receiver cover"
+    },
+    "G0Z6": {
+        "ru": "тактическое ложе для скс",
+        "en": "tactical stock for sks"
+    },
+    "gJBn": {
+        "ru": "цевьё с направляющей ris для sig sg 550",
+        "en": "handguard with guiding ris for sig sg 550"
+    },
+    "gJEn": {
+        "ru": "цевье деревянное акм, чёрное",
+        "en": "akm wooden handguard, black"
+    },
+    "JA5Q": {
+        "ru": "крышка ствольной коробки пкп с планкой пикатинни",
+        "en": "pkp receiver cover with picatinny rail"
+    },
+    "JAKQ": {
+        "ru": "цевьё fab defence g3-rs",
+        "en": "fab defense g3-rs handguard"
+    },
+    "K5kj": {
+        "ru": "цевьё mp5 с планками пикатинни",
+        "en": "mp5 with picatinny rail handguard"
+    },
+    "K5MK": {
+        "ru": "боковой кронштейн с планкой пикатинни",
+        "en": "side bracket with picatinny rail"
+    },
+    "kx8X": {
+        "ru": "планка ris xm8",
+        "en": "ris xm8 rail"
+    },
+    "kxk2": {
+        "ru": "цевьё ris p90",
+        "en": "ris p90 handguard"
+    },
+    "lz3w": {
+        "ru": "цевье ris m16",
+        "en": "ris m16 handguard"
+    },
+    "lzG2": {
+        "ru": "планка с базой пикатинни",
+        "en": "picatinny rail and base"
+    },
+    "mxEE": {
+        "ru": "цевье б-21м",
+        "en": "b-21m handguard"
+    },
+    "mxwo": {
+        "ru": "адаптивная планка ris для дп",
+        "en": "adaptive ris rail for dp"
+    },
+    "N512": {
+        "ru": "кронштейн кочетова патриот с планкой пикатинни",
+        "en": "kochetov mount for patriot with picatinny rail"
+    },
+    "N5xJ": {
+        "ru": "цевьё удав ан-94",
+        "en": "an-94 udav handguard"
+    },
+    "nxE9": {
+        "ru": "цевьё б-11 с верхней планкой",
+        "en": "b-11 handguard with upper rail"
+    },
+    "nxea": {
+        "ru": "хомут с тремя планками ris",
+        "en": "clamp with 3 ris rails"
+    },
+    "nxn9": {
+        "ru": "цевьё с направляющей ris для uzi",
+        "en": "handguard with guiding ris for uzi"
+    },
+    "P80Y": {
+        "ru": "ложе springfield m1a pacs",
+        "en": "springfield m1a pacs stock"
+    },
+    "Q8xR": {
+        "ru": "тактическая накладка скс",
+        "en": "sks tactical grip"
+    },
+    "Ro2y": {
+        "ru": "ложе m1a с планками пикатинни",
+        "en": "m1a stock with picatinny rails"
+    },
+    "RoLy": {
+        "ru": "цевье caa rs-21",
+        "en": "caa rs-21 handguard"
+    },
+    "Vo52": {
+        "ru": "хомут с планкой ris",
+        "en": "clamp with ris rail"
+    },
+    "VoDA": {
+        "ru": "sig sg 550 handguard 4x nar",
+        "en": "sig sg 550 handguard 4x nar"
+    },
+    "wDG7": {
+        "ru": "тактическая накладка оц-14",
+        "en": "ots-14 tactical grip"
+    },
+    "xLGN": {
+        "ru": "тактическое цевьё рпд",
+        "en": "rpd tactical handguard"
+    },
+    "xLr3": {
+        "ru": "повышающая ris-планка",
+        "en": "increasing ris-rail"
+    },
+    "yEm6": {
+        "ru": "цевье ris m4a1",
+        "en": "ris m4a1 handguard"
+    },
+    "yEXY": {
+        "ru": "кронштейн-планка ris",
+        "en": "ris bracket-rail"
+    },
+    "z5Bd": {
+        "ru": "планка пикатинни для свт",
+        "en": "picatinny rail for svt"
+    },
+    "0gkQ": {
+        "ru": "пластиковый магазин 5.45",
+        "en": "5.45 plastic clip"
+    },
+    "0gyQ": {
+        "ru": "барабанный магазин aa-12",
+        "en": "aa-12 drum clip"
+    },
+    "1039": {
+        "ru": "магазин 30-патронный для ак-308",
+        "en": "30-round clip for ak-308"
+    },
+    "2RK7": {
+        "ru": "магазин 7.62 nato pmag, чёрный",
+        "en": "7.62 nato pmag clip, black"
+    },
+    "2RV7": {
+        "ru": "барабанный магазин 5.45",
+        "en": "5.45 drum clip"
+    },
+    "3mkR": {
+        "ru": "магазин 5.56 nato stanag",
+        "en": "5.56 nato stanag clip"
+    },
+    "61RE": {
+        "ru": "бакелитовый магазин 7.62",
+        "en": "7.62 bakelite clip"
+    },
+    "86J3": {
+        "ru": "увеличенный магазин форт-12",
+        "en": "fort-12 extended clip"
+    },
+    "amzB": {
+        "ru": "увеличенный магазин psg1",
+        "en": "psg1 extended clip"
+    },
+    "BkRN": {
+        "ru": "магазин 5.56 nato stanag",
+        "en": "5.56 nato stanag clip"
+    },
+    "bM8Z": {
+        "ru": "барабанный магазин 7.62x39",
+        "en": "7.62x39 drum clip"
+    },
+    "DV8V": {
+        "ru": "увеличенный магазин colt",
+        "en": "colt extended clip"
+    },
+    "DVeV": {
+        "ru": "увеличенный магазин кобра",
+        "en": "kobra extended clip"
+    },
+    "ePeJ": {
+        "ru": "увеличенный магазин оц-14",
+        "en": "ots-14 extended clip"
+    },
+    "G0o9": {
+        "ru": "удлинитель магазина мр-133/мр-153",
+        "en": "mp-133/mp-153 clip extender"
+    },
+    "gJaG": {
+        "ru": "бакелитовый магазин 5.45",
+        "en": "5.45 bakelite clip"
+    },
+    "gJeG": {
+        "ru": "барабанный магазин x-5",
+        "en": "x-5 drum clip"
+    },
+    "JAd1": {
+        "ru": "барабанный магазин для пм",
+        "en": "drum clip for pm"
+    },
+    "JAo1": {
+        "ru": "барабанный магазин 5.56 nato emag",
+        "en": "5.56 nato emag drum clip"
+    },
+    "K5x8": {
+        "ru": "магазин 5.56 nato pmag, чёрный",
+        "en": "5.56 nato pmag clip, black"
+    },
+    "kx1G": {
+        "ru": "магазин 5.56 nato stanag",
+        "en": "5.56 nato stanag clip"
+    },
+    "lz8K": {
+        "ru": "магазин 5.56 nato pmag, хаки",
+        "en": "5.56 nato pmag clip, khaki"
+    },
+    "M7Bk": {
+        "ru": "увеличенный магазин для мц-558",
+        "en": "mts-558 extended clip"
+    },
+    "mxd8": {
+        "ru": "барабанный магазин g3/m1a",
+        "en": "g3/m1a drum clip"
+    },
+    "mxj8": {
+        "ru": "пластиковый магазин 7.62",
+        "en": "7.62 plastic clip"
+    },
+    "N57N": {
+        "ru": "увеличенный магазин browning",
+        "en": "browning extended clip"
+    },
+    "N5yN": {
+        "ru": "магазин пп-91",
+        "en": "smg-91 clip"
+    },
+    "nx72": {
+        "ru": "барабанный магазин 5.56 nato чёрный",
+        "en": "5.56 nato drum clip, black"
+    },
+    "P8KA": {
+        "ru": "магазин эргономичный для всс/вал",
+        "en": "ergonomic clip for vss/val"
+    },
+    "P8yA": {
+        "ru": "магазин 5.56 pufgun, черный",
+        "en": "5.56 pufgun clip, black"
+    },
+    "Q8k1": {
+        "ru": "магазин пп-2000",
+        "en": "smg-2000 clip"
+    },
+    "Q8l1": {
+        "ru": "увеличенный магазин beretta",
+        "en": "beretta extended clip"
+    },
+    "Ro3b": {
+        "ru": "магазин 5.45",
+        "en": "5.45 clip"
+    },
+    "RoKb": {
+        "ru": "магазин 7.62 nato pmag, хаки",
+        "en": "7.62 nato pmag clip, khaki"
+    },
+    "VonJ": {
+        "ru": "барабанный магазин 5.56 nato, хаки",
+        "en": "5.56 nato drum clip, khaki"
+    },
+    "wD0P": {
+        "ru": "магазин 30-патронный для всс/вал",
+        "en": "30-round clip for vss/val"
+    },
+    "xL0K": {
+        "ru": "магазин 40-патронный emag",
+        "en": "40-ammo emag clip"
+    },
+    "xLRK": {
+        "ru": "магазин 5.45 pmag, чёрный",
+        "en": "5.45 pmag clip, black"
+    },
+    "yEKx": {
+        "ru": "магазин 5.56 nato stanag",
+        "en": "5.56 nato stanag clip"
+    },
+    "z5JL": {
+        "ru": "увеличенный магазин пм/пб",
+        "en": "pm/pb extended clip"
+    },
+    "0g07": {
+        "ru": "тактическая рукоятка fortis shift vertical, черная",
+        "en": "fortis shift vertical tactical grip, black"
+    },
+    "0gMb": {
+        "ru": "тактический блок an/peq 15, чёрный",
+        "en": "an/peq 15 tactical unit, black"
+    },
+    "2R2a": {
+        "ru": "тактическая рукоятка fma td grip",
+        "en": "fma td grip tactical grip"
+    },
+    "3m6Z": {
+        "ru": "компактная защитная планка,чёрная",
+        "en": "compact protective rail, black"
+    },
+    "Bk9l": {
+        "ru": "защитная планка, олива",
+        "en": "protective rail, olive"
+    },
+    "Bkon": {
+        "ru": "тактическая рукоятка magpul afg",
+        "en": "magpul afg tactical grip"
+    },
+    "Bl92": {
+        "ru": "гп-25 костёр",
+        "en": "gp-25 kostyor"
+    },
+    "DVb9": {
+        "ru": "hq issue mini laser sight (зелёный лазер)",
+        "en": "hq issue mini laser sight (green laser)"
+    },
+    "gJ1N": {
+        "ru": "тактическая рукоятка fortis shift vertical, оранжевая",
+        "en": "fortis shift vertical tactical grip, orange"
+    },
+    "gJ5w": {
+        "ru": "тактический блок an/peq 15, хаки",
+        "en": "an/peq 15 tactical unit, khaki"
+    },
+    "JAjV": {
+        "ru": "вертикальная рукоятка tapco",
+        "en": "tapco vertical grip"
+    },
+    "K5g5": {
+        "ru": "компактная защитная планка, олива",
+        "en": "compact protective rail, olive"
+    },
+    "K5GA": {
+        "ru": "тактическая рукоятка reg fab defence, хаки",
+        "en": "reg fab defense tactical grip, khaki"
+    },
+    "kKV6": {
+        "ru": "гранатомёт fn eglm",
+        "en": "fn eglm grenade launcher"
+    },
+    "kxjk": {
+        "ru": "тактическая рукоятка reg fab defence, серый",
+        "en": "reg fab defense tactical grip, gray"
+    },
+    "kxV9": {
+        "ru": "компактная защитная планка, хаки",
+        "en": "compact protective rail, khaki"
+    },
+    "lkn1": {
+        "ru": "гранатомёт для оц-14 гроза",
+        "en": "grenade launcher for ots-14 groza"
+    },
+    "lz1d": {
+        "ru": "вертикальная рукоятка ang4",
+        "en": "ang4 vertical grip"
+    },
+    "lznO": {
+        "ru": "защитная планка, чёрная",
+        "en": "protective rail, black"
+    },
+    "N5Kj": {
+        "ru": "тактический блок an/peq 15, чёрный (зелёный лазер)",
+        "en": "an/peq 15 tactical unit, black (green laser)"
+    },
+    "nxYx": {
+        "ru": "лазерный целеуказатель клещ-2пс",
+        "en": "kleshch-2ps compact laser designator"
+    },
+    "Q8VJ": {
+        "ru": "hq issue low-profile laser sight (красный лазер)",
+        "en": "hq issue low-profile laser sight (red laser)"
+    },
+    "RoG7": {
+        "ru": "рукоять переноса огня fma dark earth",
+        "en": "fma dark earth fire transfer grip"
+    },
+    "yEM8": {
+        "ru": "тактическая рукоятка pclrs",
+        "en": "pclrs tactical grip"
+    },
+    "yEz9": {
+        "ru": "защитная планка, хаки",
+        "en": "protective rail, khaki"
+    },
+    "yyzG": {
+        "ru": "m203",
+        "en": "m203"
+    },
+    "Bk3j": {
+        "ru": "рукоять рк-3",
+        "en": "rk-3 grip"
+    },
+    "gJAn": {
+        "ru": "рукоять fab defence agr-43, хаки",
+        "en": "fab defense agr-43 grip, khaki"
+    },
+    "K5Nj": {
+        "ru": "рукоять fab defence ag-47, хаки",
+        "en": "fab defense ag-47 grip, khaki"
+    },
+    "lzVw": {
+        "ru": "рукоять fab defence ag-47, зелёный",
+        "en": "fab defense ag-47 grip, green"
+    },
+    "nx59": {
+        "ru": "рукоять fab defence agr-43, зелёный",
+        "en": "fab defense agr-43 grip, green"
+    },
+    "VowA": {
+        "ru": "рукоять fab defence agr-43, чёрный",
+        "en": "fab defense agr-43 grip, black"
+    },
+    "yEx6": {
+        "ru": "рукоять fab defence ag-47, чёрный",
+        "en": "fab defense ag-47 grip, black"
+    },
+    "yd96": {
+        "ru": "мобильный лагерь",
+        "en": "mobile camp"
+    },
+    "0P9q": {
+        "ru": "зажигательные 12 калибра",
+        "en": "12 caliber incendiary"
+    },
+    "1rPj": {
+        "ru": "патрон 7.62 мм зажигательный",
+        "en": "7.62 mm incendiary ammo"
+    },
+    "2D9P": {
+        "ru": "дробь 12 калибра",
+        "en": "12 caliber buckshot"
+    },
+    "2Dz7": {
+        "ru": "патрон 12 калибра серебрёный",
+        "en": "12 caliber silver ammo"
+    },
+    "3g8R": {
+        "ru": "патрон 9x39 мм серебрёный",
+        "en": "9x39 mm silver ammo"
+    },
+    "6Q6x": {
+        "ru": "патрон 5.45 мм сбп",
+        "en": "5.45 mm sbp ammo"
+    },
+    "7JxP": {
+        "ru": "патрон 9x39 мм сп-6",
+        "en": "9x39 mm sp-6 ammo"
+    },
+    "81zQ": {
+        "ru": "патрон 5.56 мм экспансивный",
+        "en": "5.56 mm expanding ammo"
+    },
+    "9r8V": {
+        "ru": "крупнокалиберный патрон",
+        "en": "large-caliber ammo"
+    },
+    "a0EV": {
+        "ru": "патрон 7.62 мм бронебойный",
+        "en": "7.62 mm armor-piercing ammo"
+    },
+    "A3E9": {
+        "ru": "патрон 10 мм",
+        "en": "10 mm ammo"
+    },
+    "BOEy": {
+        "ru": "баллон с горючей смесью",
+        "en": "tank of combustible mixture"
+    },
+    "BOry": {
+        "ru": "патрон 9 мм",
+        "en": "9 mm ammo"
+    },
+    "BOYN": {
+        "ru": "патрон 9 мм серебрёный",
+        "en": "9 mm silver ammo"
+    },
+    "bRZb": {
+        "ru": "патрон 7.62 мм сбп",
+        "en": "7.62 mm sbp ammo"
+    },
+    "dLZj": {
+        "ru": "патрон 9x39 мм сп-5",
+        "en": "9x39 mm sp-5 ammo"
+    },
+    "DNBn": {
+        "ru": "патрон 5.45 мм бронебойный",
+        "en": "5.45 mm armor-piercing ammo"
+    },
+    "DNXV": {
+        "ru": "патрон 9x39 мм серебрёный",
+        "en": "9x39 mm silver ammo"
+    },
+    "EYEE": {
+        "ru": "патрон 10 мм зажигательный",
+        "en": "10 mm incendiary ammo"
+    },
+    "G7E7": {
+        "ru": "патрон 5.56 мм зажигательный",
+        "en": "5.56 mm incendiary ammo"
+    },
+    "gPXm": {
+        "ru": "морозный выстрел",
+        "en": "frost shot"
+    },
+    "j6ZK": {
+        "ru": "патрон 9x39 мм бп",
+        "en": "9x39 mm bp ammo"
+    },
+    "JNVG": {
+        "ru": "охотничья пуля 12 калибра",
+        "en": "12 caliber hunting round"
+    },
+    "JNX1": {
+        "ru": "патрон 5.45 мм серебрёный",
+        "en": "5.45 mm silver ammo"
+    },
+    "KrB8": {
+        "ru": "патрон 5.56 мм серебрёный",
+        "en": "5.56 mm silver ammo"
+    },
+    "KrEx": {
+        "ru": "патрон 12.7x55 мм снайперский",
+        "en": "12.7x55 mm sniper ammo"
+    },
+    "Krnx": {
+        "ru": "патрон 9 мм зажигательный",
+        "en": "9 mm incendiary ammo"
+    },
+    "kYwG": {
+        "ru": "патрон 7.62 мм серебрёный",
+        "en": "7.62 mm silver ammo"
+    },
+    "kYX1": {
+        "ru": "патрон 9 мм сбп",
+        "en": "9 mm sbp ammo"
+    },
+    "l0rK": {
+        "ru": "патрон 5.45 мм серебрёный",
+        "en": "5.45 mm silver ammo"
+    },
+    "l0XB": {
+        "ru": "патрон 9 мм экспансивный",
+        "en": "9 mm expanding ammo"
+    },
+    "l0ZB": {
+        "ru": "патрон 12.7x55 мм пп",
+        "en": "12.7x55 smg ammo"
+    },
+    "LmEy": {
+        "ru": "баллон с горючей смесью",
+        "en": "tank of combustible mixture"
+    },
+    "m0M8": {
+        "ru": "патрон 12.7x55 мм серебрёный",
+        "en": "12.7x55 mm silver ammo"
+    },
+    "m0Zz": {
+        "ru": "патрон 5.45 мм зажигательный",
+        "en": "5.45 mm incendiary ammo"
+    },
+    "MZED": {
+        "ru": "патрон 7.62 мм",
+        "en": "7.62 mm ammo"
+    },
+    "NbRD": {
+        "ru": "патрон 5.45 мм",
+        "en": "5.45 mm ammo"
+    },
+    "NbXN": {
+        "ru": "патрон 7.62 мм серебрёный",
+        "en": "7.62 mm silver ammo"
+    },
+    "nRa2": {
+        "ru": "патрон 12.7x55 мм серебрёный",
+        "en": "12.7x55 mm silver ammo"
+    },
+    "oPo7": {
+        "ru": "патрон 7.62 мм экспансивный",
+        "en": "7.62 mm expanding ammo"
+    },
+    "OZEV": {
+        "ru": "аккумулятор для гаусс-пушки",
+        "en": "gauss rifle charger"
+    },
+    "PbJx": {
+        "ru": "боевая пуля 12 калибра",
+        "en": "12 caliber live ammo"
+    },
+    "PbOA": {
+        "ru": "патрон 5.56 мм серебрёный",
+        "en": "5.56 mm silver ammo"
+    },
+    "QAEj": {
+        "ru": "патрон 5.45 мм экспансивный",
+        "en": "5.45 mm expanding ammo"
+    },
+    "QAX1": {
+        "ru": "крупнокалиберный серебрёный патрон",
+        "en": "large-caliber silver ammo"
+    },
+    "Rb5b": {
+        "ru": "патрон 9 мм серебрёный",
+        "en": "9 mm silver ammo"
+    },
+    "RbNO": {
+        "ru": "картечь 12 калибра",
+        "en": "12 caliber canister shot"
+    },
+    "VAlJ": {
+        "ru": "крупнокалиберный серебрёный патрон",
+        "en": "large-caliber silver ammo"
+    },
+    "w3Xq": {
+        "ru": "патрон 5.56 мм сбп",
+        "en": "5.56 sbp ammo"
+    },
+    "X9AX": {
+        "ru": "патрон 7.62 мм снайперский",
+        "en": "7.62 mm sniper ammo"
+    },
+    "xgXa": {
+        "ru": "патрон 5.56 мм",
+        "en": "5.56 mm ammo"
+    },
+    "yg3N": {
+        "ru": "патрон 9 мм бронебойный",
+        "en": "9 mm armor-piercing ammo"
+    },
+    "yg5N": {
+        "ru": "патрон 12.7x55 мм",
+        "en": "12.7x55 ammo"
+    },
+    "ygrx": {
+        "ru": "патрон 12 калибра серебрёный",
+        "en": "12 caliber silver ammo"
+    },
+    "zgoX": {
+        "ru": "патрон 5.56 мм бронебойный",
+        "en": "5.56 mm armor-piercing ammo"
+    },
+    "2DEN": {
+        "ru": "рюкзак hellboy",
+        "en": "hellboy backpack"
+    },
+    "7Jyz": {
+        "ru": "кзс-4",
+        "en": "kzs-4"
+    },
+    "9rKA": {
+        "ru": "контейнер добытчик",
+        "en": "forager container"
+    },
+    "A3dB": {
+        "ru": "кзс-5",
+        "en": "kzs-5"
+    },
+    "A3KP": {
+        "ru": "рюкзак npa",
+        "en": "npa backpack"
+    },
+    "BOlx": {
+        "ru": "контейнер кзс-1",
+        "en": "kzs-1 container"
+    },
+    "dLy5": {
+        "ru": "контейнер берлога-4",
+        "en": "bear’s den — 4 container"
+    },
+    "DNVZ": {
+        "ru": "спортивная сумка",
+        "en": "sports bag"
+    },
+    "EY7z": {
+        "ru": "контейнер улей",
+        "en": "hive container"
+    },
+    "G706": {
+        "ru": "рюкзак errand junior",
+        "en": "errand junior backpack"
+    },
+    "j6nm": {
+        "ru": "контейнер кокон",
+        "en": "cocoon container"
+    },
+    "MZ7E": {
+        "ru": "рюкзак mbss",
+        "en": "mbss backpack"
+    },
+    "Rb1x": {
+        "ru": "кзс-2",
+        "en": "kzs-2"
+    },
+    "Rboy": {
+        "ru": "сумка-трансформер",
+        "en": "transformer bag"
+    },
+    "VA1K": {
+        "ru": "контейнер берлога-6",
+        "en": "bear’s den — 6 container"
+    },
+    "X9E7": {
+        "ru": "штурмовой рюкзак tri-zip",
+        "en": "tri-zip assault backpack"
+    },
+    "zg6l": {
+        "ru": "кзс-3",
+        "en": "kzs-3"
+    },
+    "3grl": {
+        "ru": "выстрел гранатомётный m381",
+        "en": "m381 grenade round"
+    },
+    "5e6a": {
+        "ru": "ргд-5",
+        "en": "rgd-5"
+    },
+    "a0J0": {
+        "ru": "выстрел гранатомётный m2",
+        "en": "m2 grenade round"
+    },
+    "A3Rw": {
+        "ru": "сзг вспышка",
+        "en": "flare grenade"
+    },
+    "BO2r": {
+        "ru": "ф-1",
+        "en": "f-1"
+    },
+    "EYNA": {
+        "ru": "m84",
+        "en": "m84"
+    },
+    "KrkX": {
+        "ru": "выстрел гранатомётный вог-25",
+        "en": "vog-25 grenade round"
+    },
+    "kYkN": {
+        "ru": "выстрел гранатомётный вог-25п подкидыш",
+        "en": "vog-25 podkidysh grenade round"
+    },
+    "l03r": {
+        "ru": "v40 mini-grenade",
+        "en": "v40 mini-grenade"
+    },
+    "Lm3Z": {
+        "ru": "m84 qd",
+        "en": "m84 qd"
+    },
+    "rB2d": {
+        "ru": "ргн",
+        "en": "rgn"
+    },
+    "VADg": {
+        "ru": "выстрел гранатомётный m397",
+        "en": "m397 grenade round"
+    },
+    "X9e1": {
+        "ru": "рго",
+        "en": "rgo"
+    },
+    "ygm5": {
+        "ru": "m67",
+        "en": "m67"
+    },
+    "0bLQ": {
+        "ru": "антидот второго класса",
+        "en": "2nd class antidote"
+    },
+    "2Zo7": {
+        "ru": "энергетик жидень extra",
+        "en": "jiden extra energy drink"
+    },
+    "3ZoR": {
+        "ru": "антирад первого класса",
+        "en": "1st class antirad"
+    },
+    "6ZzE": {
+        "ru": "эпинефрин",
+        "en": "epinephrine"
+    },
+    "8EM3": {
+        "ru": "водка",
+        "en": "vodka"
+    },
+    "9L5g": {
+        "ru": "пси-блокада третьего класса",
+        "en": "3rd class psy-blocker"
+    },
+    "a97B": {
+        "ru": "анаболик atlas",
+        "en": "atlas anabolic steroid"
+    },
+    "BLoN": {
+        "ru": "аптечка индивидуальная",
+        "en": "personal first-aid kit"
+    },
+    "gD7G": {
+        "ru": "пси-блокада второго класса",
+        "en": "2nd class psy-blocker"
+    },
+    "GLj9": {
+        "ru": "аптечка проводника",
+        "en": "guide’s first-aid kit"
+    },
+    "JLZ1": {
+        "ru": "геркулес",
+        "en": "“hercules”"
+    },
+    "KLG8": {
+        "ru": "бинт",
+        "en": "bandage"
+    },
+    "kqyG": {
+        "ru": "барвинок",
+        "en": "vinca"
+    },
+    "l61K": {
+        "ru": "аптечка армейская",
+        "en": "army first-aid kit"
+    },
+    "m858": {
+        "ru": "морфин",
+        "en": "morphine"
+    },
+    "MYek": {
+        "ru": "астрикцин",
+        "en": "“astrixin”"
+    },
+    "njk2": {
+        "ru": "антирад третьего класса",
+        "en": "3rd class antirad"
+    },
+    "OYel": {
+        "ru": "термобарьер третьего класса",
+        "en": "3rd class thermoblock"
+    },
+    "qDnJ": {
+        "ru": "пси-блокада первого класса",
+        "en": "1st class psy-blocker"
+    },
+    "rDgV": {
+        "ru": "антидот первого класса",
+        "en": "1st class antidote"
+    },
+    "RYeb": {
+        "ru": "термобарьер второго класса",
+        "en": "2nd class thermoblock"
+    },
+    "VYeJ": {
+        "ru": "антирад второго класса",
+        "en": "2nd class antirad"
+    },
+    "w8PP": {
+        "ru": "удар",
+        "en": "“strike”"
+    },
+    "x8NK": {
+        "ru": "clearmind+",
+        "en": "“clearmind+”"
+    },
+    "XYXy": {
+        "ru": "антидот третьего класса",
+        "en": "3rd class antidote"
+    },
+    "y8Mx": {
+        "ru": "аптечка научная",
+        "en": "scientific first-aid kit"
+    },
+    "Zz72": {
+        "ru": "термобарьер первого класса",
+        "en": "1st class thermoblock"
+    },
+    "0nVk": {
+        "ru": "ас вал",
+        "en": "as val"
+    },
+    "1gnd": {
+        "ru": "акм",
+        "en": "akm"
+    },
+    "75Bm": {
+        "ru": "hk g36c",
+        "en": "hk g36c"
+    },
+    "aVb0": {
+        "ru": "ак-103",
+        "en": "ak-103"
+    },
+    "aVQ0": {
+        "ru": "l85a1",
+        "en": "l85a1"
+    },
+    "DMZ7": {
+        "ru": "m4 lb",
+        "en": "m4 lb"
+    },
+    "JJ03": {
+        "ru": "рапира",
+        "en": "rapier"
+    },
+    "kaON": {
+        "ru": "акс-74у",
+        "en": "aks-74u"
+    },
+    "MOlk": {
+        "ru": "kbk wz. 88 tantal",
+        "en": "kbk wz. 88 tantal"
+    },
+    "MOwn": {
+        "ru": "акс-74",
+        "en": "aks-74"
+    },
+    "NNw9": {
+        "ru": "m16a3",
+        "en": "m16a3"
+    },
+    "nqMw": {
+        "ru": "m4a1",
+        "en": "m4a1"
+    },
+    "QBwb": {
+        "ru": "ан-94 абакан",
+        "en": "an-94 abakan"
+    },
+    "qwRM": {
+        "ru": "аек-971",
+        "en": "aek-971"
+    },
+    "RywD": {
+        "ru": "sig sg 550",
+        "en": "sig sg 550"
+    },
+    "xEKM": {
+        "ru": "m16a2",
+        "en": "m16a2"
+    },
+    "y1m5": {
+        "ru": "fn f2000",
+        "en": "fn f2000"
+    },
+    "0Qd7": {
+        "ru": "сн-2у ножка",
+        "en": "sn-2u leglet"
+    },
+    "B17n": {
+        "ru": "детектор узкого диапазона свеча",
+        "en": "candle short range detector"
+    },
+    "gKnN": {
+        "ru": "сн-2 нога",
+        "en": "sn-2 leg"
+    },
+    "lLod": {
+        "ru": "детектор узкого диапазона эльбрус",
+        "en": "elbrus short range detector"
+    },
+    "n8Vk": {
+        "ru": "сн-1у блинчик",
+        "en": "sn-1u mini-pancake"
+    },
+    "VzQG": {
+        "ru": "сн-1 блин",
+        "en": "sn-1 pancake"
+    },
+    "yZ08": {
+        "ru": "детектор узкого диапазона бурят",
+        "en": "buryat short range detector"
+    },
+    "aVJ1": {
+        "ru": "рпк-74",
+        "en": "rpk-74"
+    },
+    "MOxx": {
+        "ru": "дп",
+        "en": "dp"
+    },
+    "nqE3": {
+        "ru": "рпд",
+        "en": "rpd"
+    },
+    "V3yw": {
+        "ru": "l86a1",
+        "en": "l86a1"
+    },
+    "0nq7": {
+        "ru": "сапёрная лопата",
+        "en": "sapper’s shovel"
+    },
+    "20Aa": {
+        "ru": "охотничий мачете",
+        "en": "hunter’s machete"
+    },
+    "BMqn": {
+        "ru": "охотничий нож",
+        "en": "hunter’s knife"
+    },
+    "DMqX": {
+        "ru": "молоток",
+        "en": "hammer"
+    },
+    "kaMk": {
+        "ru": "glock feldmesser 78",
+        "en": "glock feldmesser 78"
+    },
+    "KPYA": {
+        "ru": "оц-04",
+        "en": "ots-04"
+    },
+    "lOad": {
+        "ru": "монтировка",
+        "en": "crowbar"
+    },
+    "mqol": {
+        "ru": "штык-нож m9",
+        "en": "m9 bayonet knife"
+    },
+    "NNqK": {
+        "ru": "топор",
+        "en": "ax"
+    },
+    "V3kG": {
+        "ru": "ко-1",
+        "en": "ko-1"
+    },
+    "y1l8": {
+        "ru": "изделие 6х4",
+        "en": "project 6x4"
+    },
+    "Z0n8": {
+        "ru": "нож 6х9",
+        "en": "6h9 knife"
+    },
+    "0n9q": {
+        "ru": "beretta 93r",
+        "en": "beretta 93r"
+    },
+    "75xP": {
+        "ru": "sw1911",
+        "en": "sw1911"
+    },
+    "928V": {
+        "ru": "desert eagle mark xix",
+        "en": "desert eagle mark xix"
+    },
+    "aVXV": {
+        "ru": "walther p99",
+        "en": "walther p99"
+    },
+    "aVzY": {
+        "ru": "мечта",
+        "en": "dream"
+    },
+    "BMay": {
+        "ru": "пб",
+        "en": "pb"
+    },
+    "g9Xm": {
+        "ru": "mauser c96",
+        "en": "mauser c96"
+    },
+    "jaZK": {
+        "ru": "glock 17",
+        "en": "glock 17"
+    },
+    "JJd9": {
+        "ru": "пчела",
+        "en": "bee"
+    },
+    "lOPB": {
+        "ru": "тт",
+        "en": "tt"
+    },
+    "MO0D": {
+        "ru": "форт-12",
+        "en": "fort-12"
+    },
+    "nqXA": {
+        "ru": "browning hi-power",
+        "en": "browning hi-power"
+    },
+    "oqY7": {
+        "ru": "р-92",
+        "en": "r-92"
+    },
+    "r6YM": {
+        "ru": "ср-1 гюрза",
+        "en": "sr-1 gyurza"
+    },
+    "V36x": {
+        "ru": "beretta 92fs",
+        "en": "beretta 92fs"
+    },
+    "XnAX": {
+        "ru": "оц-33 пернач",
+        "en": "ots-33 pernach"
+    },
+    "y17N": {
+        "ru": "пм",
+        "en": "pm"
+    },
+    "y1R2": {
+        "ru": "пм вечного новичка",
+        "en": "eternal novice’s pm"
+    },
+    "Z0Zy": {
+        "ru": "colt python",
+        "en": "colt python"
+    },
+    "0nmJ": {
+        "ru": "мр-133",
+        "en": "мр-133"
+    },
+    "75aL": {
+        "ru": "franchi spas-12",
+        "en": "franchi spas-12"
+    },
+    "92aQ": {
+        "ru": "мр-153",
+        "en": "мр-153"
+    },
+    "BMA2": {
+        "ru": "обрез бм-16",
+        "en": "bm-16 sawed-off"
+    },
+    "g9VX": {
+        "ru": "shorty 590",
+        "en": "shorty 590"
+    },
+    "ja2O": {
+        "ru": "сайга-12к",
+        "en": "saiga-12k"
+    },
+    "MOkQ": {
+        "ru": "бм-16",
+        "en": "bm-16"
+    },
+    "nqPD": {
+        "ru": "mossberg 590a1",
+        "en": "mossberg 590a1"
+    },
+    "V3aa": {
+        "ru": "тоз-34",
+        "en": "toz-34"
+    },
+    "XnQO": {
+        "ru": "protecta",
+        "en": "protecta"
+    },
+    "75w9": {
+        "ru": "m1a fa",
+        "en": "m1a fa"
+    },
+    "75z9": {
+        "ru": "steyr scout",
+        "en": "steyr scout"
+    },
+    "aV5B": {
+        "ru": "винтовка мосина",
+        "en": "mosin’s rifle"
+    },
+    "aV7x": {
+        "ru": "winchester m70",
+        "en": "winchester m70"
+    },
+    "d079": {
+        "ru": "свт-40",
+        "en": "svt-40"
+    },
+    "g9Nw": {
+        "ru": "m40a5",
+        "en": "m40a5"
+    },
+    "jamz": {
+        "ru": "сву",
+        "en": "svu"
+    },
+    "JJao": {
+        "ru": "лавина",
+        "en": "avalanche"
+    },
+    "lOl0": {
+        "ru": "скс",
+        "en": "sks"
+    },
+    "V3g2": {
+        "ru": "авт-40",
+        "en": "avt-40"
+    },
+    "V3m3": {
+        "ru": "свд",
+        "en": "svd"
+    },
+    "y1DZ": {
+        "ru": "карабин мосина",
+        "en": "mosin’s carbine"
+    },
+    "20g1": {
+        "ru": "пп-2000",
+        "en": "smg-2000"
+    },
+    "32Pl": {
+        "ru": "walther mpk",
+        "en": "walther mpk"
+    },
+    "92lL": {
+        "ru": "tdi kriss vector",
+        "en": "tdi kriss vector"
+    },
+    "BMBr": {
+        "ru": "пп-91 кедр",
+        "en": "smg-91 kedr"
+    },
+    "BMyl": {
+        "ru": "цунами",
+        "en": "tsunami"
+    },
+    "bnEg": {
+        "ru": "пп-19-01 витязь",
+        "en": "smg-19-01 vityaz"
+    },
+    "g9be": {
+        "ru": "fn p90",
+        "en": "fn p90"
+    },
+    "JJwe": {
+        "ru": "ср-2м вереск",
+        "en": "sr-2m veresk"
+    },
+    "karG": {
+        "ru": "hk mp5k",
+        "en": "hk mp5k"
+    },
+    "KP0X": {
+        "ru": "аек-919к каштан",
+        "en": "aek-919k kashtan"
+    },
+    "lOdr": {
+        "ru": "imi uzi",
+        "en": "imi uzi"
+    },
+    "NNPA": {
+        "ru": "пп орех",
+        "en": "smg nut"
+    },
+    "oq89": {
+        "ru": "пп-19 бизон-2-01",
+        "en": "smg-19 bizon-2-01"
+    },
+    "PLoq": {
+        "ru": "spectre m4",
+        "en": "spectre m4"
+    },
+    "y1d5": {
+        "ru": "hk mp5",
+        "en": "hk mp5"
+    },
+    "y1q9": {
+        "ru": "гадюка",
+        "en": "viper"
+    },
+    "BLjx": {
+        "ru": "модная куртка",
+        "en": "stylish jacket"
+    },
+    "gDj2": {
+        "ru": "укреплённый плащ",
+        "en": "reinforced cloak"
+    },
+    "0b8O": {
+        "ru": "тяжелый бронекостюм идущий в метели",
+        "en": "blizzard-bound heavy armored suit"
+    },
+    "0blO": {
+        "ru": "sba tank",
+        "en": "sba tank"
+    },
+    "3Ze1": {
+        "ru": "тяжелый бронекостюм туманный охотник",
+        "en": "shade hunter heavy armored suit"
+    },
+    "8jaZ": {
+        "ru": "экзоброня крысолов",
+        "en": "ratcatcher exoarmor"
+    },
+    "a9jO": {
+        "ru": "идущий в метели группы норд-22",
+        "en": "nord-22 group blizzard-bound"
+    },
+    "dzBO": {
+        "ru": "экзоброня зверобой",
+        "en": "beast slayer exoarmor"
+    },
+    "gDGn": {
+        "ru": "модифицированный экзоскелет",
+        "en": "modified exoskeleton"
+    },
+    "JQxo": {
+        "ru": "бронекостюм рысь",
+        "en": "lynx armored suit"
+    },
+    "KLjj": {
+        "ru": "комплект алтын",
+        "en": "altyn set"
+    },
+    "kqo2": {
+        "ru": "бронекостюм кз-3б",
+        "en": "cd-3b armored suit"
+    },
+    "l6Jw": {
+        "ru": "бронекостюм кз-3а",
+        "en": "cd-3a armored suit"
+    },
+    "MYrL": {
+        "ru": "экзоскелет группы норд-22",
+        "en": "nord-22 group exoskeleton"
+    },
+    "NQo2": {
+        "ru": "бронекостюм призрачный охотник",
+        "en": "phantom hunter armored suit"
+    },
+    "OYZz": {
+        "ru": "бронекостюм авангард",
+        "en": "vanguard armored suit"
+    },
+    "PQ7K": {
+        "ru": "экзоскелет медведь",
+        "en": "bear exoskeleton"
+    },
+    "PYVY": {
+        "ru": "бронекостюм кз-4",
+        "en": "cd-4 armored suit"
+    },
+    "Q197": {
+        "ru": "экзоскелет группы норд",
+        "en": "nord group exoskeleton"
+    },
+    "VYjA": {
+        "ru": "тяжелый комплект алтын-т",
+        "en": "altyn-t heavy set"
+    },
+    "VYXK": {
+        "ru": "комбинезон кз-1",
+        "en": "cd-1 suit"
+    },
+    "xQM3": {
+        "ru": "танк группы хорс",
+        "en": "khors group tank"
+    },
+    "Xqok": {
+        "ru": "бронескелет центурион",
+        "en": "centurion armored exoskeleton"
+    },
+    "XY9j": {
+        "ru": "сверхтяжелый бронекостюм апостол",
+        "en": "apostle heavy armored suit"
+    },
+    "1LNO": {
+        "ru": "указ ао-6 кочевник",
+        "en": "raps ah-6 nomad"
+    },
+    "6XG0": {
+        "ru": "zivcas группы хорс",
+        "en": "khors group zivcas"
+    },
+    "D0n2": {
+        "ru": "штурмовик группы норд",
+        "en": "nord group assault trooper"
+    },
+    "ez99": {
+        "ru": "штурмовик группы норд-22",
+        "en": "nord-22 group assault trooper"
+    },
+    "gD6n": {
+        "ru": "бронескелет альбатрос-разведчик",
+        "en": "albatross scout armored exoskeleton"
+    },
+    "JLBQ": {
+        "ru": "комбинезон ригель",
+        "en": "rigel suit"
+    },
+    "mbKo": {
+        "ru": "костюм экспедиция",
+        "en": "expedition suit"
+    },
+    "nj29": {
+        "ru": "комбинезон тонга",
+        "en": "tonga suit"
+    },
+    "njL9": {
+        "ru": "бронескелет альбатрос-лазутчик",
+        "en": "albatross infiltrator armored exoskeleton"
+    },
+    "RY6y": {
+        "ru": "бронескелет альбатрос-штурмовик",
+        "en": "albatross heavy assault armored exoskeleton"
+    },
+    "VYEA": {
+        "ru": "экзоброня jd zivcas 2a",
+        "en": "jd zivcas 2a exoarmor"
+    },
+    "y8a6": {
+        "ru": "комбинезон магнит",
+        "en": "magnet suit"
+    },
+    "ZzY8": {
+        "ru": "экзокостюм гончий",
+        "en": "hounds exoskeleton"
+    },
+    "9jOO": {
+        "ru": "бронекостюм скат-9м",
+        "en": "skat-9m armored suit"
+    },
+    "a9MN": {
+        "ru": "экзоскелет мул",
+        "en": "mule exoskeleton"
+    },
+    "bbYq": {
+        "ru": "бронекостюм армай",
+        "en": "brigand armored suit"
+    },
+    "dzRL": {
+        "ru": "экзоскелет гренадер",
+        "en": "grenadier exoskeleton"
+    },
+    "MAQB": {
+        "ru": "бронекостюм скат-9б",
+        "en": "skat-9b armored suit"
+    },
+    "NQD2": {
+        "ru": "бронекостюм скат-10",
+        "en": "skat-10 armored suit"
+    },
+    "oDwX": {
+        "ru": "экзоскелет туз",
+        "en": "ace exoskeleton"
+    },
+    "qD00": {
+        "ru": "бронекостюм каратель",
+        "en": "punisher armored suit"
+    },
+    "m82E": {
+        "ru": "ким-102 циркон",
+        "en": "mis-102 zircon"
+    },
+    "QYnR": {
+        "ru": "ким-100 гранат",
+        "en": "mis-100 garnet"
+    },
+    "RQXk": {
+        "ru": "ким-85д",
+        "en": "mis-85d"
+    },
+    "zae2": {
+        "ru": "комбинезон сатурн",
+        "en": "saturn suit"
+    },
+    "zxzq": {
+        "ru": "ким-х атлас",
+        "en": "mis-x atlas"
+    },
+    "B132": {
+        "ru": "рубик",
+        "en": "rubik"
+    },
+    "2DON": {
+        "ru": "контейнер берлога-6у",
+        "en": "berloga-6u container"
+    },
+    "3gLq": {
+        "ru": "контейнер кзс-1у",
+        "en": "kzs-1u container"
+    },
+    "a0nY": {
+        "ru": "контейнер холодильник",
+        "en": "fridge container"
+    },
+    "DNjR": {
+        "ru": "кзс-2у",
+        "en": "kzs-2u"
+    },
+    "m0OL": {
+        "ru": "контейнер иу-2",
+        "en": "iu-2 container"
+    },
+    "MZDY": {
+        "ru": "кзс-3у",
+        "en": "kzs-3u"
+    },
+    "oPG8": {
+        "ru": "сумка вьюк",
+        "en": "pack bag"
+    },
+    "OZDE": {
+        "ru": "ягдташ",
+        "en": "game bag"
+    },
+    "q0Nr": {
+        "ru": "контейнер колотун",
+        "en": "freezer container"
+    },
+    "QAOn": {
+        "ru": "рюкзак hellboy укрепленный",
+        "en": "reinforced hellboy backpack"
+    },
+    "rBNm": {
+        "ru": "контейнер ксм",
+        "en": "smc container"
+    },
+    "X9bQ": {
+        "ru": "контейнер берлога-4у",
+        "en": "berloga-4u container"
+    },
+    "yg92": {
+        "ru": "кзс-5у",
+        "en": "kzs-5y"
+    },
+    "ZYBG": {
+        "ru": "кзс-4у",
+        "en": "kzs-4u"
+    },
+    "0n6Q": {
+        "ru": "fn scar-l",
+        "en": "fn scar-l"
+    },
+    "1g8d": {
+        "ru": "алк-22 стрекоза",
+        "en": "alk-22 dragonfly"
+    },
+    "1gx9": {
+        "ru": "steyr aug a2",
+        "en": "steyr aug a2"
+    },
+    "20z7": {
+        "ru": "оц-14м шторм",
+        "en": "ots-14m shtorm"
+    },
+    "8O53": {
+        "ru": "steyr aug a1",
+        "en": "steyr aug a1"
+    },
+    "92Xg": {
+        "ru": "hk xm8",
+        "en": "hk xm8"
+    },
+    "BMXN": {
+        "ru": "hk xm8s",
+        "en": "hk xm8s"
+    },
+    "bnNZ": {
+        "ru": "steyr aug a3",
+        "en": "steyr aug a3"
+    },
+    "d0QM": {
+        "ru": "ак-12",
+        "en": "ak-12"
+    },
+    "g9xG": {
+        "ru": "lr-300",
+        "en": "lr-300"
+    },
+    "jaGP": {
+        "ru": "fn fal",
+        "en": "fn fal"
+    },
+    "jaKq": {
+        "ru": "оц-14 гроза",
+        "en": "ots-14 groza"
+    },
+    "kaNG": {
+        "ru": "iwi tavor x95",
+        "en": "iwi tavor x95"
+    },
+    "KPX8": {
+        "ru": "ак-308",
+        "en": "ak-308"
+    },
+    "lOeK": {
+        "ru": "dsa-58",
+        "en": "dsa-58"
+    },
+    "MOXk": {
+        "ru": "ткб-0146м",
+        "en": "tkb-0146m"
+    },
+    "mqM8": {
+        "ru": "9а-91",
+        "en": "9а-91"
+    },
+    "nqa2": {
+        "ru": "ак-105",
+        "en": "ak-105"
+    },
+    "qwjJ": {
+        "ru": "famas g2",
+        "en": "famas g2"
+    },
+    "r62d": {
+        "ru": "а-545",
+        "en": "a-545"
+    },
+    "r6OV": {
+        "ru": "fn scar-h",
+        "en": "fn scar-h"
+    },
+    "w1jP": {
+        "ru": "hk416",
+        "en": "hk416"
+    },
+    "Xne1": {
+        "ru": "hk g3a1",
+        "en": "hk g3a1"
+    },
+    "y1jx": {
+        "ru": "hk417",
+        "en": "hk417"
+    },
+    "Ygx7": {
+        "ru": "аш-12",
+        "en": "ash-12"
+    },
+    "Z0xx": {
+        "ru": "fn f2000 tactical",
+        "en": "fn f2000 tactical"
+    },
+    "753d": {
+        "ru": "рпг-7",
+        "en": "rpg-7"
+    },
+    "nqe9": {
+        "ru": "огнемёт",
+        "en": "flamethrower"
+    },
+    "Ryjy": {
+        "ru": "огниво",
+        "en": "tinderbox"
+    },
+    "V35A": {
+        "ru": "рг-6",
+        "en": "rg-6"
+    },
+    "Xn5y": {
+        "ru": "птрд-м",
+        "en": "ptrd-m"
+    },
+    "75Qa": {
+        "ru": "пкп печенег",
+        "en": "pkp pecheneg"
+    },
+    "eamJ": {
+        "ru": "рпк-16",
+        "en": "rpk-16"
+    },
+    "ja9X": {
+        "ru": "mg 42",
+        "en": "mg 42"
+    },
+    "QBX1": {
+        "ru": "m249 saw",
+        "en": "m249 saw"
+    },
+    "Ry5b": {
+        "ru": "рпк",
+        "en": "rpk"
+    },
+    "1gqO": {
+        "ru": "огненная бритва",
+        "en": "fire razor"
+    },
+    "32qB": {
+        "ru": "gerber downrange tomahawk",
+        "en": "gerber downrange tomahawk"
+    },
+    "32VB": {
+        "ru": "мясницкий крюк",
+        "en": "butcher’s hook"
+    },
+    "5DgM": {
+        "ru": "друг болотника",
+        "en": "swamp dweller’s friend"
+    },
+    "620V": {
+        "ru": "костяной нож",
+        "en": "bone knife"
+    },
+    "62qV": {
+        "ru": "m48 tomahawk",
+        "en": "m48 tomahawk"
+    },
+    "75qe": {
+        "ru": "нож из шипа",
+        "en": "shiv"
+    },
+    "8O2J": {
+        "ru": "боевой нож катран-1",
+        "en": "katran-1 combat knife"
+    },
+    "8OqJ": {
+        "ru": "алюминиевая бита",
+        "en": "aluminum club"
+    },
+    "92JD": {
+        "ru": "ледяной ледоруб",
+        "en": "frozen ice pick"
+    },
+    "AMz5": {
+        "ru": "керамбит из когтя",
+        "en": "claw karambit"
+    },
+    "aVDN": {
+        "ru": "новогодняя лопата",
+        "en": "new year’s shovel"
+    },
+    "aVNN": {
+        "ru": "эндшпиль",
+        "en": "endgame"
+    },
+    "BM8n": {
+        "ru": "классический m9",
+        "en": "classic m9"
+    },
+    "bnQO": {
+        "ru": "кислотная бритва",
+        "en": "acid razor"
+    },
+    "d06O": {
+        "ru": "прижигатель",
+        "en": "cauterizer"
+    },
+    "E9e7": {
+        "ru": "шипастая дубинка",
+        "en": "spiked club"
+    },
+    "eaxD": {
+        "ru": "кусок трубы",
+        "en": "piece of pipe"
+    },
+    "g98N": {
+        "ru": "jagdkommando",
+        "en": "jagdkommando"
+    },
+    "GJak": {
+        "ru": "казачья шашка",
+        "en": "cossack shashka"
+    },
+    "GJqk": {
+        "ru": "тесак",
+        "en": "hatchet"
+    },
+    "jawR": {
+        "ru": "ледяной кукри",
+        "en": "icy kukri"
+    },
+    "JJqV": {
+        "ru": "русский штык",
+        "en": "russian bayonet"
+    },
+    "kaek": {
+        "ru": "рвач",
+        "en": "grabber"
+    },
+    "KPdA": {
+        "ru": "едкая пила",
+        "en": "corrosive saw"
+    },
+    "lOMd": {
+        "ru": "нож с обратным хватом",
+        "en": "reverse-grip knife"
+    },
+    "MOqq": {
+        "ru": "старый серп",
+        "en": "old sickle"
+    },
+    "mqal": {
+        "ru": "пламенный привет",
+        "en": "fiery greeting"
+    },
+    "nq1k": {
+        "ru": "кукри",
+        "en": "kukri"
+    },
+    "OOrz": {
+        "ru": "увср",
+        "en": "uvsr"
+    },
+    "oq1X": {
+        "ru": "флюорит",
+        "en": "fluorite"
+    },
+    "oqbX": {
+        "ru": "бритва",
+        "en": "razor"
+    },
+    "PLqE": {
+        "ru": "ледоруб",
+        "en": "ice pick"
+    },
+    "QBqQ": {
+        "ru": "мачете эмчес",
+        "en": "emches machete"
+    },
+    "QBZQ": {
+        "ru": "ритуальный топор",
+        "en": "ceremonial ax"
+    },
+    "qwd0": {
+        "ru": "нр-43",
+        "en": "nr-43"
+    },
+    "r67Z": {
+        "ru": "тесак военсталов",
+        "en": "military stalkers’ hatchet"
+    },
+    "RyB7": {
+        "ru": "танто с кольцом",
+        "en": "tanto with a ring"
+    },
+    "w1BA": {
+        "ru": "мачете survival sp8 ontario",
+        "en": "survival sp8 ontario machete"
+    },
+    "w1ZA": {
+        "ru": "тактический нож ka-bar bkr3",
+        "en": "ka-bar bkr3 tactical knife"
+    },
+    "xEOl": {
+        "ru": "мизерикорд",
+        "en": "misericorde"
+    },
+    "xEyl": {
+        "ru": "телескопическая дубинка",
+        "en": "telescopic baton"
+    },
+    "Xn3j": {
+        "ru": "твичер",
+        "en": "twitcher"
+    },
+    "y1B8": {
+        "ru": "мясницкий нож",
+        "en": "butcher’s knife"
+    },
+    "Yg5Y": {
+        "ru": "диверсионный нож",
+        "en": "diversion knife"
+    },
+    "z1K2": {
+        "ru": "бита с гвоздями",
+        "en": "bat with nails"
+    },
+    "z1y2": {
+        "ru": "керамбит steel tiger",
+        "en": "steel tiger karambit"
+    },
+    "32XR": {
+        "ru": "ingram mac-10",
+        "en": "ingram mac-10"
+    },
+    "KPE8": {
+        "ru": "пмм",
+        "en": "pmm"
+    },
+    "lOZK": {
+        "ru": "imi micro uzi",
+        "en": "imi micro uzi"
+    },
+    "NNXN": {
+        "ru": "glock 18c",
+        "en": "glock 18c"
+    },
+    "V3lJ": {
+        "ru": "апс",
+        "en": "aps"
+    },
+    "YgZm": {
+        "ru": "рш-12",
+        "en": "rsh-12"
+    },
+    "z1jL": {
+        "ru": "мр-412",
+        "en": "мр-412"
+    },
+    "DMXV": {
+        "ru": "m1014",
+        "en": "m1014"
+    },
+    "E9Xq": {
+        "ru": "crye precision six12",
+        "en": "crye precision six12"
+    },
+    "oqjQ": {
+        "ru": "grizzly 8.5",
+        "en": "grizzly 8.5"
+    },
+    "oqrQ": {
+        "ru": "cobray terminator",
+        "en": "cobray terminator"
+    },
+    "PLaZ": {
+        "ru": "chiappa triple crown",
+        "en": "chiappa triple crown"
+    },
+    "PLOA": {
+        "ru": "aa-12",
+        "en": "aa-12"
+    },
+    "qw6w": {
+        "ru": "оц-62",
+        "en": "ots-62"
+    },
+    "Ry7n": {
+        "ru": "рмо-93",
+        "en": "rmb-93"
+    },
+    "1gE9": {
+        "ru": "сок-94",
+        "en": "sok-94"
+    },
+    "5DwQ": {
+        "ru": "hk psg1",
+        "en": "hk psg1"
+    },
+    "62eE": {
+        "ru": "вск-94",
+        "en": "vsk-94"
+    },
+    "75MM": {
+        "ru": "sig sg 550 sniper",
+        "en": "sig sg 550 sniper"
+    },
+    "92wq": {
+        "ru": "wa2000",
+        "en": "wa2000"
+    },
+    "AMA7": {
+        "ru": "отл-03 карбач",
+        "en": "karbach otl-03"
+    },
+    "AMXD": {
+        "ru": "mcmillan cs5",
+        "en": "mcmillan cs5"
+    },
+    "aVPB": {
+        "ru": "мц-116м",
+        "en": "mts-116m"
+    },
+    "JJX1": {
+        "ru": "св-98",
+        "en": "sv-98"
+    },
+    "NN0j": {
+        "ru": "fg-42 хлыст",
+        "en": "fg-42 whip"
+    },
+    "nqyx": {
+        "ru": "всс винторез",
+        "en": "vss vintorez"
+    },
+    "OOR6": {
+        "ru": "мц-558",
+        "en": "mts-558"
+    },
+    "OOXl": {
+        "ru": "fn scar ssr",
+        "en": "fn scar ssr"
+    },
+    "r637": {
+        "ru": "l96a1",
+        "en": "l96a1"
+    },
+    "RyPl": {
+        "ru": "alpine tpg-1",
+        "en": "alpine tpg-1"
+    },
+    "Z0V2": {
+        "ru": "гаусс-пушка",
+        "en": "gauss rifle"
+    },
+    "BMEN": {
+        "ru": "hk ump9",
+        "en": "hk ump9"
+    },
+    "xEjK": {
+        "ru": "steyr aug 9mm",
+        "en": "steyr aug 9 mm"
+    },
+    "y15x": {
+        "ru": "imi mini uzi",
+        "en": "imi mini uzi"
+    }
+}

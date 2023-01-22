@@ -12,7 +12,7 @@
 # Установка
 
 ```console
-pip install stalcraft-api
+pip install stalcraft-api --upgrade
 ```
 
 
@@ -79,4 +79,18 @@ print(clan.info())
 print()
 print("Members in clan with id 647d6c53-b3d7-4d30-8d08-de874eb1d845")
 print(client.clan("647d6c53-b3d7-4d30-8d08-de874eb1d845").members())
+```
+
+<br>
+
+# Поиск ID предмета
+
+```python
+from stalcraft import Client, Item
+
+TOKEN = "YOUR_TOKEN"
+
+client = Client(TOKEN)
+
+print(client.auction(Item("Гадюка").item_id).lots())
 ```

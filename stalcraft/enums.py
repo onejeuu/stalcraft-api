@@ -18,6 +18,7 @@ class Region(Enum):
     NA: North America / Северная Америка
     SEA: South East Asia / Юго-Восточная Азия
     """
+
     RU = "ru"
     EU = "eu"
     NA = "na"

@@ -6,7 +6,6 @@ class Client(BaseApi):
         """
         token: Токен для авторизации
         api_link: Опциональный параметр, ссылка на API
-        warn_demo: Предупреждать о том что используется demo версия API
         """
 
         super().__init__(token, api_link)

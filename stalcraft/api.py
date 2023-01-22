@@ -5,14 +5,11 @@ import requests
 
 
 class BaseApi:
-    def __init__(self, token: str, api_link: str | ApiLink = "", warn_demo: bool=True):
+    def __init__(self, token: str, api_link: str | ApiLink = ""):
         assert token is not None, "token should not be None"
 
         if not api_link:
             api_link = ApiLink.DEMO.value
-
-        if warn_demo and api_link == ApiLink.DEMO.value:
-            print("Warning, you are using a demo version of api")
 
         self.api_link = api_link
         self.token = token

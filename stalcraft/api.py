@@ -45,7 +45,7 @@ class BaseApi:
         Проверяет правильность значений offset и limit
         """
 
-        assert offset >= 0, f"offset should be between >= 0, got {offset}"
+        assert offset >= 0, f"offset should be >= 0, got {offset}"
         assert limit in range(0, 101), f"limit should be between 0 and 100, got {limit}"
 
     def __repr__(self):

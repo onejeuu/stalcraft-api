@@ -2,12 +2,7 @@
 
 📄 [`Официальная документация API`](https://eapi.stalcraft.net)
 
-
-<br>
-
-# Информация
-
-**Для использования полноценной версии API вы должны пройти верификацию от EXBO**
+ℹ️ **Для использования полноценной версии API вы должны пройти верификацию от EXBO**
 
 [`подробнее`](https://eapi.stalcraft.net/registration.html)
 
@@ -17,7 +12,7 @@
 # Установка
 
 ```console
-git clone https://github.com/onejeuu/stalcraft-api.git
+pip install stalcraft-api
 ```
 
 
@@ -26,9 +21,7 @@ git clone https://github.com/onejeuu/stalcraft-api.git
 # Quick Start
 
 ```python
-from stalcraft import (
-    Client, ApiLink
-)
+from stalcraft import Client, ApiLink
 
 TOKEN = "YOUR_TOKEN"
 
@@ -41,9 +34,7 @@ client = Client(TOKEN, ApiLink.PRODUCTION)
 
 
 ```python
-from stalcraft import (
-    Client, Region, Sort, Order
-)
+from stalcraft import Client, Region, Sort, Order
 
 TOKEN = "YOUR_TOKEN"
 
@@ -55,7 +46,7 @@ print(client.regions())
 
 print()
 print("List of characters on EU server")
-print(client.characters(Region.RU))
+print(client.characters(Region.EU))
 
 print()
 print("List of clans with offset 1 and limit 2")

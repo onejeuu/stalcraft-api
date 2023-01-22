@@ -5,13 +5,13 @@ class Auction(BaseApi):
     def __init__(self, token, api_link, item_id: str = "", region: Region = Region.RU):
         super().__init__(token, api_link)
 
-        self.region = region
-
         if not item_id:
             raise ValueError(f"Invalid item '{item_id}'")
 
         else:
             self.item_id = item_id
+
+        self.region = region
 
     def history(self, offset: int=0, limit: int=20):
         """

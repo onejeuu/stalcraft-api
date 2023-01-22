@@ -5,13 +5,13 @@ class Clan(BaseApi):
     def __init__(self, token, api_link, clan_id: str = "", region: Region = Region.RU):
         super().__init__(token, api_link)
 
-        self.region = region
-
         if not clan_id:
             raise ValueError(f"Invalid clan_id: {clan_id}")
 
         else:
             self.clan_id = clan_id
+
+        self.region = region
 
     def info(self):
         """

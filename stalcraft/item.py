@@ -18,3 +18,6 @@ class Item:
 
         if not self.item_id:
             raise ValueError(f"Item {self.name} not found")
+
+    def __repr__(self):
+        return f"<Item> name='{self.name}' item_id='{self.item_id}'"

@@ -2,7 +2,7 @@ from . import BaseApi, BaseUrl, Region
 
 
 class Clan(BaseApi):
-    def __init__(self, token: str, base_url: str | BaseUrl, clan_id: str = "", region: Region = Region.RU):
+    def __init__(self, token: str, base_url: str | BaseUrl, clan_id="", region=Region.RU):
         super().__init__(token, base_url)
 
         if not clan_id:

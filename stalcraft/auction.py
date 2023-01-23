@@ -2,7 +2,7 @@ from . import BaseApi, BaseUrl, Order, Region, Sort
 
 
 class Auction(BaseApi):
-    def __init__(self, token: str, base_url: str | BaseUrl = "", item_id: str = "", region: Region = Region.RU):
+    def __init__(self, token: str, base_url: str | BaseUrl = "", item_id="", region=Region.RU):
         super().__init__(token, base_url)
 
         if not item_id:

@@ -20,7 +20,7 @@ class Item:
 
 
 class LocalItem(Item):
-    def __init__(self, name: str, path: str="stalcraft/items.json", encoding="utf-8"):
+    def __init__(self, name: str, path="stalcraft/items.json", encoding="utf-8"):
         """
         Search for Item ID by name in file
 
@@ -105,8 +105,8 @@ class WebItem(Item):
         for item in self.items_database:
             lines = item.get("name", {}).get("lines", {})
 
-            ru = lines.get("ru")
-            en = lines.get("en")
+            ru = lines.get("ru", '')
+            en = lines.get("en", '')
 
             if self.name in (self._format_line(ru), self._format_line(en)):
                 data = item.get("data", '').split('/')

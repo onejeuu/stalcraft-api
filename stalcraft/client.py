@@ -2,7 +2,7 @@ from . import AppClan, Auction, BaseApi, BaseUrl, Region, UserClan
 
 
 class Client(BaseApi):
-    def __init__(self, token: str, base_url: str | BaseUrl = ""):
+    def __init__(self, token: str, base_url: str | BaseUrl = BaseUrl.DEMO):
         """
         token: Token for authorization, you can use DemoToken.APP or DemoToken.USER
         base_url: Optional parameter, API url
@@ -18,7 +18,7 @@ class Client(BaseApi):
         method = "regions"
         return self._request(method)
 
-    def clans(self, offset: int=0, limit: int=20, region: Region = Region.RU):
+    def clans(self, offset=0, limit=20, region=Region.RU):
         """
         Returns list of clans
 
@@ -32,7 +32,7 @@ class Client(BaseApi):
         method = f"{region.value}/clans?offset={offset}&limit={limit}"
         return self._request(method)
 
-    def emission(self, region: Region = Region.RU):
+    def emission(self, region=Region.RU):
         """
         Returns information about emission
 
@@ -42,7 +42,7 @@ class Client(BaseApi):
         method = f"{region.value}/emission"
         return self._request(method)
 
-    def auction(self, item_id: str = "", region: Region = Region.RU):
+    def auction(self, item_id="", region=Region.RU):
         """
         Interface for working with auction
 
@@ -57,10 +57,10 @@ class Client(BaseApi):
 
 
 class AppClient(Client):
-    def __init__(self, token: str, base_url: str | BaseUrl = ""):
+    def __init__(self, token: str, base_url: str | BaseUrl = BaseUrl.DEMO):
         super().__init__(token, base_url)
 
-    def clan(self, clan_id: str = "", region: Region = Region.RU):
+    def clan(self, clan_id: str = "", region=Region.RU):
         """
         Interface for working with clans
 
@@ -75,10 +75,10 @@ class AppClient(Client):
 
 
 class UserClient(Client):
-    def __init__(self, token: str, base_url: str | BaseUrl = ""):
+    def __init__(self, token: str, base_url: str | BaseUrl = BaseUrl.DEMO):
         super().__init__(token, base_url)
 
-    def characters(self, region: Region = Region.RU):
+    def characters(self, region=Region.RU):
         """
         Returns list of your characters
 
@@ -88,7 +88,7 @@ class UserClient(Client):
         method = f"{region.value}/characters"
         return self._request(method)
 
-    def friends(self, character: str = "", region: Region = Region.RU):
+    def friends(self, character="", region=Region.RU):
         """
         Returns list of characters friends
 
@@ -102,7 +102,7 @@ class UserClient(Client):
         method = f"{region.value}/friends/{character}"
         return self._request(method)
 
-    def clan(self, clan_id: str = "", region: Region = Region.RU):
+    def clan(self, clan_id="", region=Region.RU):
         """
         Interface for working with clans
 

@@ -4,14 +4,11 @@ from . import BaseUrl
 
 
 class BaseApi:
-    def __init__(self, token: str, base_url: str | BaseUrl = ""):
+    def __init__(self, token: str, base_url: str | BaseUrl = BaseUrl.DEMO):
         assert token is not None, "token should not be None"
 
         if isinstance(base_url, BaseUrl):
             base_url = base_url.value
-
-        if not base_url:
-            base_url = BaseUrl.DEMO.value
 
         self.base_url = base_url
         self.token = token

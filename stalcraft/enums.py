@@ -1,10 +1,10 @@
 from enum import Enum
 
 
-class ApiLink(Enum):
+class BaseUrl(Enum):
     """
-    DEMO: Демонстрационный API
-    PRODUCTION: Полноценный API
+    DEMO: Demo API
+    PRODUCTION: Production API
     """
 
     DEMO = "http://dapi.stalcraft.net"
@@ -13,10 +13,10 @@ class ApiLink(Enum):
 
 class Region(Enum):
     """
-    RU: Russia / Россия
-    EU: Europe / Европа
-    NA: North America / Северная Америка
-    SEA: South East Asia / Юго-Восточная Азия
+    RU: Russia
+    EU: Europe
+    NA: North America
+    SEA: South East Asia
     """
 
     RU = "ru"
@@ -26,13 +26,6 @@ class Region(Enum):
 
 
 class Sort(Enum):
-    """
-    TIME_CREATED: Время создания
-    TIME_LEFT: Времени осталось
-    CURRENT_PRICE: Цена ставки
-    BUYOUT_PRICE: Цена выкупа
-    """
-
     TIME_CREATED = "time_created"
     TIME_LEFT = "time_left"
     CURRENT_PRICE = "current_price"
@@ -40,10 +33,5 @@ class Sort(Enum):
 
 
 class Order(Enum):
-    """
-    ASCENDING: Возростание
-    DESCENDING: Убывание
-    """
-
     ASCENDING = "asc"
     DESCENDING = "desc"

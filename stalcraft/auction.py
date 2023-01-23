@@ -1,22 +1,20 @@
-from . import BaseApi, Region, Sort, Order
+from . import BaseApi, BaseUrl, Order, Region, Sort
 
 
 class Auction(BaseApi):
-    def __init__(self, token, api_link, item_id: str = "", region: Region = Region.RU):
-        super().__init__(token, api_link)
+    def __init__(self, token: str, base_url: str | BaseUrl = "", item_id: str = "", region: Region = Region.RU):
+        super().__init__(token, base_url)
 
         if not item_id:
             raise ValueError(f"Invalid item '{item_id}'")
 
-        else:
-            self.item_id = item_id
-
+        self.item_id = item_id
         self.region = region
 
-    def history(self, offset: int=0, limit: int=20):
+    def price_history(self, offset=0, limit=20):
         """
-        offset: Количество цен в списке, которое нужно пропустить, по умолчанию 0 \n
-        limit: Количество возвращаемых цен, начиная со смещения, минимум 0, максимум 100, по умолчанию 20 \n
+        offset: Amount of prices in list to skip, default 0
+        limit: Amount of prices to return, starting from offset, minimum 0, maximum 100, default 20
         """
 
         self._offset_and_limit(offset, limit)
@@ -24,12 +22,12 @@ class Auction(BaseApi):
         method = f"{self.region.value}/auction/{self.item_id}/history?offset={offset}&limit={limit}"
         return self._request(method)
 
-    def lots(self, offset: int=0, limit: int=20, sort: Sort = Sort.TIME_CREATED, order: Order = Order.ASCENDING):
+    def lots(self, offset=0, limit=20, sort=Sort.TIME_CREATED, order=Order.ASCENDING):
         """
-        offset: Количество цен в списке, которое нужно пропустить, по умолчанию 0 \n
-        limit: Количество возвращаемых цен, начиная со смещения, минимум 0, максимум 100, по умолчанию 20 \n
-        sort: Параметр для сортировки по одному из: TIME_CREATED, TIME_LEFT, CURRENT_PRICE, BUYOUT_PRICE \n
-        order: Параметр для порядка: ASCENDING (возрастания), DESCENDING (убывания) \n
+        offset: Amount of lots in list to skip, default 0
+        limit: Amount of lots to return, starting from offset, minimum 0, maximum 100, default 20
+        sort: Property to sort by, one of: TIME_CREATED, TIME_LEFT, CURRENT_PRICE, BUYOUT_PRICE
+        order: Either ASCENDING or DESCENDING
         """
 
         self._offset_and_limit(offset, limit)

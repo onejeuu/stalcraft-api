@@ -1,40 +1,30 @@
-from . import BaseApi, ApiLink, Auction, Clan, Region
+from . import AppClan, Auction, BaseApi, BaseUrl, Region, UserClan
 
 
 class Client(BaseApi):
-    def __init__(self, token: str, api_link: str | ApiLink = ""):
+    def __init__(self, token: str, base_url: str | BaseUrl = ""):
         """
-        token: Токен для авторизации
-        api_link: Опциональный параметр, ссылка на API
+        token: Token for authorization, you can use DemoToken.APP or DemoToken.USER
+        base_url: Optional parameter, API url
         """
 
-        super().__init__(token, api_link)
+        super().__init__(token, base_url)
 
     def regions(self):
         """
-        Возвращает список регионов
+        Returns list of regions
         """
 
         method = "regions"
         return self._request(method)
 
-    def characters(self, region: Region = Region.RU):
-        """
-        Возвращает список персонажей
-
-        region: Регион сталкрафта, по умолчанию Region.RU
-        """
-
-        method = f"{region.value}/characters"
-        return self._request(method)
-
     def clans(self, offset: int=0, limit: int=20, region: Region = Region.RU):
         """
-        Возвращает список кланов
+        Returns list of clans
 
-        offset: Количество цен в списке, которое нужно пропустить, по умолчанию 0 \n
-        limit: Количество возвращаемых цен, начиная со смещения, минимум 0, максимум 100, по умолчанию 20 \n
-        region: Регион сталкрафта, по умолчанию Region.RU
+        offset: Amount of clans in list to skip, default 0
+        limit: Amount of clans to return, starting from offset, minimum 0, maximum 100, default 20
+        region: Stalcraft region, default Region.RU
         """
 
         self._offset_and_limit(offset, limit)
@@ -44,20 +34,66 @@ class Client(BaseApi):
 
     def emission(self, region: Region = Region.RU):
         """
-        Возвращает информацию о выбросе
+        Returns information about emission
 
-        region: Регион сталкрафта, по умолчанию Region.RU
+        region: Stalcraft region, default Region.RU
         """
 
         method = f"{region.value}/emission"
         return self._request(method)
 
+    def auction(self, item_id: str = "", region: Region = Region.RU):
+        """
+        Interface for working with auction
+
+        item_id: Item ID, for example "y1q9"
+        region: Stalcraft region, default Region.RU
+        """
+
+        return Auction(self.token, self.base_url, item_id, region)
+
+    def __repr__(self):
+        return f"<Client> api_link='{self.base_url}' token='{self.part_of_token}'"
+
+
+class AppClient(Client):
+    def __init__(self, token: str, base_url: str | BaseUrl = ""):
+        super().__init__(token, base_url)
+
+    def clan(self, clan_id: str = "", region: Region = Region.RU):
+        """
+        Interface for working with clans
+
+        clan_id: Clan ID, for example "647d6c53-b3d7-4d30-8d08-de874eb1d845"
+        region: Stalcraft region, default Region.RU
+        """
+
+        return AppClan(self.token, self.base_url, clan_id, region)
+
+    def __repr__(self):
+        return f"<AppClient> api_link='{self.base_url}' token='{self.part_of_token}'"
+
+
+class UserClient(Client):
+    def __init__(self, token: str, base_url: str | BaseUrl = ""):
+        super().__init__(token, base_url)
+
+    def characters(self, region: Region = Region.RU):
+        """
+        Returns list of your characters
+
+        region: Stalcraft region, default Region.RU
+        """
+
+        method = f"{region.value}/characters"
+        return self._request(method)
+
     def friends(self, character: str = "", region: Region = Region.RU):
         """
-        Возвращает список друзей
+        Returns list of characters friends
 
-        character: Имя персонажа
-        region: Регион сталкрафта, по умолчанию Region.RU
+        character: Character name
+        region: Stalcraft region, default Region.RU
         """
 
         if not character:
@@ -66,25 +102,15 @@ class Client(BaseApi):
         method = f"{region.value}/friends/{character}"
         return self._request(method)
 
-    def auction(self, item_id: str = "", region: Region = Region.RU):
-        """
-        Интерфейс для работы с аукционом
-
-        item: ID предмета, к примеру "y1q9"
-        region: Регион сталкрафта, по умолчанию Region.RU
-        """
-
-        return Auction(self.token, self.api_link, item_id, region)
-
     def clan(self, clan_id: str = "", region: Region = Region.RU):
         """
-        Интерфейс для работы с кланами
+        Interface for working with clans
 
-        clan_id: ID клана, к примеру "647d6c53-b3d7-4d30-8d08-de874eb1d845"
-        region: Регион сталкрафта, по умолчанию Region.RU
+        clan_id: Clan ID, for example "647d6c53-b3d7-4d30-8d08-de874eb1d845"
+        region: Stalcraft region, default Region.RU
         """
 
-        return Clan(self.token, self.api_link, clan_id, region)
+        return UserClan(self.token, self.base_url, clan_id, region)
 
     def __repr__(self):
-        return f"<Client> api_link='{self.api_link}' token='{self.token_part}'"
+        return f"<UserClient> api_link='{self.base_url}' token='{self.part_of_token}'"

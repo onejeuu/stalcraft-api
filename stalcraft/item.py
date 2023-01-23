@@ -45,7 +45,7 @@ class LocalItem(Item):
 
     def _find_item(self):
         for item_id, lines in self.items_database.items():
-            if self.name in (lines['ru'], lines['en']):
+            if self.name in (lines["ru"], lines["en"]):
                 self.item_id = item_id
                 break
 
@@ -54,7 +54,11 @@ class LocalItem(Item):
 
 
 class WebItem(Item):
-    def __init__(self, name: str, branch="main", region: Literal["ru"] | Literal ["global"] = "ru"):
+    REPOS = "EXBO-Studio/stalcraft-database"
+    GITHUB_API = "http://api.github.com"
+    GITHUB_RAW = "http://raw.githubusercontent.com"
+
+    def __init__(self, name: str, folder: Literal["ru", "global"] = "ru"):
         """
         Attention: This method is not most reliable and with frequent use may cause a rate limit
         Learn more: https://docs.github.com/en/rest/rate-limit
@@ -62,14 +66,12 @@ class WebItem(Item):
         Search for Item ID by name in stalcraft-database github repository
 
         name: Name of item (without quotes)
-        branch: Default branch in repository
-        region: Search folder ru/global, default ru
+        folder: Search folder ru/global, default ru
         """
 
         super().__init__(name)
 
-        self.branch = branch
-        self.region = region
+        self.folder = folder
 
         self.last_commit = ""
 
@@ -80,7 +82,9 @@ class WebItem(Item):
         self._check_item_id()
 
     def _get_last_commit(self):
-        response = requests.get(f"https://api.github.com/repos/EXBO-Studio/stalcraft-database/branches/{self.branch}")
+        response = requests.get(
+            f"{self.GITHUB_API}/repos/{self.REPOS}/branches/main"
+        )
         branch_data = response.json()
 
         self.last_commit = branch_data.get("commit", {}).get("sha", "")
@@ -89,13 +93,13 @@ class WebItem(Item):
         if not self.last_commit:
             raise LastCommitNotFound()
 
-        listing = f"https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/{self.last_commit}/{self.region}/listing.json"
-
-        response = requests.get(listing)
+        response = requests.get(
+            f"{self.GITHUB_RAW}/{self.REPOS}/{self.last_commit}/{self.folder}/listing.json"
+        )
 
         self.items_database = response.json()
 
-    def _format_line(self, value: str):
+    def _format(self, value: str):
         return value.replace('«', '').replace('»', '').lower()
 
     def _find_item(self):
@@ -108,11 +112,13 @@ class WebItem(Item):
             ru = lines.get("ru", '')
             en = lines.get("en", '')
 
-            if self.name in (self._format_line(ru), self._format_line(en)):
-                data = item.get("data", '').split('/')
-                item_id = data[-1].split('.')[0]
+            if self.name in (self._format(ru), self._format(en)):
+                data = item.get("data", '')
+                filename = data.split('/')[-1]
+                item_id = filename.split('.')[0]
 
                 self.item_id = item_id
+                break
 
     def __repr__(self):
         return f"<WebItem> name='{self.name}' item_id='{self.item_id}'"

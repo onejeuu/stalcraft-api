@@ -41,4 +41,4 @@ class BaseApi:
         assert limit in range(0, 101), f"limit should be between 0 and 100, got {limit}"
 
     def __repr__(self):
-        return f"<BaseAPI> api_link='{self.base_url}' token='{self.part_of_token}'"
+        return f"<BaseAPI> base_url='{self.base_url}' token='{self.part_of_token}'"

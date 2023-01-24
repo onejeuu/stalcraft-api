@@ -13,7 +13,7 @@ class Clan(BaseApi):
 
     def info(self):
         """
-        Returns information about clan
+        Returns information about the given clan.
         """
 
         method = f"{self.region.value}/clan/{self.clan_id}/info"
@@ -37,7 +37,9 @@ class UserClan(Clan):
 
     def members(self):
         """
-        Returns clan members
+        Returns list of members in the given.
+
+        ! Can be used only when using user access token and that user has at least one character in that clan.
         """
 
         method = f"{self.region.value}/clan/{self.clan_id}/members"

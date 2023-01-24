@@ -19,16 +19,20 @@ class BaseApi:
 
     @property
     def headers(self):
-        return {"Authorization": f"Bearer {self.token}"}
+        return {
+            "Authorization": f"Bearer {self.token}",
+            "Content-Type": "application/json"
+        }
 
-    def _request(self, method: str):
+    def _request(self, method: str, params={}):
         """
-        Makes request to Stalcraft API with Authorization header
+        Makes request to Stalcraft API with Authorization and Content-Type header
         """
 
         response = requests.get(
             f"{self.base_url}/{method}",
-            headers=self.headers
+            headers=self.headers,
+            params=params
         )
         return response.json()
 

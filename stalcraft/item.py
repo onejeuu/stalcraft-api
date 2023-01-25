@@ -16,7 +16,7 @@ class Item:
             raise ItemIdNotFound(f"Item with name '{self.name}' not found")
 
     def __repr__(self):
-        return f"<Item> name='{self.name}' item_id='{self.item_id}'"
+        return f"<{self.__class__.__name__}> name='{self.name}' item_id='{self.item_id}'"
 
 
 class LocalItem(Item):
@@ -50,7 +50,7 @@ class LocalItem(Item):
                 break
 
     def __repr__(self):
-        return f"<LocalItem> name='{self.name}' item_id='{self.item_id}' path='{self.path}' encoding='{self.encoding}'"
+        return f"{super().__repr__()} path='{self.path}' encoding='{self.encoding}'"
 
 
 class WebItem(Item):
@@ -106,4 +106,4 @@ class WebItem(Item):
                 break
 
     def __repr__(self):
-        return f"<WebItem> name='{self.name}' item_id='{self.item_id}'"
+        return f"{super().__repr__()} folder='{self.folder}'"

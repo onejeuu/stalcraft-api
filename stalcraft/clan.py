@@ -25,15 +25,12 @@ class Clan(BaseApi):
         return schemas.ClanInfo(response)
 
     def __repr__(self):
-        return f"<Clan> clan_id='{self.clan_id}' region='{self.region}'"
+        return f"<{self.__class__.__name__}> clan_id='{self.clan_id}' region='{self.region}'"
 
 
 class AppClan(Clan):
     def __init__(self, token, base_url, clan_id, region):
         super().__init__(token, base_url, clan_id, region)
-
-    def __repr__(self):
-        return f"<AppClan> clan_id='{self.clan_id}' region='{self.region}'"
 
 
 class UserClan(Clan):
@@ -54,6 +51,3 @@ class UserClan(Clan):
             schemas.ClanMember(member)
             for member in response
         ]
-
-    def __repr__(self):
-        return f"<UserClan> clan_id='{self.clan_id}' region='{self.region}'"

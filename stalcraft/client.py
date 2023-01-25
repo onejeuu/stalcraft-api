@@ -69,9 +69,6 @@ class Client(BaseApi):
 
         return Auction(self.token, self.base_url, item_id, region)
 
-    def __repr__(self):
-        return f"<Client> base_url='{self.base_url}' token='{self.part_of_token}'"
-
 
 class AppClient(Client):
     def __init__(self, token: str, base_url: str | BaseUrl = BaseUrl.DEMO):
@@ -87,9 +84,6 @@ class AppClient(Client):
         """
 
         return AppClan(self.token, self.base_url, clan_id, region)
-
-    def __repr__(self):
-        return f"<AppClient> base_url='{self.base_url}' token='{self.part_of_token}'"
 
 
 class UserClient(Client):
@@ -134,6 +128,3 @@ class UserClient(Client):
         """
 
         return UserClan(self.token, self.base_url, clan_id, region)
-
-    def __repr__(self):
-        return f"<UserClient> base_url='{self.base_url}' token='{self.part_of_token}'"

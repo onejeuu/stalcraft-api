@@ -53,4 +53,4 @@ class Auction(BaseApi):
         return schemas.Lots(response)
 
     def __repr__(self):
-        return f"<Auction> item='{self.item_id}' region='{self.region}'"
+        return f"<{self.__class__.__name__}> item_id='{self.item_id}' region='{self.region}'"

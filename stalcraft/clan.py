@@ -22,18 +22,7 @@ class Clan(BaseApi):
         method = f"{self.region.value}/clan/{self.clan_id}/info"
         response = self._request(method)
 
-        return schemas.ClanInfo(
-            id=response.get("id"),
-            name=response.get("name"),
-            tag=response.get("tag"),
-            level=response.get("level"),
-            level_points=response.get("levelPoints"),
-            registration_time=datetime.fromisoformat(response.get("registrationTime")),
-            alliance=response.get("alliance"),
-            description=response.get("description"),
-            leader=response.get("leader"),
-            member_count=response.get("memberCount")
-        )
+        return schemas.ClanInfo(response)
 
     def __repr__(self):
         return f"<Clan> clan_id='{self.clan_id}' region='{self.region}'"
@@ -62,11 +51,7 @@ class UserClan(Clan):
         response = self._request(method)
 
         return [
-            schemas.ClanMember(
-                name=member.get("name"),
-                rank=Rank[member.get("rank")],
-                join_time=datetime.fromisoformat(member.get("joinTime"))
-            )
+            schemas.ClanMember(member)
             for member in response
         ]
 

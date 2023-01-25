@@ -14,7 +14,7 @@ class Auction(BaseApi):
         self.item_id = item_id
         self.region = region
 
-    def price_history(self, offset=0, limit=20):
+    def price_history(self, offset=0, limit=20, additional=False):
         """
         Returns history of prices for lots which were bought from auction for the given item.
         Prices are sorted in descending order by recorded time of purchase.
@@ -27,23 +27,12 @@ class Auction(BaseApi):
         self._offset_and_limit(offset, limit)
 
         method = f"{self.region.value}/auction/{self.item_id}/history"
-        params = {"offset": offset, "limit": limit}
+        params = {"offset": offset, "limit": limit, "additional": additional}
         response = self._request(method, params)
 
-        return schemas.Prices(
-            total=response.get("total"),
-            prices=[
-                schemas.Price(
-                    amount=price.get("amount"),
-                    price=price.get("price"),
-                    time=datetime.fromisoformat(price.get("time")),
-                    additional=price.get("additional")
-                )
-                for price in response.get("prices")
-            ]
-        )
+        return schemas.Prices(response)
 
-    def lots(self, offset=0, limit=20, sort=Sort.TIME_CREATED, order=Order.ASCENDING):
+    def lots(self, offset=0, limit=20, sort=Sort.TIME_CREATED, order=Order.ASCENDING, additional=False):
         """
         Returns list of currently active lots on the auction for the given item.
         Lots are sorted based on given parameter.
@@ -58,24 +47,10 @@ class Auction(BaseApi):
         self._offset_and_limit(offset, limit)
 
         method = f"{self.region.value}/auction/{self.item_id}/lots"
-        params = {"offset": offset, "limit": limit, "sort": sort.value, "order": order.value}
+        params = {"offset": offset, "limit": limit, "sort": sort.value, "order": order.value, "additional": additional}
         response = self._request(method, params)
 
-        return schemas.Lots(
-            total=response.get("total"),
-            lots=[
-                schemas.Lot(
-                    item_id=lot.get("itemId"),
-                    start_price=lot.get("startPrice"),
-                    current_price=lot.get('currentPrice'),
-                    buyout_price=lot.get("buyoutPrice"),
-                    start_time=datetime.fromisoformat(lot.get("startTime")),
-                    end_time=datetime.fromisoformat(lot.get("endTime")),
-                    additional=lot.get("additional"),
-                )
-                for lot in response.get("lots")
-            ]
-        )
+        return schemas.Lots(response)
 
     def __repr__(self):
-        return f"<Clan> item='{self.item_id}' region='{self.region}'"
+        return f"<Auction> item='{self.item_id}' region='{self.region}'"

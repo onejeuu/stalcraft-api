@@ -23,10 +23,7 @@ class Client(BaseApi):
         response = self._request(method)
 
         return [
-            schemas.RegionInfo(
-                id=region.get("id"),
-                name=region.get("name")
-            )
+            schemas.RegionInfo(region)
             for region in response
         ]
 
@@ -41,11 +38,7 @@ class Client(BaseApi):
         method = f"{region.value}/emission"
         response = self._request(method)
 
-        return schemas.Emission(
-            current_start=self._format_datetime(response.get("currentStart")),
-            previous_start=self._format_datetime(response.get("previousStart")),
-            previous_end=self._format_datetime(response.get("previousEnd"))
-        )
+        return schemas.Emission(response)
 
     def clans(self, offset=0, limit=20, region=Region.RU):
         """
@@ -63,24 +56,7 @@ class Client(BaseApi):
         params = {"offset": offset, "limit": limit}
         response = self._request(method, params)
 
-        return schemas.Clans(
-            total=response.get("totalClans"),
-            clans=[
-                schemas.ClanInfo(
-                    id=clan.get("id"),
-                    name=clan.get("name"),
-                    tag=clan.get("tag"),
-                    level=clan.get("level"),
-                    level_points=clan.get("levelPoints"),
-                    registration_time=clan.get("registrationTime"),
-                    alliance=clan.get("alliance"),
-                    description=clan.get("description"),
-                    leader=clan.get("leader"),
-                    member_count=clan.get("memberCount")
-                )
-                for clan in response.get("data", [{}])
-            ]
-        )
+        return schemas.Clans(response)
 
     def auction(self, item_id, region=Region.RU):
         """
@@ -132,74 +108,9 @@ class UserClient(Client):
         response = self._request(method)
 
         return [
-            schemas.Character(
-                info=schemas.CharacterInfo(
-                    id=character.get("information").get("id"),
-                    name=character.get("information").get("name"),
-                    creation_time=self._format_datetime(character.get("information").get("creationTime"))
-                ),
-                clan=schemas.CharacterClan(
-                    info=schemas.ClanInfo(
-                        id=character.get("clan").get("info").get("id"),
-                        name=character.get("clan").get("info").get("name"),
-                        tag=character.get("clan").get("info").get("tag"),
-                        level=character.get("clan").get("info").get("level"),
-                        level_points=character.get("clan").get("info").get("levelPoints"),
-                        registration_time=character.get("clan").get("info").get("registrationTime"),
-                        alliance=character.get("clan").get("info").get("alliance"),
-                        description=character.get("clan").get("info").get("description"),
-                        leader=character.get("clan").get("info").get("leader"),
-                        member_count=character.get("clan").get("info").get("memberCount")
-                    ),
-                    member=schemas.ClanMember(
-                        name=character.get("clan").get("member").get("name"),
-                        rank=Rank[character.get("clan").get("member").get("rank")],
-                        join_time=self._format_datetime(character.get("clan").get("member").get("joinTime"))
-                    )
-                )
-            )
+            schemas.Character(character)
             for character in response
         ]
-
-        characters = []
-
-        for character in response:
-            info = character.get("information")
-            clan = character.get("clan", {})
-            clan_info = clan.get("info", {})
-            clan_member = clan.get("member", {})
-
-            characters.append(
-                schemas.Character(
-                    info=schemas.CharacterInfo(
-                        id=info.get("id"),
-                        name=info.get("name"),
-                        creation_time=self._format_datetime(info.get("creationTime"))
-                    ),
-                    clan=schemas.CharacterClan(
-                        info=schemas.ClanInfo(
-                            id=clan_info.get("id"),
-                            name=clan_info.get("name"),
-                            tag=clan_info.get("tag"),
-                            level=clan_info.get("level"),
-                            level_points=clan_info.get("levelPoints"),
-                            registration_time=clan_info.get("registrationTime"),
-                            alliance=clan_info.get("alliance"),
-                            description=clan_info.get("description"),
-                            leader=clan_info.get("leader"),
-                            member_count=clan_info.get("memberCount")
-                        ),
-                        member=schemas.ClanMember(
-                            name=clan_member.get("name"),
-                            rank=Rank[clan_member.get("rank")],
-                            join_time=self._format_datetime(clan_member.get("joinTime"))
-                        )
-                    )
-                )
-            )
-
-        return characters
-
 
     def friends(self, character: str, region=Region.RU):
         """

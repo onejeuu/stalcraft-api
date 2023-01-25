@@ -45,8 +45,3 @@ class Rank(Enum):
     OFFICER = "OFFICER"
     COLONEL = "COLONEL"
     LEADER = "LEADER"
-
-
-class OutputFormat(Enum):
-    DATACLASS = "dataclass"
-    JSON = "json"

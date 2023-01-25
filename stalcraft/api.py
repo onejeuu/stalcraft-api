@@ -1,7 +1,7 @@
 from datetime import datetime
 import requests
 
-from . import BaseUrl
+from . import BaseUrl, Unauthorised, InvalidParameter, NotFound
 
 
 class BaseApi:
@@ -30,11 +30,23 @@ class BaseApi:
         Makes request to Stalcraft API with Authorization and Content-Type header
         """
 
+        url = f"{self.base_url}/{method}"
+
         response = requests.get(
-            f"{self.base_url}/{method}",
+            url=url,
             headers=self.headers,
             params=params
         )
+
+        if response.status_code == 400:
+            raise InvalidParameter(f"One of parameters is invalid: '{url}' {params}")
+
+        if response.status_code == 401:
+            raise Unauthorised(f"Bad Token: '{self.part_of_token}'")
+
+        if response.status_code == 404:
+            raise NotFound(f"Not Found: '{url}' {params}")
+
         return response.json()
 
     def _offset_and_limit(self, offset: int, limit: int):
@@ -44,9 +56,6 @@ class BaseApi:
 
         assert offset >= 0, f"offset should be >= 0, got {offset}"
         assert limit in range(0, 101), f"limit should be between 0 and 100, got {limit}"
-
-    def _format_datetime(self, string: str):
-        return datetime.fromisoformat(string)
 
     def __repr__(self):
         return f"<BaseAPI> base_url='{self.base_url}' token='{self.part_of_token}'"

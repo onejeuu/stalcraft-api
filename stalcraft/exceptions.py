@@ -1,8 +1,20 @@
-class ItemException(Exception):
+class StalcraftApiException(Exception):
     pass
 
 
-class LastCommitNotFound(ItemException):
+class Unauthorised(StalcraftApiException):
+    pass
+
+
+class InvalidParameter(StalcraftApiException):
+    pass
+
+
+class NotFound(StalcraftApiException):
+    pass
+
+
+class ItemException(Exception):
     pass
 
 

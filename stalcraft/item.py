@@ -2,7 +2,7 @@ from typing import Literal
 import requests
 import json
 
-from . import LastCommitNotFound, ListingJsonNotFound, ItemIdNotFound
+from . import ListingJsonNotFound, ItemIdNotFound
 
 
 class Item:
@@ -55,7 +55,6 @@ class LocalItem(Item):
 
 class WebItem(Item):
     REPOS = "EXBO-Studio/stalcraft-database"
-    GITHUB_API = "http://api.github.com"
     GITHUB_RAW = "http://raw.githubusercontent.com"
 
     def __init__(self, name: str, folder: Literal["ru", "global"] = "ru"):
@@ -73,28 +72,14 @@ class WebItem(Item):
 
         self.folder = folder
 
-        self.last_commit = ""
-
-        self._get_last_commit()
         self._get_listing()
         self._find_item()
 
         self._check_item_id()
 
-    def _get_last_commit(self):
-        response = requests.get(
-            f"{self.GITHUB_API}/repos/{self.REPOS}/branches/main"
-        )
-        branch_data = response.json()
-
-        self.last_commit = branch_data.get("commit", {}).get("sha", "")
-
     def _get_listing(self):
-        if not self.last_commit:
-            raise LastCommitNotFound()
-
         response = requests.get(
-            f"{self.GITHUB_RAW}/{self.REPOS}/{self.last_commit}/{self.folder}/listing.json"
+            f"{self.GITHUB_RAW}/{self.REPOS}/main/{self.folder}/listing.json"
         )
 
         self.items_database = response.json()

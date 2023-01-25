@@ -36,9 +36,10 @@ client = AppClient(TOKEN, BaseUrl.PRODUCTION)
 
 <br>
 
-# Usage
+# Usage Examples
 
-## AppClient Examples
+<details>
+<summary>AppClient</summary>
 
 ```python
 from stalcraft import AppClient, Region, Sort, Order
@@ -73,10 +74,13 @@ print("Information about clan with id '647d6c53-b3d7-4d30-8d08-de874eb1d845'")
 print(client.clan("647d6c53-b3d7-4d30-8d08-de874eb1d845").info())
 ```
 
+</details>
+
 
 <br>
 
-## UserClient Examples
+<details>
+<summary>UserClient</summary>
 
 ```python
 from stalcraft import UserClient, Region
@@ -87,12 +91,11 @@ client = UserClient(TOKEN)
 
 # + all methods from AppClient
 
-print()
-print("List of characters on EU server")
+print("List of characters created on EU server by the user by which used access token was provided")
 print(client.characters(Region.EU))
 
 print()
-print("List of friends character 'Test-1'")
+print("List of friends character names who are friend with 'Test-1'")
 print(client.friends("Test-1"))
 
 print()
@@ -100,13 +103,16 @@ print("Members in clan with id '647d6c53-b3d7-4d30-8d08-de874eb1d845'")
 print(client.clan("647d6c53-b3d7-4d30-8d08-de874eb1d845").members())
 ```
 
+</details>
+
 
 <br>
 
-## Find Item ID by name
+<details>
+<summary>Find Item ID by name</summary>
 
 ```python
-from stalcraft import AppClient, LocalItem, WebItem, ItemException
+from stalcraft import AppClient, LocalItem, WebItem
 
 TOKEN = "YOUR_TOKEN"
 
@@ -120,11 +126,48 @@ print()
 print("(Not reliable)")
 print("Search by stalcraft-database github repository")
 print(client.auction(WebItem("Snowflake").item_id).lots())
+```
+
+</details>
+
+
+<br>
+
+<details>
+<summary>Exceptions</summary>
+
+```python
+from stalcraft import (
+    UserClient, LocalItem, StalcraftApiException, ItemException
+)
+
+TOKEN = "YOUR_TOKEN"
+
+client = UserClient(TOKEN)
 
 print()
 print("If an item with that name does not exist")
 try:
-    print(LocalItem("test123").item_id)
+    print(LocalItem("test").item_id)
 except ItemException as e:
     print("Error:", e)
+
+print()
+print("If one of parameters is invalid")
+try:
+    print(client.auction("test").price_history())
+except StalcraftApiException as e:
+    print("Error:", e)
+
+print()
+print("If token is invalid")
+
+client = UserClient("test")
+
+try:
+    print(client.characters())
+except StalcraftApiException as e:
+    print("Error:", e)
 ```
+
+</details>

@@ -1,94 +1,128 @@
-from dataclasses import dataclass
 from datetime import datetime
 
 from . import Rank
 
 
-@dataclass
-class RegionInfo:
-    id: str
-    name: str
+class BaseSchema:
+    def datetime(self, string: str):
+        try:
+            return datetime.fromisoformat(string)
+
+        except Exception:
+            return None
+
+    def __eq__(self, other):
+        return self.__dict__ == other.__dict__
+
+    def __repr__(self):
+        kws = [f"{key}={value!r}" for key, value in self.__dict__.items()]
+        return "{}({})".format(type(self).__name__, ", ".join(kws))
+
+    def __rich_repr__(self):
+        for key, value in self.__dict__.items():
+            yield key, value
 
 
-@dataclass
-class Emission:
-    current_start: datetime
-    previous_start: datetime
-    previous_end: datetime
+class RegionInfo(BaseSchema):
+    def __init__(self, region):
+        self.id = region.get("id")
+        self.name = region.get("name")
 
 
-@dataclass
-class ClanInfo:
-    id: str
-    name: str
-    tag: str
-    level: int
-    level_points: int
-    registration_time: datetime
-    alliance: str
-    description: str
-    leader: str
-    member_count: int
+class Emission(BaseSchema):
+    def __init__(self, response):
+        self.current_start = self.datetime(response.get("currentStart"))
+        self.previous_start = self.datetime(response.get("previousStart"))
+        self.previous_end = self.datetime(response.get("previousEnd"))
 
 
-@dataclass
-class Clans:
-    total: int
-    clans: list[ClanInfo]
+class ClanInfo(BaseSchema):
+    def __init__(self, clan):
+        self.id = clan.get("id")
+        self.name = clan.get("name")
+        self.tag = clan.get("tag")
+        self.level = clan.get("level")
+        self.level_points = clan.get("levelPoints")
+        self.registration_time = self.datetime(clan.get("registrationTime"))
+        self.alliance = clan.get("alliance")
+        self.description = clan.get("description")
+        self.leader = clan.get("leader")
+        self.member_count = clan.get("memberCount")
 
 
-@dataclass
-class ClanMember:
-    name: str
-    rank: Rank
-    join_time: datetime
+class Clans(BaseSchema):
+    def __init__(self, response):
+        self.total = response.get("total", 0)
+
+        self.clans = [
+            ClanInfo(clan) for clan in response.get("data", [{}])
+        ]
 
 
-@dataclass
-class CharacterInfo:
-    id: str
-    name: str
-    creation_time: datetime
+class CharacterInfo(BaseSchema):
+    def __init__(self, info):
+        self.id = info.get("id")
+        self.name = info.get("name")
+        self.creation_time = self.datetime(info.get("creationTime"))
 
 
-@dataclass
-class CharacterClan:
-    info: ClanInfo
-    member: ClanMember
+class ClanMember(BaseSchema):
+    def __init__(self, member):
+        self.name = member.get("name")
+        self.rank = Rank[member.get("rank")]
+        self.join_time = self.datetime(member.get("joinTime"))
 
 
-@dataclass
-class Character:
-    info: CharacterInfo
-    clan: CharacterClan
+class CharacterClan(BaseSchema):
+    def __init__(self, clan):
+        clan_info = clan.get("info", {})
+        clan_member = clan.get("member", {})
+
+        self.info = ClanInfo(clan_info)
+        self.member = ClanMember(clan_member)
 
 
-@dataclass
-class Price:
-    amount: int
-    price: int
-    time: datetime
-    additional: dict
+class Character(BaseSchema):
+    def __init__(self, character):
+        info = character.get("information", {})
+        clan = character.get("clan", {})
+
+        self.info = CharacterInfo(info)
+        self.clan = CharacterClan(clan)
 
 
-@dataclass
-class Prices:
-    total: int
-    prices: list[Price]
+class Price(BaseSchema):
+    def __init__(self, price):
+        self.amount = price.get("amount")
+        self.price = price.get("price")
+        self.time = self.datetime(price.get("time"))
+        self.additional = price.get("additional")
 
 
-@dataclass
-class Lot:
-    item_id: str
-    start_price: int
-    current_price: int
-    buyout_price: int
-    start_time: datetime
-    end_time: datetime
-    additional: dict
+class Prices(BaseSchema):
+    def __init__(self, response):
+        self.total = response.get("total", 0)
+
+        self.prices = [
+            Price(price) for price in response.get("prices", [{}])
+        ]
 
 
-@dataclass
-class Lots:
-    total: int
-    lots: list[Lot]
+class Lot(BaseSchema):
+    def __init__(self, lot):
+        self.item_id = lot.get("itemId")
+        self.start_price = lot.get("startPrice")
+        self.current_price = lot.get('currentPrice')
+        self.buyout_price = lot.get("buyoutPrice")
+        self.start_time = self.datetime(lot.get("startTime"))
+        self.end_time = self.datetime(lot.get("endTime"))
+        self.additional = lot.get("additional")
+
+
+class Lots(BaseSchema):
+    def __init__(self, response):
+        self.total = response.get("total", 0)
+
+        self.lots = [
+            Lot(lots) for lots in response.get("lots", [{}])
+        ]

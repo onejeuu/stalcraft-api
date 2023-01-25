@@ -138,7 +138,7 @@ print(client.auction(WebItem("Snowflake").item_id).lots())
 
 ```python
 from stalcraft import (
-    UserClient, LocalItem, StalcraftApiException, ItemException
+    UserClient, LocalItem, ItemException, StalcraftApiException
 )
 
 TOKEN = "YOUR_TOKEN"

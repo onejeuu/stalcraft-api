@@ -1,4 +1,7 @@
-from . import BaseApi, BaseUrl, Region
+from datetime import datetime
+
+from . import BaseApi, BaseUrl, Region, Rank
+from . import schemas
 
 
 class Clan(BaseApi):
@@ -17,7 +20,20 @@ class Clan(BaseApi):
         """
 
         method = f"{self.region.value}/clan/{self.clan_id}/info"
-        return self._request(method)
+        response = self._request(method)
+
+        return schemas.ClanInfo(
+            id=response.get("id"),
+            name=response.get("name"),
+            tag=response.get("tag"),
+            level=response.get("level"),
+            level_points=response.get("levelPoints"),
+            registration_time=datetime.fromisoformat(response.get("registrationTime")),
+            alliance=response.get("alliance"),
+            description=response.get("description"),
+            leader=response.get("leader"),
+            member_count=response.get("memberCount")
+        )
 
     def __repr__(self):
         return f"<Clan> clan_id='{self.clan_id}' region='{self.region}'"
@@ -43,7 +59,16 @@ class UserClan(Clan):
         """
 
         method = f"{self.region.value}/clan/{self.clan_id}/members"
-        return self._request(method)
+        response = self._request(method)
+
+        return [
+            schemas.ClanMember(
+                name=member.get("name"),
+                rank=Rank[member.get("rank")],
+                join_time=datetime.fromisoformat(member.get("joinTime"))
+            )
+            for member in response
+        ]
 
     def __repr__(self):
         return f"<UserClan> clan_id='{self.clan_id}' region='{self.region}'"

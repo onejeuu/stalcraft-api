@@ -1,3 +1,4 @@
+from datetime import datetime
 import requests
 
 from . import BaseUrl
@@ -43,6 +44,9 @@ class BaseApi:
 
         assert offset >= 0, f"offset should be >= 0, got {offset}"
         assert limit in range(0, 101), f"limit should be between 0 and 100, got {limit}"
+
+    def _format_datetime(self, string: str):
+        return datetime.fromisoformat(string)
 
     def __repr__(self):
         return f"<BaseAPI> base_url='{self.base_url}' token='{self.part_of_token}'"

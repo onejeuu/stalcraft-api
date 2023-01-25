@@ -1,14 +1,14 @@
-class ItemIdException(Exception):
+class ItemException(Exception):
     pass
 
 
-class LastCommitNotFound(ItemIdException):
+class LastCommitNotFound(ItemException):
     pass
 
 
-class ListingJsonNotFound(ItemIdException):
+class ListingJsonNotFound(ItemException):
     pass
 
 
-class ItemIdNotFound(ItemIdException):
+class ItemIdNotFound(ItemException):
     pass

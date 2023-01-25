@@ -1,7 +1,7 @@
-from .enums import BaseUrl, Region, Sort, Order
+from .enums import BaseUrl, Region, Sort, Order, Rank
 
 from .exceptions import (
-    ItemIdException, LastCommitNotFound, ListingJsonNotFound, ItemIdNotFound
+    ItemException, LastCommitNotFound, ListingJsonNotFound, ItemIdNotFound
 )
 
 from .api import BaseApi

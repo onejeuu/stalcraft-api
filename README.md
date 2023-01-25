@@ -1,5 +1,9 @@
 # stalcraft-api unofficial python library
 
+[![PyPi Package Version](https://img.shields.io/pypi/v/stalcraft-api.svg?style=flat-square)](https://pypi.org/project/stalcraft-api)
+[![Supported python versions](https://img.shields.io/pypi/pyversions/stalcraft-api.svg?style=flat-square)](https://pypi.org/project/stalcraft-api)
+[![MIT License](https://img.shields.io/pypi/l/aiogram.svg?style=flat-square)](https://opensource.org/licenses/MIT)
+
 📄 **Official API documentation:** https://eapi.stalcraft.net
 
 ℹ️ **Before you can use the API, you must register your application and receive approval**
@@ -102,7 +106,7 @@ print(client.clan("647d6c53-b3d7-4d30-8d08-de874eb1d845").members())
 ## Find Item ID by name
 
 ```python
-from stalcraft import AppClient, LocalItem, WebItem, ItemIdException
+from stalcraft import AppClient, LocalItem, WebItem, ItemException
 
 TOKEN = "YOUR_TOKEN"
 
@@ -121,6 +125,6 @@ print()
 print("If an item with that name does not exist")
 try:
     print(LocalItem("test123").item_id)
-except ItemIdException as e:
+except ItemException as e:
     print("Error:", e)
 ```

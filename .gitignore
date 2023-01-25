@@ -1,11 +1,15 @@
 __pycache__/
 *.py[cod]
 
-setup.py
 build/*
 dist/*
 stalcraft_api.egg-info/*
+setup.py
+
+tests/*
+test.py
 
 stalcraft-database/*
 items.py
-test.py
+
+schemas_test.py

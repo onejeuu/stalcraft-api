@@ -35,3 +35,18 @@ class Sort(Enum):
 class Order(Enum):
     ASCENDING = "asc"
     DESCENDING = "desc"
+
+
+class Rank(Enum):
+    RECRUIT = "RECRUIT"
+    COMMONER = "COMMONER"
+    SOLDIER = "SOLDIER"
+    SERGEANT = "SERGEANT"
+    OFFICER = "OFFICER"
+    COLONEL = "COLONEL"
+    LEADER = "LEADER"
+
+
+class OutputFormat(Enum):
+    DATACLASS = "dataclass"
+    JSON = "json"

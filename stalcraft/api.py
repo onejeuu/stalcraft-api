@@ -1,7 +1,8 @@
-from datetime import datetime
 import requests
+import base64
+import json
 
-from . import BaseUrl, Unauthorised, InvalidParameter, NotFound
+from . import BaseUrl, StatusCode, InvalidToken, StalcraftApiException, Unauthorised, InvalidParameter, NotFound
 
 
 class BaseApi:
@@ -13,10 +14,36 @@ class BaseApi:
 
         self.base_url = base_url
         self.token = token
+        self.token_payload = None
 
     @property
     def part_of_token(self):
         return f"{self.token[:10]}...{self.token[-5:]}"
+
+    def _parse_jwt_token(self):
+        try:
+            token_payload = self.token.split('.')[1]
+            token_payload_decoded = str(base64.b64decode(token_payload + "=="), "utf-8")
+            payload = json.loads(token_payload_decoded)
+
+        except Exception:
+            return False
+
+        else:
+            return payload
+
+    def validate_token(self):
+        """
+        Validate JWT token payload
+        """
+
+        payload = self._parse_jwt_token()
+
+        if payload is False:
+            raise InvalidToken(f"Invalid token provided: '{self.part_of_token}'")
+
+        self.token_payload = payload
+        return payload
 
     @property
     def headers(self):
@@ -25,29 +52,49 @@ class BaseApi:
             "Content-Type": "application/json"
         }
 
-    def _request(self, method: str, params={}):
+    def _get_response(self, url: str, payload={}):
         """
-        Makes request to Stalcraft API with Authorization and Content-Type header
+        Returns response from Stalcraft API
+        """
+
+        return requests.get(
+            url=url,
+            params=payload,
+            headers=self.headers
+        )
+
+    def _handle_response_status(self, response, url: str, payload: dict):
+        """
+        Match response status_code
+        """
+
+        match response.status_code:
+            case StatusCode.INVALID_PARAMETER.value:
+                raise InvalidParameter(f"One of parameters is invalid: url='{url}' payload={payload}")
+
+            case StatusCode.UNAUTHORISED.value:
+                raise Unauthorised(f"Bad Token: '{self.part_of_token}'")
+
+            case StatusCode.NOT_FOUND.value:
+                raise NotFound(f"Not Found: url='{url}' payload={payload}")
+
+            case StatusCode.OK.value:
+                return response.json()
+
+            case _:
+                raise StalcraftApiException(response)
+
+    def _request(self, method: str, payload={}):
+        """
+        Makes request to Stalcraft API
         """
 
         url = f"{self.base_url}/{method}"
 
-        response = requests.get(
-            url=url,
-            headers=self.headers,
-            params=params
-        )
+        response = self._get_response(url, payload)
+        result = self._handle_response_status(response, url, payload)
 
-        if response.status_code == 400:
-            raise InvalidParameter(f"One of parameters is invalid: '{url}' {params}")
-
-        if response.status_code == 401:
-            raise Unauthorised(f"Bad Token: '{self.part_of_token}'")
-
-        if response.status_code == 404:
-            raise NotFound(f"Not Found: '{url}' {params}")
-
-        return response.json()
+        return result
 
     def _offset_and_limit(self, offset: int, limit: int):
         """

@@ -53,14 +53,17 @@ class Client(BaseApi):
         self._offset_and_limit(offset, limit)
 
         method = f"{region.value}/clans"
-        params = {"offset": offset, "limit": limit}
-        response = self._request(method, params)
+        payload = {"offset": offset, "limit": limit}
+        response = self._request(method, payload)
 
-        return schemas.Clans(response)
+        return [
+            schemas.ClanInfo(clan)
+            for clan in response['data']
+        ]
 
     def auction(self, item_id, region=Region.RU):
         """
-        Interface for working with auction
+        Factory method for working with auction
 
         Args:
             item_id: Item ID, for example "y1q9"
@@ -73,10 +76,11 @@ class Client(BaseApi):
 class AppClient(Client):
     def __init__(self, token: str, base_url: str | BaseUrl = BaseUrl.DEMO):
         super().__init__(token, base_url)
+        self.validate_token()
 
     def clan(self, clan_id: str = "", region=Region.RU):
         """
-        Interface for working with clans
+        Factory method for working with clans
 
         Args:
             clan_id: Clan ID, for example "647d6c53-b3d7-4d30-8d08-de874eb1d845"
@@ -89,6 +93,7 @@ class AppClient(Client):
 class UserClient(Client):
     def __init__(self, token: str, base_url: str | BaseUrl = BaseUrl.DEMO):
         super().__init__(token, base_url)
+        self.validate_token()
 
     def characters(self, region=Region.RU):
         """
@@ -120,7 +125,7 @@ class UserClient(Client):
 
     def clan(self, clan_id: str, region=Region.RU):
         """
-        Interface for working with clans
+        Factory method for working with clans
 
         Args:
             clan_id: Clan ID, for example "647d6c53-b3d7-4d30-8d08-de874eb1d845"

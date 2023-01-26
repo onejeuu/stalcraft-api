@@ -45,3 +45,10 @@ class Rank(Enum):
     OFFICER = "OFFICER"
     COLONEL = "COLONEL"
     LEADER = "LEADER"
+
+
+class StatusCode(Enum):
+    OK = 200
+    INVALID_PARAMETER = 400
+    UNAUTHORISED = 401
+    NOT_FOUND = 404

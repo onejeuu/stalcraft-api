@@ -1,3 +1,7 @@
+class InvalidToken(Exception):
+    pass
+
+
 class StalcraftApiException(Exception):
     pass
 

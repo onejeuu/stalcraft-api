@@ -2,7 +2,7 @@ from typing import Literal
 import requests
 import json
 
-from . import ListingJsonNotFound, ItemIdNotFound
+from . import StatusCode, ListingJsonNotFound, ItemIdNotFound
 
 
 class Item:
@@ -15,8 +15,12 @@ class Item:
         if not self.item_id:
             raise ItemIdNotFound(f"Item with name '{self.name}' not found")
 
+    def __str__(self):
+        return self.item_id
+
     def __repr__(self):
         return f"<{self.__class__.__name__}> name='{self.name}' item_id='{self.item_id}'"
+
 
 
 class LocalItem(Item):
@@ -54,8 +58,9 @@ class LocalItem(Item):
 
 
 class WebItem(Item):
-    REPOS = "EXBO-Studio/stalcraft-database"
     GITHUB_RAW = "http://raw.githubusercontent.com"
+    REPOS = "EXBO-Studio/stalcraft-database"
+    DEFAULT_BRANCH = "main"
 
     def __init__(self, name: str, folder: Literal["ru", "global"] = "ru"):
         """
@@ -79,28 +84,28 @@ class WebItem(Item):
 
     def _get_listing(self):
         response = requests.get(
-            f"{self.GITHUB_RAW}/{self.REPOS}/main/{self.folder}/listing.json"
+            f"{self.GITHUB_RAW}/{self.REPOS}/{self.DEFAULT_BRANCH}/{self.folder}/listing.json"
         )
+
+        if response.status_code != StatusCode.OK.value:
+            raise ListingJsonNotFound(f"Listing.json not found in '{self.REPOS}/main/{self.folder}'")
 
         self.items_database = response.json()
 
-    def _format(self, value: str):
-        return value.replace('«', '').replace('»', '').lower()
+    def _format(self, name: str):
+        return name.replace('«', '').replace('»', '').lower()
 
     def _find_item(self):
-        if not self.items_database:
-            raise ListingJsonNotFound()
-
         for item in self.items_database:
             lines = item.get("name", {}).get("lines", {})
 
-            ru = lines.get("ru", '')
-            en = lines.get("en", '')
+            ru = self._format(lines.get("ru", ''))
+            en = self._format(lines.get("en", ''))
 
-            if self.name in (self._format(ru), self._format(en)):
+            if self.name in (ru, en):
                 data = item.get("data", '')
-                filename = data.split('/')[-1]
-                item_id = filename.split('.')[0]
+                filename, file_extension = data.split('/')[-1].split('.')
+                item_id = filename
 
                 self.item_id = item_id
                 break

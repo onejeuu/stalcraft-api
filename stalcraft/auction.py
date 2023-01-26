@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from . import BaseApi, BaseUrl, Order, Region, Sort
 from . import schemas
 
@@ -27,10 +25,13 @@ class Auction(BaseApi):
         self._offset_and_limit(offset, limit)
 
         method = f"{self.region.value}/auction/{self.item_id}/history"
-        params = {"offset": offset, "limit": limit, "additional": additional}
-        response = self._request(method, params)
+        payload = {"offset": offset, "limit": limit, "additional": additional}
+        response = self._request(method, payload)
 
-        return schemas.Prices(response)
+        return [
+            schemas.Price(price)
+            for price in response['prices']
+        ]
 
     def lots(self, offset=0, limit=20, sort=Sort.TIME_CREATED, order=Order.ASCENDING, additional=False):
         """
@@ -47,10 +48,13 @@ class Auction(BaseApi):
         self._offset_and_limit(offset, limit)
 
         method = f"{self.region.value}/auction/{self.item_id}/lots"
-        params = {"offset": offset, "limit": limit, "sort": sort.value, "order": order.value, "additional": additional}
-        response = self._request(method, params)
+        payload = {"offset": offset, "limit": limit, "sort": sort.value, "order": order.value, "additional": additional}
+        response = self._request(method, payload)
 
-        return schemas.Lots(response)
+        return [
+            schemas.Lot(lots)
+            for lots in response['lots']
+        ]
 
     def __repr__(self):
-        return f"<{self.__class__.__name__}> item_id='{self.item_id}' region='{self.region}'"
+        return f"{super().__repr__()} item_id='{self.item_id}' region='{self.region}'"

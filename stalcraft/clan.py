@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from . import BaseApi, BaseUrl, Region, Rank
 from . import schemas
 
@@ -25,7 +23,7 @@ class Clan(BaseApi):
         return schemas.ClanInfo(response)
 
     def __repr__(self):
-        return f"<{self.__class__.__name__}> clan_id='{self.clan_id}' region='{self.region}'"
+        return f"{super().__repr__()} clan_id='{self.clan_id}' region='{self.region}'"
 
 
 class AppClan(Clan):

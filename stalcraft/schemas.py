@@ -5,18 +5,35 @@ from . import Rank
 
 class BaseSchema:
     def datetime(self, string: str):
-        try:
-            return datetime.fromisoformat(string)
+        return datetime.fromisoformat(string)
 
-        except Exception:
-            return None
+    def _compare(self, other, method):
+        if isinstance(other, self.__class__):
+            return method(self, other)
+        return False
+
+    @property
+    def key(self):
+        return list(self.__dict__.keys())[0]
 
     def __eq__(self, other):
-        return self.__dict__ == other.__dict__
+        return self._compare(other, lambda s, o: s.__dict__ == o.__dict__)
+
+    def __lt__(self, other):
+        return self._compare(other, lambda s, o: s.key < o.key)
+
+    def __le__(self, other):
+        return self._compare(other, lambda s, o: s.key <= o.key)
+
+    def __gt__(self, other):
+        return self._compare(other, lambda s, o: s.key > o.key)
+
+    def __ge__(self, other):
+        return self._compare(other, lambda s, o: s.key >= o.key)
 
     def __repr__(self):
         kws = [f"{key}={value!r}" for key, value in self.__dict__.items()]
-        return "{}({})".format(type(self).__name__, ", ".join(kws))
+        return f"{self.__class__.__name__}({', '.join(kws)})"
 
     def __rich_repr__(self):
         for key, value in self.__dict__.items():
@@ -49,14 +66,9 @@ class ClanInfo(BaseSchema):
         self.leader = clan.get("leader")
         self.member_count = clan.get("memberCount")
 
-
-class Clans(BaseSchema):
-    def __init__(self, response):
-        self.total = response.get("total", 0)
-
-        self.clans = [
-            ClanInfo(clan) for clan in response.get("data", [{}])
-        ]
+    @property
+    def key(self):
+        return self.name
 
 
 class CharacterInfo(BaseSchema):
@@ -65,12 +77,20 @@ class CharacterInfo(BaseSchema):
         self.name = info.get("name")
         self.creation_time = self.datetime(info.get("creationTime"))
 
+    @property
+    def key(self):
+        return self.name
+
 
 class ClanMember(BaseSchema):
     def __init__(self, member):
         self.name = member.get("name")
         self.rank = Rank[member.get("rank")]
         self.join_time = self.datetime(member.get("joinTime"))
+
+    @property
+    def key(self):
+        return self.name
 
 
 class CharacterClan(BaseSchema):
@@ -98,31 +118,21 @@ class Price(BaseSchema):
         self.time = self.datetime(price.get("time"))
         self.additional = price.get("additional")
 
-
-class Prices(BaseSchema):
-    def __init__(self, response):
-        self.total = response.get("total", 0)
-
-        self.prices = [
-            Price(price) for price in response.get("prices", [{}])
-        ]
+    @property
+    def key(self):
+        return self.price
 
 
 class Lot(BaseSchema):
     def __init__(self, lot):
         self.item_id = lot.get("itemId")
         self.start_price = lot.get("startPrice")
-        self.current_price = lot.get('currentPrice')
+        self.current_price = lot.get("currentPrice")
         self.buyout_price = lot.get("buyoutPrice")
         self.start_time = self.datetime(lot.get("startTime"))
         self.end_time = self.datetime(lot.get("endTime"))
         self.additional = lot.get("additional")
 
-
-class Lots(BaseSchema):
-    def __init__(self, response):
-        self.total = response.get("total", 0)
-
-        self.lots = [
-            Lot(lots) for lots in response.get("lots", [{}])
-        ]
+    @property
+    def key(self):
+        return self.buyout_price

@@ -4,8 +4,12 @@ from . import Rank
 
 
 class BaseSchema:
-    def datetime(self, string: str):
-        return datetime.fromisoformat(string)
+    def datetime(self, string: str, default=None):
+        try:
+            return datetime.fromisoformat(string)
+
+        except Exception:
+            return default
 
     def _compare(self, other, method):
         if isinstance(other, self.__class__):

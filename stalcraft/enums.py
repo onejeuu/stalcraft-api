@@ -11,6 +11,13 @@ class BaseUrl(Enum):
     PRODUCTION = "http://eapi.stalcraft.net"
 
 
+class StatusCode(Enum):
+    OK = 200
+    INVALID_PARAMETER = 400
+    UNAUTHORISED = 401
+    NOT_FOUND = 404
+
+
 class Region(Enum):
     """
     RU: Russia
@@ -33,8 +40,8 @@ class Sort(Enum):
 
 
 class Order(Enum):
-    ASCENDING = "asc"
-    DESCENDING = "desc"
+    ASCENDING = ASC = "asc"
+    DESCENDING = DESC = "desc"
 
 
 class Rank(Enum):
@@ -45,10 +52,3 @@ class Rank(Enum):
     OFFICER = "OFFICER"
     COLONEL = "COLONEL"
     LEADER = "LEADER"
-
-
-class StatusCode(Enum):
-    OK = 200
-    INVALID_PARAMETER = 400
-    UNAUTHORISED = 401
-    NOT_FOUND = 404

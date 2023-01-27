@@ -1,13 +1,12 @@
-from . import BaseApi, BaseUrl, Region, Rank
+from . import BaseApi, BaseUrl, Region
 from . import schemas
 
 
 class Clan(BaseApi):
-    def __init__(self, token: str, base_url: str | BaseUrl, clan_id="", region=Region.RU):
+    def __init__(self, token: str, base_url: BaseUrl | str, json: bool, clan_id: str, region: Region):
         super().__init__(token, base_url)
 
-        if not clan_id:
-            raise ValueError(f"Invalid clan_id: '{clan_id}'")
+        self.json = json
 
         self.clan_id = clan_id
         self.region = region
@@ -20,6 +19,9 @@ class Clan(BaseApi):
         method = f"{self.region.value}/clan/{self.clan_id}/info"
         response = self._request(method)
 
+        if self.json is True:
+            return response
+
         return schemas.ClanInfo(response)
 
     def __repr__(self):
@@ -27,23 +29,26 @@ class Clan(BaseApi):
 
 
 class AppClan(Clan):
-    def __init__(self, token, base_url, clan_id, region):
-        super().__init__(token, base_url, clan_id, region)
+    def __init__(self, token, base_url, json, clan_id, region):
+        super().__init__(token, base_url, json, clan_id, region)
 
 
 class UserClan(Clan):
-    def __init__(self, token, base_url, clan_id, region):
-        super().__init__(token, base_url, clan_id, region)
+    def __init__(self, token, base_url, json, clan_id, region):
+        super().__init__(token, base_url, json, clan_id, region)
 
     def members(self):
         """
-        Returns list of members in the given.
+        Returns list of members in the given clan.
 
         ! Can be used only when using user access token and that user has at least one character in that clan.
         """
 
         method = f"{self.region.value}/clan/{self.clan_id}/members"
         response = self._request(method)
+
+        if self.json is True:
+            return response
 
         return [
             schemas.ClanMember(member)

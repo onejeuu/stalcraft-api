@@ -3,7 +3,6 @@
 [![PyPi Package Version](https://img.shields.io/pypi/v/stalcraft-api.svg?style=flat-square)](https://pypi.org/project/stalcraft-api)
 [![Supported python versions](https://img.shields.io/pypi/pyversions/stalcraft-api.svg?style=flat-square)](https://pypi.org/project/stalcraft-api)
 [![MIT License](https://img.shields.io/pypi/l/aiogram.svg?style=flat-square)](https://opensource.org/licenses/MIT)
-![Lines of code](https://img.shields.io/tokei/lines/github.com/onejeuu/stalcraft-api?style=flat-square)
 
 
 📄 **Official API documentation:** https://eapi.stalcraft.net
@@ -55,8 +54,8 @@ print("List of regions")
 print(client.regions())
 
 print()
-print("List of clans with offset 1 and limit 2")
-print(client.clans(offset=1, limit=2))
+print("List of clans with limit 2")
+print(client.clans(limit=2))
 
 print()
 print("Information about emission on NA server")
@@ -65,7 +64,7 @@ print(client.emission(Region.NA))
 print()
 print("List of lots for item with id 'y1q9'")
 print("With offset 5, limit 2, sort by buyout price and order by descending")
-print(client.auction("y1q9").lots(offset=5, limit=2, sort=Sort.BUYOUT_PRICE, order=Order.DESCENDING))
+print(client.auction("y1q9").lots(offset=5, limit=2, sort=Sort.BUYOUT_PRICE, order=Order.DESC))
 
 print()
 print("List of price history for item with id 'y1q9'")
@@ -145,17 +144,16 @@ from stalcraft import (
     InvalidToken, StalcraftApiException, ItemException
 )
 
+TOKEN = "YOUR_TOKEN"
+
+client = UserClient(TOKEN)
+
 print()
 print("If token is invalid")
-
 try:
     client = UserClient("test1234567890")
 except InvalidToken as e:
     print("Error:", e)
-
-TOKEN = "YOUR_TOKEN"
-
-client = UserClient(TOKEN)
 
 print()
 print("If an item with that name does not exist")
@@ -173,3 +171,48 @@ except StalcraftApiException as e:
 ```
 
 </details>
+
+
+<br>
+
+# Output Formats
+
+```python
+from stalcraft import AppClient
+
+# Optional
+from rich import print
+
+TOKEN = "YOUR_TOKEN"
+
+client = AppClient(TOKEN)
+
+print()
+print("Object:")
+print(client.emission())
+
+# or client = AppClient(TOKEN, json=True)
+client.json = True
+
+print()
+print("Json:")
+print(client.emission())
+```
+
+## Output:
+
+```python
+Object:
+Emission(
+    current_start=datetime.datetime(2023, 1, 27, 9, 28, 16, 656875, tzinfo=datetime.timezone.utc),
+    previous_start=datetime.datetime(2023, 1, 27, 7, 26, 16, 656875, tzinfo=datetime.timezone.utc),
+    previous_end=datetime.datetime(2023, 1, 27, 7, 31, 16, 656875, tzinfo=datetime.timezone.utc)
+)
+
+Json:
+{
+    'currentStart': '2023-01-27T09:28:16.829929Z',
+    'previousStart': '2023-01-27T07:26:16.829929Z',
+    'previousEnd': '2023-01-27T07:31:16.829929Z'
+}
+```

@@ -1,13 +1,15 @@
-from . import BaseApi, BaseUrl, Order, Region, Sort
+from . import BaseApi, BaseUrl, Order, Region, Sort, LocalItem, WebItem
 from . import schemas
 
 
 class Auction(BaseApi):
-    def __init__(self, token: str, base_url: str | BaseUrl = "", item_id="", region=Region.RU):
+    def __init__(self, token: str, base_url: BaseUrl | str, json: bool, item_id: str | LocalItem | WebItem, region: Region):
         super().__init__(token, base_url)
 
-        if not item_id:
-            raise ValueError(f"Invalid item '{item_id}'")
+        self.json = json
+
+        if isinstance(item_id, (LocalItem, WebItem)):
+            item_id = item_id.item_id
 
         self.item_id = item_id
         self.region = region
@@ -27,6 +29,9 @@ class Auction(BaseApi):
         method = f"{self.region.value}/auction/{self.item_id}/history"
         payload = {"offset": offset, "limit": limit, "additional": additional}
         response = self._request(method, payload)
+
+        if self.json is True:
+            return response
 
         return [
             schemas.Price(price)
@@ -50,6 +55,9 @@ class Auction(BaseApi):
         method = f"{self.region.value}/auction/{self.item_id}/lots"
         payload = {"offset": offset, "limit": limit, "sort": sort.value, "order": order.value, "additional": additional}
         response = self._request(method, payload)
+
+        if self.json is True:
+            return response
 
         return [
             schemas.Lot(lots)

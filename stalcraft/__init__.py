@@ -1,5 +1,6 @@
 from .enums import (
-    BaseUrl, Region, Sort, Order, Rank, StatusCode
+    BaseUrl, StatusCode,
+    Region, Sort, Order, Rank
 )
 
 from .exceptions import (

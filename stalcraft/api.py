@@ -1,12 +1,17 @@
+from typing import Any, Dict, Literal
+from requests import Response
 import requests
 import base64
 import json
 
-from . import BaseUrl, StatusCode, InvalidToken, StalcraftApiException, Unauthorised, InvalidParameter, NotFound
+from . import (
+    BaseUrl, StatusCode,
+    InvalidToken, StalcraftApiException, InvalidParameter, Unauthorised, NotFound
+)
 
 
 class BaseApi:
-    def __init__(self, token: str, base_url: str | BaseUrl = BaseUrl.DEMO):
+    def __init__(self, token: str, base_url: BaseUrl | str):
         assert token is not None, "token should not be None"
 
         if isinstance(base_url, BaseUrl):
@@ -20,7 +25,7 @@ class BaseApi:
     def part_of_token(self):
         return f"{self.token[:10]}...{self.token[-5:]}"
 
-    def _parse_jwt_token(self):
+    def _parse_jwt_token(self) -> Literal[False] | Dict[str, Any]:
         try:
             token_payload = self.token.split('.')[1]
             token_payload_decoded = str(base64.b64decode(token_payload + "=="), "utf-8")
@@ -32,7 +37,7 @@ class BaseApi:
         else:
             return payload
 
-    def validate_token(self):
+    def validate_token(self) -> Dict[str, Any]:
         """
         Validate JWT token payload
         """
@@ -52,7 +57,7 @@ class BaseApi:
             "Content-Type": "application/json"
         }
 
-    def _get_response(self, url: str, payload={}):
+    def _get_response(self, url: str, payload: Dict[str, Any]) -> Response:
         """
         Returns response from Stalcraft API
         """
@@ -63,7 +68,7 @@ class BaseApi:
             headers=self.headers
         )
 
-    def _handle_response_status(self, response, url: str, payload: dict):
+    def _handle_response_status(self, response: Response, url: str, payload: Dict[str, Any]) -> Dict[str, Any]:
         """
         Match response status_code
         """
@@ -84,7 +89,7 @@ class BaseApi:
             case _:
                 raise StalcraftApiException(response)
 
-    def _request(self, method: str, payload={}):
+    def _request(self, method: str, payload: Dict[str, Any]={}) -> Dict[str, Any]:
         """
         Makes request to Stalcraft API
         """

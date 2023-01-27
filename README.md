@@ -148,26 +148,23 @@ TOKEN = "YOUR_TOKEN"
 
 client = UserClient(TOKEN)
 
+def handle_exception(func, exception):
+    try:
+        func()
+    except exception as e:
+        print("Error:", e)
+
 print()
 print("If token is invalid")
-try:
-    client = UserClient("test1234567890")
-except InvalidToken as e:
-    print("Error:", e)
+handle_exception(lambda: UserClient("test1234567890"), InvalidToken)
 
 print()
 print("If an item with that name does not exist")
-try:
-    print(LocalItem("test"))
-except ItemException as e:
-    print("Error:", e)
+handle_exception(lambda: LocalItem("test"), ItemException)
 
 print()
 print("If one of parameters is invalid")
-try:
-    print(client.auction("test").price_history())
-except StalcraftApiException as e:
-    print("Error:", e)
+handle_exception(lambda: client.auction("test").price_history(), StalcraftApiException)
 ```
 
 </details>
@@ -199,7 +196,7 @@ print("Json:")
 print(client.emission())
 ```
 
-## Output:
+### Output:
 
 ```python
 Object:

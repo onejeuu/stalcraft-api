@@ -9,7 +9,7 @@ from .exceptions import (
     ItemException, ListingJsonNotFound, ItemIdNotFound
 )
 
-from .api import BaseApi
+from .api import BaseApi, Api
 
 from .clan import AppClan, UserClan
 from .item import LocalItem, WebItem

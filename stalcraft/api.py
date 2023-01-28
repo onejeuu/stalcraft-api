@@ -19,36 +19,10 @@ class BaseApi:
 
         self.base_url = base_url
         self.token = token
-        self.token_payload = None
 
     @property
     def part_of_token(self):
         return f"{self.token[:10]}...{self.token[-5:]}"
-
-    def _parse_jwt_token(self) -> Literal[False] | Dict[str, Any]:
-        try:
-            token_payload = self.token.split('.')[1]
-            token_payload_decoded = str(base64.b64decode(token_payload + "=="), "utf-8")
-            payload = json.loads(token_payload_decoded)
-
-        except Exception:
-            return False
-
-        else:
-            return payload
-
-    def validate_token(self) -> Dict[str, Any]:
-        """
-        Validate JWT token payload
-        """
-
-        payload = self._parse_jwt_token()
-
-        if payload is False:
-            raise InvalidToken(f"Invalid token provided: '{self.part_of_token}'")
-
-        self.token_payload = payload
-        return payload
 
     @property
     def headers(self):
@@ -111,3 +85,37 @@ class BaseApi:
 
     def __repr__(self):
         return f"<{self.__class__.__name__}> base_url='{self.base_url}' token='{self.part_of_token}'"
+
+
+class Api(BaseApi):
+    def __init__(self, token: str, base_url: BaseUrl | str):
+        super().__init__(token, base_url)
+
+        self.token_payload = {}
+
+        self.validate_token()
+
+    def _parse_jwt_token(self) -> Literal[False] | Dict[str, Any]:
+        try:
+            token_payload = self.token.split('.')[1]
+            token_payload_decoded = str(base64.b64decode(token_payload + "=="), "utf-8")
+            payload = json.loads(token_payload_decoded)
+
+        except Exception:
+            return False
+
+        else:
+            return payload
+
+    def validate_token(self) -> Dict[str, Any]:
+        """
+        Validate JWT token payload
+        """
+
+        payload = self._parse_jwt_token()
+
+        if payload is False:
+            raise InvalidToken(f"Invalid token provided: '{self.part_of_token}'")
+
+        self.token_payload = payload
+        return payload

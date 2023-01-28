@@ -1,8 +1,8 @@
-from . import AppClan, Auction, BaseApi, BaseUrl, Region, UserClan, LocalItem, WebItem
+from . import AppClan, Auction, Api, BaseUrl, Region, UserClan, LocalItem, WebItem
 from . import schemas
 
 
-class Client(BaseApi):
+class Client(Api):
     def __init__(self, token: str, base_url: BaseUrl | str, json: bool):
         """
         Client for working with the API.
@@ -14,7 +14,6 @@ class Client(BaseApi):
         """
 
         super().__init__(token, base_url)
-        self.validate_token()
 
         self.json = json
 

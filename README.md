@@ -184,7 +184,7 @@ handle_exception(lambda: client.auction("test").price_history(), StalcraftApiExc
 
 <br>
 
-# How Get Token
+# About Tokens
 
 ```python
 CLIENT_ID = "YOUR_CLIENT_ID"
@@ -210,10 +210,7 @@ print("Get User Token")
 print(auth.get_user_token())
 ```
 
-
-<br>
-
-# Refresh User Token
+## Refresh User Token
 
 ```python
 CLIENT_ID = "YOUR_CLIENT_ID"

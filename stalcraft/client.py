@@ -1,3 +1,5 @@
+from typing import Literal
+
 from . import AppClan, Auction, TokenApi, SecretApi, BaseUrl, Region, UserClan, LocalItem, WebItem
 from . import schemas
 
@@ -105,7 +107,7 @@ class Client:
 
         return Auction(self._api, item_id, region, self.json)
 
-    def character_profile(self, character: str, region=Region.RU):
+    def character_profile(self, character: str, stats_language: Literal["ru", "en"]="ru", region=Region.RU):
         """
         Returns information about player's profile. Includes alliance, profile description, last login time, stats, etc.
 

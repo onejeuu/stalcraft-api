@@ -1,4 +1,6 @@
 from datetime import datetime
+import json
+import os
 
 from . import Rank
 
@@ -120,6 +122,7 @@ class CharacterStatistic(BaseSchema):
         self.id = stat.get("id")
         self.type = stat.get("type")
         self.value = stat.get("value")
+
 
 
 class CharacterProfile(BaseSchema):

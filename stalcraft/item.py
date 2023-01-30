@@ -1,8 +1,9 @@
 from typing import Literal
 import requests
 import json
+import os
 
-from . import StatusCode
+from .enums import StatusCode
 
 from .exceptions import (
     ListingJsonNotFound, ItemIdNotFound
@@ -28,16 +29,20 @@ class Item:
 
 
 class LocalItem(Item):
-    def __init__(self, name: str, path="stalcraft/items.json", encoding="utf-8"):
+    def __init__(self, name: str, path: str="", encoding="utf-8"):
         """
         Search for Item ID by name in file
 
         name: Name of item (without quotes)
-        path: Path to the file, by default built-in stalcraft/items.json
+        path: Path to the file, by default built-in items.json
         encoding: File encoding, default utf-8
         """
 
         super().__init__(name)
+
+        if not path:
+            here = os.path.abspath(os.path.dirname(__file__))
+            path = f"{here}/data/items.json"
 
         self.path = path
         self.encoding = encoding

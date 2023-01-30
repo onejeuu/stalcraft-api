@@ -4,7 +4,8 @@ import requests
 import base64
 import json
 
-from . import BaseUrl, StatusCode
+from . import BaseUrl
+from .enums import StatusCode
 
 from .exceptions import (
     InvalidToken, StalcraftApiException, InvalidParameter, Unauthorised, NotFound

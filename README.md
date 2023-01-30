@@ -43,7 +43,7 @@ client = AppClient(TOKEN, BaseUrl.PRODUCTION)
 <summary>AppClient</summary>
 
 ```python
-from stalcraft import AppClient, Region, Sort, Order
+from stalcraft import AppClient, BaseUrl, Region, Sort, Order
 
 CLIENT_ID = "YOUR_CLIENT_ID"
 CLIENT_SECRET = "YOUR_CLIENT_SECRET"
@@ -51,10 +51,10 @@ CLIENT_SECRET = "YOUR_CLIENT_SECRET"
 TOKEN = "YOUR_TOKEN"
 
 # Method 1:
-client = AppClient(token=TOKEN)
+client = AppClient(token=TOKEN, base_url=BaseUrl.PRODUCTION)
 
 # Method 2:
-client = AppClient(client_id=CLIENT_ID, client_secret=CLIENT_SECRET)
+client = AppClient(client_id=CLIENT_ID, client_secret=CLIENT_SECRET, base_url=BaseUrl.PRODUCTION)
 
 print()
 print("List of regions")
@@ -110,6 +110,10 @@ print()
 print("Members in clan with id '647d6c53-b3d7-4d30-8d08-de874eb1d845'")
 print("Can be used only when using user access token and that user has at least one character in that clan.")
 print(client.clan("647d6c53-b3d7-4d30-8d08-de874eb1d845").members())
+
+# Information about player's profile. Includes alliance, profile description, last login time, stats, etc.
+# (Not working in DEMO API)
+# client.character_profile("ZIV")
 ```
 
 </details>
@@ -180,14 +184,13 @@ handle_exception(lambda: client.auction("test").price_history(), StalcraftApiExc
 
 <br>
 
-# How get Token
+# How Get Token
 
 ```python
 CLIENT_ID = "YOUR_CLIENT_ID"
 CLIENT_SECRET = "YOUR_CLIENT_SECRET"
-REDIRECT_URI = "YOUR_REDIRECT_URI"
 
-auth = Authorization(client_id=CLIENT_ID, client_secret=CLIENT_SECRET, redirect_uri=REDIRECT_URI)
+auth = Authorization(client_id=CLIENT_ID, client_secret=CLIENT_SECRET)
 
 print()
 print("Get App Token")

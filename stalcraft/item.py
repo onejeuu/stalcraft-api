@@ -2,7 +2,11 @@ from typing import Literal
 import requests
 import json
 
-from . import StatusCode, ListingJsonNotFound, ItemIdNotFound
+from . import StatusCode
+
+from .exceptions import (
+    ListingJsonNotFound, ItemIdNotFound
+)
 
 
 class Item:
@@ -58,7 +62,7 @@ class LocalItem(Item):
 
 
 class WebItem(Item):
-    GITHUB_RAW = "http://raw.githubusercontent.com"
+    GITHUB_RAW = "raw.githubusercontent.com"
     REPOS = "EXBO-Studio/stalcraft-database"
     DEFAULT_BRANCH = "main"
 
@@ -84,11 +88,11 @@ class WebItem(Item):
 
     def _get_listing(self):
         response = requests.get(
-            f"{self.GITHUB_RAW}/{self.REPOS}/{self.DEFAULT_BRANCH}/{self.folder}/listing.json"
+            f"http://{self.GITHUB_RAW}/{self.REPOS}/{self.DEFAULT_BRANCH}/{self.folder}/listing.json"
         )
 
         if response.status_code != StatusCode.OK.value:
-            raise ListingJsonNotFound(f"Listing.json not found in '{self.REPOS}/main/{self.folder}'")
+            raise ListingJsonNotFound(f"Listing.json not found in '{self.REPOS}/{self.DEFAULT_BRANCH}/{self.folder}'")
 
         self.items_database = response.json()
 

@@ -1,18 +1,17 @@
-from . import BaseApi, BaseUrl, Order, Region, Sort, LocalItem, WebItem
+from . import TokenApi, SecretApi, Order, Region, Sort, LocalItem, WebItem
 from . import schemas
 
 
-class Auction(BaseApi):
-    def __init__(self, token: str, base_url: BaseUrl | str, json: bool, item_id: str | LocalItem | WebItem, region: Region):
-        super().__init__(token, base_url)
-
-        self.json = json
+class Auction:
+    def __init__(self, api: TokenApi | SecretApi, item_id: str | LocalItem | WebItem, region: Region, json: bool):
+        self._api = api
 
         if isinstance(item_id, (LocalItem, WebItem)):
             item_id = item_id.item_id
 
         self.item_id = item_id
         self.region = region
+        self.json = json
 
     def price_history(self, offset=0, limit=20, additional=False):
         """
@@ -24,11 +23,11 @@ class Auction(BaseApi):
             limit: Amount of prices to return, starting from offset, minimum 0, maximum 100, default 20
         """
 
-        self._offset_and_limit(offset, limit)
+        self._api._offset_and_limit(offset, limit)
 
         method = f"{self.region.value}/auction/{self.item_id}/history"
         payload = {"offset": offset, "limit": limit, "additional": additional}
-        response = self._request(method, payload)
+        response = self._api._request(method, payload)
 
         if self.json is True:
             return response
@@ -50,11 +49,11 @@ class Auction(BaseApi):
             order: Either ASCENDING or DESCENDING
         """
 
-        self._offset_and_limit(offset, limit)
+        self._api._offset_and_limit(offset, limit)
 
         method = f"{self.region.value}/auction/{self.item_id}/lots"
         payload = {"offset": offset, "limit": limit, "sort": sort.value, "order": order.value, "additional": additional}
-        response = self._request(method, payload)
+        response = self._api._request(method, payload)
 
         if self.json is True:
             return response
@@ -65,4 +64,4 @@ class Auction(BaseApi):
         ]
 
     def __repr__(self):
-        return f"{super().__repr__()} item_id='{self.item_id}' region='{self.region}'"
+        return f"<{self.__class__.__name__}> {self._api.__repr__()} item_id='{self.item_id}' region='{self.region}'"

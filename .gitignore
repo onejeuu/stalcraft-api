@@ -1,6 +1,8 @@
 __pycache__/
 *.py[cod]
 
+.env
+
 build/*
 dist/*
 stalcraft_api.egg-info/*

@@ -1,21 +1,42 @@
-from . import AppClan, Auction, Api, BaseUrl, Region, UserClan, LocalItem, WebItem
+from . import AppClan, Auction, TokenApi, SecretApi, BaseUrl, Region, UserClan, LocalItem, WebItem
 from . import schemas
 
 
-class Client(Api):
-    def __init__(self, token: str, base_url: BaseUrl | str, json: bool):
+class Client:
+    def __init__(
+        self,
+        token: str | None = None,
+        client_id: str | None = None,
+        client_secret: str | None = None,
+        base_url: BaseUrl | str = BaseUrl.DEMO,
+        json = False
+    ):
         """
         Client for working with the API.
 
         Args:
             token: Token for authorization
+            client_id: Application ID for authorization
+            client_secret: Application secret for authorization
             base_url: Optional parameter, API url
             json: Optional parameter, if True response returned in raw format, default False
         """
 
-        super().__init__(token, base_url)
-
+        self.token = token
+        self.client_id = client_id
+        self.client_secret = client_secret
+        self.base_url = base_url
         self.json = json
+
+        if token:
+            self._api = TokenApi(token, base_url)
+
+        elif client_id and client_secret:
+            self._api = SecretApi(client_id, client_secret, base_url)
+
+        else:
+            raise ValueError("No token or client_id with client_secret provided.")
+
 
     def regions(self):
         """
@@ -23,7 +44,7 @@ class Client(Api):
         """
 
         method = "regions"
-        response = self._request(method)
+        response = self._api._request(method)
 
         if self.json is True:
             return response
@@ -42,7 +63,7 @@ class Client(Api):
         """
 
         method = f"{region.value}/emission"
-        response = self._request(method)
+        response = self._api._request(method)
 
         if self.json is True:
             return response
@@ -59,11 +80,11 @@ class Client(Api):
             region: Stalcraft region, default Region.RU
         """
 
-        self._offset_and_limit(offset, limit)
+        self._api._offset_and_limit(offset, limit)
 
         method = f"{region.value}/clans"
         payload = {"offset": offset, "limit": limit}
-        response = self._request(method, payload)
+        response = self._api._request(method, payload)
 
         if self.json is True:
             return response
@@ -82,12 +103,40 @@ class Client(Api):
             region: Stalcraft region, default Region.RU
         """
 
-        return Auction(self.token, self.base_url, self.json, item_id, region)
+        return Auction(self._api, item_id, region, self.json)
+
+    def character_profile(self, character: str, region=Region.RU):
+        """
+        Returns information about player's profile. Includes alliance, profile description, last login time, stats, etc.
+
+        Args:
+            character: Character name
+            region: Stalcraft region, default Region.RU
+        """
+
+        method = f"{region.value}/character/by-name/{character}/profile"
+        response = self._api._request(method)
+
+        if self.json is True:
+            return response
+
+        return schemas.CharacterProfile(response)
+
+    def __repr__(self):
+        return f"<{self.__class__.__name__}> {self._api.__repr__()}"
 
 
 class AppClient(Client):
-    def __init__(self, token: str, base_url: BaseUrl | str = BaseUrl.DEMO, json=False):
-        super().__init__(token, base_url, json)
+    def __init__(
+        self,
+        token: str | None = None,
+        client_id: str | None = None,
+        client_secret: str | None = None,
+        base_url: BaseUrl | str = BaseUrl.DEMO,
+        json=False
+    ):
+        super().__init__(token, client_id, client_secret, base_url, json)
+
 
     def clan(self, clan_id: str, region=Region.RU):
         """
@@ -98,12 +147,12 @@ class AppClient(Client):
             region: Stalcraft region, default Region.RU
         """
 
-        return AppClan(self.token, self.base_url, self.json, clan_id, region)
+        return AppClan(self._api, clan_id, region, self.json)
 
 
 class UserClient(Client):
     def __init__(self, token: str, base_url: BaseUrl | str = BaseUrl.DEMO, json=False):
-        super().__init__(token, base_url, json)
+        super().__init__(token=token, base_url=base_url, json=json)
 
     def characters(self, region=Region.RU):
         """
@@ -114,7 +163,7 @@ class UserClient(Client):
         """
 
         method = f"{region.value}/characters"
-        response = self._request(method)
+        response = self._api._request(method)
 
         if self.json is True:
             return response
@@ -134,7 +183,7 @@ class UserClient(Client):
         """
 
         method = f"{region.value}/friends/{character}"
-        response = self._request(method)
+        response = self._api._request(method)
 
         return list(response)
 
@@ -147,4 +196,4 @@ class UserClient(Client):
             region: Stalcraft region, default Region.RU
         """
 
-        return UserClan(self.token, self.base_url, self.json, clan_id, region)
+        return UserClan(self._api, clan_id, region, self.json)

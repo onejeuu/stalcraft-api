@@ -109,10 +109,35 @@ class CharacterClan(BaseSchema):
 class Character(BaseSchema):
     def __init__(self, character):
         info = character.get("information", {})
-        clan = character.get("clan", {})
-
         self.info = CharacterInfo(info)
-        self.clan = CharacterClan(clan)
+
+        clan = character.get("clan", {})
+        self.clan = CharacterClan(clan) if clan else None
+
+
+class CharacterStatistic(BaseSchema):
+    def __init__(self, stat):
+        self.id = stat.get("id")
+        self.type = stat.get("type")
+        self.value = stat.get("value")
+
+
+class CharacterProfile(BaseSchema):
+    def __init__(self, response):
+        self.username = response.get("username")
+        self.uuid = response.get("uuid")
+        self.status = response.get("status")
+        self.alliance = response.get("alliance")
+        self.last_login = response.get("lastLogin")
+        self.displayed_achievements = response.get("displayedAchievements")
+
+        clan = response.get("clan", {})
+        self.clan = CharacterClan(clan) if clan else None
+
+        self.stats = [
+            CharacterStatistic(stat)
+            for stat in response.get("stats", [])
+        ]
 
 
 class Price(BaseSchema):
@@ -131,7 +156,7 @@ class Lot(BaseSchema):
     def __init__(self, lot):
         self.item_id = lot.get("itemId")
         self.start_price = lot.get("startPrice")
-        self.current_price = lot.get("currentPrice")
+        self.current_price = lot.get("currentPrice", self.start_price)
         self.buyout_price = lot.get("buyoutPrice")
         self.start_time = self.datetime(lot.get("startTime"))
         self.end_time = self.datetime(lot.get("endTime"))

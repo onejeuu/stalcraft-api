@@ -4,32 +4,23 @@ import requests
 import base64
 import json
 
-from . import (
-    BaseUrl, StatusCode,
+from . import BaseUrl, StatusCode
+
+from .exceptions import (
     InvalidToken, StalcraftApiException, InvalidParameter, Unauthorised, NotFound
 )
 
 
 class BaseApi:
-    def __init__(self, token: str, base_url: BaseUrl | str):
-        assert token is not None, "token should not be None"
-
+    def __init__(self, base_url: BaseUrl | str):
         if isinstance(base_url, BaseUrl):
             base_url = base_url.value
 
         self.base_url = base_url
-        self.token = token
-
-    @property
-    def part_of_token(self):
-        return f"{self.token[:10]}...{self.token[-5:]}"
 
     @property
     def headers(self):
-        return {
-            "Authorization": f"Bearer {self.token}",
-            "Content-Type": "application/json"
-        }
+        return {}
 
     def _get_response(self, url: str, payload: Dict[str, Any]) -> Response:
         """
@@ -52,7 +43,7 @@ class BaseApi:
                 raise InvalidParameter(f"One of parameters is invalid: url='{url}' payload={payload}")
 
             case StatusCode.UNAUTHORISED.value:
-                raise Unauthorised(f"Bad Token: '{self.part_of_token}'")
+                raise Unauthorised("Bad token or client_id and client_secret")
 
             case StatusCode.NOT_FOUND.value:
                 raise NotFound(f"Not Found: url='{url}' payload={payload}")
@@ -63,7 +54,7 @@ class BaseApi:
             case _:
                 raise StalcraftApiException(response)
 
-    def _request(self, method: str, payload: Dict[str, Any]={}) -> Dict[str, Any]:
+    def _request(self, method: str, payload: Dict[str, Any]={}) -> Any:
         """
         Makes request to Stalcraft API
         """
@@ -84,16 +75,30 @@ class BaseApi:
         assert limit in range(0, 101), f"limit should be between 0 and 100, got {limit}"
 
     def __repr__(self):
-        return f"<{self.__class__.__name__}> base_url='{self.base_url}' token='{self.part_of_token}'"
+        return f"base_url='{self.base_url}'"
 
 
-class Api(BaseApi):
+class TokenApi(BaseApi):
     def __init__(self, token: str, base_url: BaseUrl | str):
-        super().__init__(token, base_url)
+        super().__init__(base_url)
+
+        self.token = token
 
         self.token_payload = {}
 
         self.validate_token()
+
+    @property
+    def part_of_token(self):
+        if self.token:
+            return f"{self.token[:10]}...{self.token[-5:]}"
+
+    @property
+    def headers(self):
+        return {
+            "Authorization": f"Bearer {self.token}",
+            "Content-Type": "application/json"
+        }
 
     def _parse_jwt_token(self) -> Literal[False] | Dict[str, Any]:
         try:
@@ -119,3 +124,29 @@ class Api(BaseApi):
 
         self.token_payload = payload
         return payload
+
+    def __repr__(self):
+        return f"{super().__repr__()} token='{self.part_of_token}'"
+
+
+class SecretApi(BaseApi):
+    def __init__(self, client_id: str, client_secret: str, base_url: BaseUrl | str):
+        super().__init__(base_url)
+
+        self.client_id = client_id
+        self.client_secret = client_secret
+
+    @property
+    def part_of_secret(self):
+        return f"{self.client_secret[:5]}...{self.client_secret[-3:]}"
+
+    @property
+    def headers(self):
+        return {
+            "Client-Id": self.client_id,
+            "Client-Secret": self.client_secret,
+            "Content-Type": "application/json"
+        }
+
+    def __repr__(self):
+        return f"{super().__repr__()} client_id='{self.client_id}' client_secret='{self.part_of_secret}'"

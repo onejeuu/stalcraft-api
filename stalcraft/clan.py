@@ -1,15 +1,14 @@
-from . import BaseApi, BaseUrl, Region
+from . import TokenApi, SecretApi, Region
 from . import schemas
 
 
-class Clan(BaseApi):
-    def __init__(self, token: str, base_url: BaseUrl | str, json: bool, clan_id: str, region: Region):
-        super().__init__(token, base_url)
-
-        self.json = json
+class Clan:
+    def __init__(self, api: TokenApi | SecretApi, clan_id: str, region: Region, json: bool):
+        self._api = api
 
         self.clan_id = clan_id
         self.region = region
+        self.json = json
 
     def info(self):
         """
@@ -17,7 +16,7 @@ class Clan(BaseApi):
         """
 
         method = f"{self.region.value}/clan/{self.clan_id}/info"
-        response = self._request(method)
+        response = self._api._request(method)
 
         if self.json is True:
             return response
@@ -25,17 +24,17 @@ class Clan(BaseApi):
         return schemas.ClanInfo(response)
 
     def __repr__(self):
-        return f"{super().__repr__()} clan_id='{self.clan_id}' region='{self.region}'"
+        return f"<{self.__class__.__name__}> {self._api.__repr__()} clan_id='{self.clan_id}' region='{self.region}'"
 
 
 class AppClan(Clan):
-    def __init__(self, token, base_url, json, clan_id, region):
-        super().__init__(token, base_url, json, clan_id, region)
+    def __init__(self, base_url, json, clan_id, region):
+        super().__init__(base_url, json, clan_id, region)
 
 
 class UserClan(Clan):
-    def __init__(self, token, base_url, json, clan_id, region):
-        super().__init__(token, base_url, json, clan_id, region)
+    def __init__(self, base_url, json, clan_id, region):
+        super().__init__(base_url, json, clan_id, region)
 
     def members(self):
         """
@@ -45,7 +44,7 @@ class UserClan(Clan):
         """
 
         method = f"{self.region.value}/clan/{self.clan_id}/members"
-        response = self._request(method)
+        response = self._api._request(method)
 
         if self.json is True:
             return response

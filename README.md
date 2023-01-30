@@ -45,9 +45,16 @@ client = AppClient(TOKEN, BaseUrl.PRODUCTION)
 ```python
 from stalcraft import AppClient, Region, Sort, Order
 
+CLIENT_ID = "YOUR_CLIENT_ID"
+CLIENT_SECRET = "YOUR_CLIENT_SECRET"
+
 TOKEN = "YOUR_TOKEN"
 
-client = AppClient(TOKEN)
+# Method 1:
+client = AppClient(token=TOKEN)
+
+# Method 2:
+client = AppClient(client_id=CLIENT_ID, client_secret=CLIENT_SECRET)
 
 print()
 print("List of regions")
@@ -139,8 +146,9 @@ print(client.auction(WebItem("Snowflake", folder="ru")).lots())
 <summary>Exceptions</summary>
 
 ```python
-from stalcraft import (
-    UserClient, LocalItem,
+from stalcraft import UserClient, LocalItem
+
+from stalcraft.exceptions import (
     InvalidToken, StalcraftApiException, ItemException
 )
 
@@ -168,6 +176,55 @@ handle_exception(lambda: client.auction("test").price_history(), StalcraftApiExc
 ```
 
 </details>
+
+
+<br>
+
+# How get Token
+
+```python
+CLIENT_ID = "YOUR_CLIENT_ID"
+CLIENT_SECRET = "YOUR_CLIENT_SECRET"
+REDIRECT_URI = "YOUR_REDIRECT_URI"
+
+auth = Authorization(client_id=CLIENT_ID, client_secret=CLIENT_SECRET, redirect_uri=REDIRECT_URI)
+
+print()
+print("Get App Token")
+print(auth.get_app_token())
+
+print()
+print("Get User Code")
+print(auth.get_user_code())
+
+auth.input_code()
+
+# or
+# auth.code = "USER_CODE"
+
+print()
+print("Get User Token")
+print(auth.get_user_token())
+```
+
+
+<br>
+
+# Refresh User Token
+
+```python
+CLIENT_ID = "YOUR_CLIENT_ID"
+CLIENT_SECRET = "YOUR_CLIENT_SECRET"
+REDIRECT_URI = "YOUR_REDIRECT_URI"
+
+auth = Authorization(client_id=CLIENT_ID, client_secret=CLIENT_SECRET, redirect_uri=REDIRECT_URI)
+
+REFRESH_TOKEN = "USER_REFRESH_TOKEN"
+
+print()
+print("Refresh User Token")
+print(auth.update_token(REFRESH_TOKEN))
+```
 
 
 <br>
@@ -201,15 +258,14 @@ print(client.emission())
 ```python
 Object:
 Emission(
-    current_start=datetime.datetime(2023, 1, 27, 9, 28, 16, 656875, tzinfo=datetime.timezone.utc),
-    previous_start=datetime.datetime(2023, 1, 27, 7, 26, 16, 656875, tzinfo=datetime.timezone.utc),
-    previous_end=datetime.datetime(2023, 1, 27, 7, 31, 16, 656875, tzinfo=datetime.timezone.utc)
+    current_start=None,
+    previous_start=datetime.datetime(2023, 1, 30, 5, 16, 52, tzinfo=datetime.timezone.utc),
+    previous_end=datetime.datetime(2023, 1, 30, 5, 21, 52, tzinfo=datetime.timezone.utc)
 )
 
 Json:
 {
-    'currentStart': '2023-01-27T09:28:16.829929Z',
-    'previousStart': '2023-01-27T07:26:16.829929Z',
-    'previousEnd': '2023-01-27T07:31:16.829929Z'
+    'previousStart': '2023-01-30T05:16:52Z',
+    'previousEnd': '2023-01-30T05:21:52Z'
 }
 ```

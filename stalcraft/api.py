@@ -8,7 +8,7 @@ from . import BaseUrl
 from .enums import StatusCode
 
 from .exceptions import (
-    InvalidToken, StalcraftApiException, InvalidParameter, Unauthorised, NotFound
+    InvalidToken, StalcraftApiException, InvalidParameter, Unauthorised, NotFound, RateLimit
 )
 
 
@@ -48,6 +48,9 @@ class BaseApi:
 
             case StatusCode.NOT_FOUND.value:
                 raise NotFound(f"Not Found: url='{url}' payload={payload}")
+
+            case StatusCode.RATE_LIMIT.value:
+                raise RateLimit(f"Too Many Requests")
 
             case StatusCode.OK.value:
                 return response.json()

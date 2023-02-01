@@ -16,6 +16,7 @@ class StatusCode(Enum):
     INVALID_PARAMETER = 400
     UNAUTHORISED = 401
     NOT_FOUND = 404
+    RATE_LIMIT = 429
 
 
 class Region(Enum):

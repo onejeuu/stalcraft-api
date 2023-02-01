@@ -18,6 +18,10 @@ class NotFound(StalcraftApiException):
     pass
 
 
+class RateLimit(StalcraftApiException):
+    pass
+
+
 class ItemException(Exception):
     pass
 

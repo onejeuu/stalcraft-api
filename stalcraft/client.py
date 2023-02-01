@@ -135,7 +135,7 @@ class AppClient(Client):
         client_id: str | None = None,
         client_secret: str | None = None,
         base_url: BaseUrl | str = BaseUrl.DEMO,
-        json=False
+        json = False
     ):
         super().__init__(token, client_id, client_secret, base_url, json)
 

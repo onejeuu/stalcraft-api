@@ -28,13 +28,13 @@ class Clan:
 
 
 class AppClan(Clan):
-    def __init__(self, base_url, json, clan_id, region):
-        super().__init__(base_url, json, clan_id, region)
+    def __init__(self, api: TokenApi | SecretApi, clan_id: str, region: Region, json: bool):
+        super().__init__(api, clan_id, region, json)
 
 
 class UserClan(Clan):
-    def __init__(self, base_url, json, clan_id, region):
-        super().__init__(base_url, json, clan_id, region)
+    def __init__(self, api: TokenApi | SecretApi, clan_id: str, region: Region, json: bool):
+        super().__init__(api, clan_id, region, json)
 
     def members(self):
         """

@@ -22,6 +22,10 @@
 pip install stalcraft-api --upgrade
 ```
 
+```console
+pip install -r requirements.txt
+```
+
 
 <br>
 

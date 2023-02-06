@@ -10,7 +10,7 @@ class Client:
         token: str | None = None,
         client_id: str | None = None,
         client_secret: str | None = None,
-        base_url: BaseUrl | str = BaseUrl.DEMO,
+        base_url: BaseUrl | str = BaseUrl.PRODUCTION,
         json = False
     ):
         """
@@ -134,7 +134,7 @@ class AppClient(Client):
         token: str | None = None,
         client_id: str | None = None,
         client_secret: str | None = None,
-        base_url: BaseUrl | str = BaseUrl.DEMO,
+        base_url: BaseUrl | str = BaseUrl.PRODUCTION,
         json = False
     ):
         super().__init__(token, client_id, client_secret, base_url, json)
@@ -153,7 +153,12 @@ class AppClient(Client):
 
 
 class UserClient(Client):
-    def __init__(self, token: str, base_url: BaseUrl | str = BaseUrl.DEMO, json=False):
+    def __init__(
+        self,
+        token: str,
+        base_url: BaseUrl | str = BaseUrl.PRODUCTION,
+        json = False
+    ):
         super().__init__(token=token, base_url=base_url, json=json)
 
     def characters(self, region=Region.RU):

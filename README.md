@@ -28,11 +28,11 @@ pip install stalcraft-api --upgrade
 # Quick Start
 
 ```python
-from stalcraft import AppClient, BaseUrl
+from stalcraft import AppClient
 
 TOKEN = "YOUR_TOKEN"
 
-client = AppClient(TOKEN, BaseUrl.PRODUCTION)
+client = AppClient(token=TOKEN)
 ```
 
 <br>
@@ -43,7 +43,7 @@ client = AppClient(TOKEN, BaseUrl.PRODUCTION)
 <summary>AppClient</summary>
 
 ```python
-from stalcraft import AppClient, BaseUrl, Region, Sort, Order
+from stalcraft import AppClient, Region, Sort, Order
 
 CLIENT_ID = "YOUR_CLIENT_ID"
 CLIENT_SECRET = "YOUR_CLIENT_SECRET"
@@ -51,10 +51,10 @@ CLIENT_SECRET = "YOUR_CLIENT_SECRET"
 TOKEN = "YOUR_TOKEN"
 
 # Method 1:
-client = AppClient(token=TOKEN, base_url=BaseUrl.PRODUCTION)
+client = AppClient(token=TOKEN)
 
 # Method 2:
-client = AppClient(client_id=CLIENT_ID, client_secret=CLIENT_SECRET, base_url=BaseUrl.PRODUCTION)
+client = AppClient(client_id=CLIENT_ID, client_secret=CLIENT_SECRET)
 
 print()
 print("List of regions")
@@ -78,8 +78,8 @@ print("List of price history for item with id 'y1q9'")
 print(client.auction("y1q9").price_history())
 
 print()
-print("Information about clan with id '647d6c53-b3d7-4d30-8d08-de874eb1d845'")
-print(client.clan("647d6c53-b3d7-4d30-8d08-de874eb1d845").info())
+print("Information about clan with id '562968e7-4282-4ac6-900f-f7f1581495e8'")
+print(client.clan("562968e7-4282-4ac6-900f-f7f1581495e8").info())
 ```
 
 </details>
@@ -91,26 +91,27 @@ print(client.clan("647d6c53-b3d7-4d30-8d08-de874eb1d845").info())
 <summary>UserClient</summary>
 
 ```python
-from stalcraft import UserClient, Region
+from stalcraft import UserClient, BaseUrl, Region
 
 TOKEN = "YOUR_TOKEN"
 
-client = UserClient(TOKEN)
+client = UserClient(token=TOKEN, base_url=BaseUrl.DEMO)
 
 # + all methods from AppClient
 
-print("List of characters created on EU server by the user by which used access token was provided")
+print("List of characters created by the user on EU server by which used access token was provided")
 print(client.characters(Region.EU))
 
 print()
 print("List of friends character names who are friend with 'Test-1'")
 print(client.friends("Test-1"))
 
-print()
-print("Members in clan with id '647d6c53-b3d7-4d30-8d08-de874eb1d845'")
-print("Can be used only when using user access token and that user has at least one character in that clan.")
-print(client.clan("647d6c53-b3d7-4d30-8d08-de874eb1d845").members())
 
+# Members in clan with id '562968e7-4282-4ac6-900f-f7f1581495e8'
+# (Can be used only when using user access token and that user has at least one character in that clan)
+# client.clan("562968e7-4282-4ac6-900f-f7f1581495e8").members()
+
+#
 # Information about player's profile. Includes alliance, profile description, last login time, stats, etc.
 # (Not working in DEMO API)
 # client.character_profile("ZIV")
@@ -129,7 +130,7 @@ from stalcraft import AppClient, LocalItem, WebItem
 
 TOKEN = "YOUR_TOKEN"
 
-client = AppClient(TOKEN)
+client = AppClient(token=TOKEN)
 
 print()
 print("Search by local file")
@@ -158,7 +159,7 @@ from stalcraft.exceptions import (
 
 TOKEN = "YOUR_TOKEN"
 
-client = UserClient(TOKEN)
+client = UserClient(token=TOKEN)
 
 def handle_exception(func, exception):
     try:
@@ -239,7 +240,7 @@ from rich import print
 
 TOKEN = "YOUR_TOKEN"
 
-client = AppClient(TOKEN)
+client = AppClient(token=TOKEN)
 
 print()
 print("Object:")

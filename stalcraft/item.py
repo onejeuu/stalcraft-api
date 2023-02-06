@@ -29,7 +29,7 @@ class Item:
 
 
 class LocalItem(Item):
-    def __init__(self, name: str, path: str="", encoding="utf-8"):
+    def __init__(self, name: str, path="", encoding="utf-8"):
         """
         Search for Item ID by name in file
 
@@ -113,8 +113,8 @@ class WebItem(Item):
 
             if self.name in (ru, en):
                 data = item.get("data", '')
-                filename, file_extension = data.split('/')[-1].split('.')
-                item_id = filename
+                file_name, file_extension = data.split('/')[-1].split('.')
+                item_id = file_name
 
                 self.item_id = item_id
                 break

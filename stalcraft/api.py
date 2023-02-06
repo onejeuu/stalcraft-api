@@ -50,7 +50,7 @@ class BaseApi:
                 raise NotFound(f"Not Found: url='{url}' payload={payload}")
 
             case StatusCode.RATE_LIMIT.value:
-                raise RateLimit(f"Too Many Requests")
+                raise RateLimit(f"Too Many Requests: url='{url}' payload={payload}")
 
             case StatusCode.OK.value:
                 return response.json()

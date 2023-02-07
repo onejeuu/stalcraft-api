@@ -107,7 +107,7 @@ class TokenApi(BaseApi):
     def _parse_jwt_token(self) -> Literal[False] | Dict[str, Any]:
         try:
             token_payload = self.token.split('.')[1]
-            token_payload_decoded = str(base64.b64decode(token_payload + "=="), "utf-8")
+            token_payload_decoded = str(base64.b64decode(f"{token_payload}=="), "utf-8")
             payload = json.loads(token_payload_decoded)
 
         except Exception:

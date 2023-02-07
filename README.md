@@ -16,16 +16,29 @@
 
 <br>
 
-# Setup
+# Install
+
+### Pip
 
 ```console
 pip install stalcraft-api --upgrade
 ```
 
+<details>
+<summary>Manual</summary>
+
+```console
+git clone git@github.com:onejeuu/stalcraft-api.git
+```
+
+```console
+cd stalcraft-api
+```
+
 ```console
 pip install -r requirements.txt
 ```
-
+</details>
 
 <br>
 

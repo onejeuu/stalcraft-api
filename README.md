@@ -1,22 +1,34 @@
-# stalcraft-api unofficial python library
+<h1 align="center">stalcraft-api unofficial python library</h1>
 
-[![PyPi Package Version](https://img.shields.io/pypi/v/stalcraft-api.svg?style=flat-square)](https://pypi.org/project/stalcraft-api)
-[![Supported python versions](https://img.shields.io/pypi/pyversions/stalcraft-api.svg?style=flat-square)](https://pypi.org/project/stalcraft-api)
-[![MIT License](https://img.shields.io/pypi/l/aiogram.svg?style=flat-square)](https://opensource.org/licenses/MIT)
-
-
-📄 **Official API documentation:** https://eapi.stalcraft.net
-
-ℹ️ **Before you can use the API, you must register your application and receive approval**
-
-ℹ️ **For testing Demo API is available**
-
-[`more about applications`](https://eapi.stalcraft.net/registration.html)
+<p align="center">
+    <a href="https://pypi.org/project/stalcraft-api" alt="PyPi Package Version">
+        <img src="https://img.shields.io/pypi/v/stalcraft-api.svg?style=flat-square"/></a>
+    <a href="https://pypi.org/project/stalcraft-api" alt="Supported python versions">
+        <img src="https://img.shields.io/pypi/pyversions/stalcraft-api.svg?style=flat-square"/></a>
+    <a href="https://opensource.org/licenses/MIT" alt="MIT License">
+        <img src="https://img.shields.io/pypi/l/aiogram.svg?style=flat-squar"/></a>
+</p>
 
 
 <br>
 
-# Install
+<p align="center">
+    <b>Official API documentation:</b> https://eapi.stalcraft.net
+</p>
+<p align="center">
+    <b>Before you can use the API, you must register your application and receive approval<b>
+</p>
+<p align="center">
+    <b>For testing Demo API is available<b>
+</p>
+<p align="center">
+    <a href="https://eapi.stalcraft.net/registration.html">more about applications</a>
+</p>
+
+
+<br>
+
+# 🔧 Install
 
 ### Pip
 
@@ -40,9 +52,10 @@ pip install -r requirements.txt
 ```
 </details>
 
+
 <br>
 
-# Quick Start
+# ⚡ Quick Start
 
 ```python
 from stalcraft import AppClient
@@ -52,12 +65,13 @@ TOKEN = "YOUR_TOKEN"
 client = AppClient(token=TOKEN)
 ```
 
+
 <br>
 
-# Usage Examples
+# 📎 Usage Examples
 
 <details>
-<summary>AppClient</summary>
+<summary>App Client</summary>
 
 ```python
 from stalcraft import AppClient, Region, Sort, Order
@@ -105,7 +119,7 @@ print(client.clan("562968e7-4282-4ac6-900f-f7f1581495e8").info())
 <br>
 
 <details>
-<summary>UserClient</summary>
+<summary>User Client</summary>
 
 ```python
 from stalcraft import UserClient, BaseUrl, Region
@@ -202,7 +216,7 @@ handle_exception(lambda: client.auction("test").price_history(), StalcraftApiExc
 
 <br>
 
-# About Tokens
+# 🔑 About Tokens
 
 ```python
 CLIENT_ID = "YOUR_CLIENT_ID"
@@ -247,7 +261,7 @@ print(auth.update_token(REFRESH_TOKEN))
 
 <br>
 
-# Output Formats
+# 📋 Output Formats
 
 ```python
 from stalcraft import AppClient

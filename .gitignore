@@ -3,14 +3,12 @@ __pycache__/
 
 .env
 
-build/*
+.vscode/*
+
 dist/*
-stalcraft_api.egg-info/*
-setup.py
-setup.bat
+pyproject.toml
 
 tests/*
 test.py
 
-stalcraft-database/*
-items.py
+convert.py

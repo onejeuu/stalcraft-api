@@ -100,13 +100,13 @@ print("Information about emission on NA server")
 print(client.emission(Region.NA))
 
 print()
-print("List of lots for item with id 'y1q9'")
+print("List of lots for item with id '1r756'")
 print("With offset 5, limit 2, sort by buyout price and order by descending")
-print(client.auction("y1q9").lots(offset=5, limit=2, sort=Sort.BUYOUT_PRICE, order=Order.DESC))
+print(client.auction("1r756").lots(offset=5, limit=2, sort=Sort.BUYOUT_PRICE, order=Order.DESC))
 
 print()
-print("List of price history for item with id 'y1q9'")
-print(client.auction("y1q9").price_history())
+print("List of price history for item with id '1r756'")
+print(client.auction("1r756").price_history())
 
 print()
 print("Information about clan with id '562968e7-4282-4ac6-900f-f7f1581495e8'")
@@ -157,7 +157,7 @@ print(client.friends("Test-1"))
 <summary>Find Item ID by name</summary>
 
 ```python
-from stalcraft import AppClient, LocalItem, WebItem
+from stalcraft import AppClient, LocalItem, WebItem, ItemFolder
 
 TOKEN = "YOUR_TOKEN"
 
@@ -170,7 +170,7 @@ print(client.auction(LocalItem("Snowflake")).lots())
 print()
 print("(Not reliable)")
 print("Search by listing.json in stalcraft-database github repository")
-print(client.auction(WebItem("Snowflake", folder="ru")).lots())
+print(client.auction(WebItem("Snowflake", folder=ItemFolder.GLOBAL)).lots())
 ```
 
 </details>
@@ -218,6 +218,8 @@ handle_exception(lambda: client.auction("test").price_history(), StalcraftApiExc
 
 # 🔑 About Tokens
 
+### Get User and App Token
+
 ```python
 CLIENT_ID = "YOUR_CLIENT_ID"
 CLIENT_SECRET = "YOUR_CLIENT_SECRET"
@@ -242,14 +244,13 @@ print("Get User Token")
 print(auth.get_user_token())
 ```
 
-## Refresh User Token
+### Refresh User Token
 
 ```python
 CLIENT_ID = "YOUR_CLIENT_ID"
 CLIENT_SECRET = "YOUR_CLIENT_SECRET"
-REDIRECT_URI = "YOUR_REDIRECT_URI"
 
-auth = Authorization(client_id=CLIENT_ID, client_secret=CLIENT_SECRET, redirect_uri=REDIRECT_URI)
+auth = Authorization(client_id=CLIENT_ID, client_secret=CLIENT_SECRET)
 
 REFRESH_TOKEN = "USER_REFRESH_TOKEN"
 

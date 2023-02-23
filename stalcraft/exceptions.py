@@ -18,7 +18,7 @@ class NotFound(StalcraftApiException):
     pass
 
 
-class RateLimit(StalcraftApiException):
+class RateLimitException(StalcraftApiException):
     pass
 
 

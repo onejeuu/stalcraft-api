@@ -39,6 +39,9 @@ class Client:
         else:
             raise ValueError("No token or client_id with client_secret provided.")
 
+    @property
+    def ratelimit(self):
+        return self._api._ratelimit
 
     def regions(self):
         """
@@ -46,7 +49,7 @@ class Client:
         """
 
         method = "regions"
-        response = self._api._request(method)
+        response = self._api._request(method, raw=True)
 
         if self.json is True:
             return response
@@ -101,13 +104,13 @@ class Client:
         Factory method for working with auction.
 
         Args:
-            item_id: Item ID, for example "y1q9"
+            item_id: Item ID, for example "1r756"
             region: Stalcraft region, default Region.RU
         """
 
         return Auction(self._api, item_id, region, self.json)
 
-    def character_profile(self, character: str, stats_language: Literal["ru", "en"]="ru", region=Region.RU):
+    def character_profile(self, character: str, region=Region.RU):
         """
         Returns information about player's profile. Includes alliance, profile description, last login time, stats, etc.
 

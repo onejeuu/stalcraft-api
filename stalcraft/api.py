@@ -1,15 +1,25 @@
 from typing import Any, Dict, Literal
+from dataclasses import dataclass
 from requests import Response
+from datetime import datetime
 import requests
 import base64
+import pytz
 import json
 
 from . import BaseUrl
 from .enums import StatusCode
 
 from .exceptions import (
-    InvalidToken, StalcraftApiException, InvalidParameter, Unauthorised, NotFound, RateLimit
+    InvalidToken, StalcraftApiException, InvalidParameter, Unauthorised, NotFound, RateLimitException
 )
+
+
+@dataclass
+class RateLimit:
+    limit: int
+    remaining: int
+    reset: datetime
 
 
 class BaseApi:
@@ -17,7 +27,9 @@ class BaseApi:
         if isinstance(base_url, BaseUrl):
             base_url = base_url.value
 
-        self.base_url = base_url
+        self._base_url = base_url
+
+        self._ratelimit: RateLimit | None = None
 
     @property
     def headers(self):
@@ -50,7 +62,7 @@ class BaseApi:
                 raise NotFound(f"Not Found: url='{url}' payload={payload}")
 
             case StatusCode.RATE_LIMIT.value:
-                raise RateLimit(f"Too Many Requests: url='{url}' payload={payload}")
+                raise RateLimitException(f"Too Many Requests: url='{url}' payload={payload}")
 
             case StatusCode.OK.value:
                 return response.json()
@@ -58,17 +70,36 @@ class BaseApi:
             case _:
                 raise StalcraftApiException(response)
 
-    def _request(self, method: str, payload: Dict[str, Any]={}) -> Any:
+    def _update_rate_limit(self, response):
+        """
+        Updates rate limit property
+        """
+
+        headers = response.headers
+
+        limit = int(headers.get("X-RateLimit-Limit", 0))
+        remaining = int(headers.get("X-RateLimit-Remaining", 0))
+        reset = headers.get("X-RateLimit-Reset", 0)
+        reset = datetime.fromtimestamp(int(reset[:-3]), pytz.timezone('Europe/Moscow'))
+
+        self._ratelimit = RateLimit(limit=limit, remaining=remaining, reset=reset)
+
+    def _request(self, method: str, payload: Dict[str, Any]={}, raw=False) -> Any:
         """
         Makes request to Stalcraft API
         """
 
-        url = f"{self.base_url}/{method}"
+        url = f"{self._base_url}/{method}"
+
 
         response = self._get_response(url, payload)
-        result = self._handle_response_status(response, url, payload)
 
-        return result
+        if raw is False:
+            self._update_rate_limit(response)
+
+        response = self._handle_response_status(response, url, payload)
+
+        return response
 
     def _offset_and_limit(self, offset: int, limit: int):
         """
@@ -79,7 +110,7 @@ class BaseApi:
         assert limit in range(0, 101), f"limit should be between 0 and 100, got {limit}"
 
     def __repr__(self):
-        return f"base_url='{self.base_url}'"
+        return f"base_url='{self._base_url}'"
 
 
 class TokenApi(BaseApi):
@@ -94,8 +125,7 @@ class TokenApi(BaseApi):
 
     @property
     def part_of_token(self):
-        if self.token:
-            return f"{self.token[:10]}...{self.token[-5:]}"
+        return f"{self.token[:10]}...{self.token[-5:]}"
 
     @property
     def headers(self):

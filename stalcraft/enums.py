@@ -53,3 +53,8 @@ class Rank(Enum):
     OFFICER = "OFFICER"
     COLONEL = "COLONEL"
     LEADER = "LEADER"
+
+
+class ItemFolder(Enum):
+    RU = "ru"
+    GLOBAL = "global"

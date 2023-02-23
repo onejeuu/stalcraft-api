@@ -7,18 +7,16 @@ class Authorization:
     TOKEN_URL = "https://exbo.net/oauth/token"
     USER_URL = "https://exbo.net/oauth/user"
 
-    def __init__(self, client_id: str, client_secret: str, scope="", redirect_uri: str = "http://localhost"):
+    def __init__(self, client_id: str, client_secret: str, scope="", redirect_uri="http://localhost"):
         self.client_id = client_id
         self.client_secret = client_secret
         self.redirect_uri = redirect_uri
         self.scope = scope
-        self.state = ""
 
         self.code = ""
 
     def get_user_code(self):
-        self.state = uuid.uuid4().hex
-        return f"{self.AUTHORIZE_URL}?client_id={self.client_id}&redirect_uri={self.redirect_uri}&scope={self.scope}&response_type=code&state={self.state}"
+        return f"{self.AUTHORIZE_URL}?client_id={self.client_id}&redirect_uri={self.redirect_uri}&scope={self.scope}&response_type=code"
 
     def input_code(self):
         self.code = input("Enter the authorization code from the redirect URL: ")
@@ -29,8 +27,7 @@ class Authorization:
             "client_secret": self.client_secret,
             "code": self.code,
             "grant_type": "authorization_code",
-            "redirect_uri": self.redirect_uri,
-            "state": self.state
+            "redirect_uri": self.redirect_uri
         }
 
         response = requests.post(self.TOKEN_URL, data=data)

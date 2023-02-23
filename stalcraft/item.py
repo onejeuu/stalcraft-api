@@ -1,8 +1,10 @@
 from typing import Literal
+from pathlib import Path
 import requests
 import json
 import os
 
+from . import ItemFolder
 from .enums import StatusCode
 
 from .exceptions import (
@@ -29,20 +31,21 @@ class Item:
 
 
 class LocalItem(Item):
-    def __init__(self, name: str, path="", encoding="utf-8"):
+    def __init__(self, name: str, path="", encoding="utf-8", folder=ItemFolder.RU):
         """
         Search for Item ID by name in file
 
         name: Name of item (without quotes)
         path: Path to the file, by default built-in items.json
         encoding: File encoding, default utf-8
+        folder: Search folder ru or global, default ItemFolder.RU
         """
 
         super().__init__(name)
 
         if not path:
-            here = os.path.abspath(os.path.dirname(__file__))
-            path = f"{here}/data/items.json"
+            root_path = Path(__file__).resolve().parent
+            path = Path(root_path, "data", folder.value, "listing.json")
 
         self.path = path
         self.encoding = encoding
@@ -71,7 +74,7 @@ class WebItem(Item):
     REPOS = "EXBO-Studio/stalcraft-database"
     DEFAULT_BRANCH = "main"
 
-    def __init__(self, name: str, folder: Literal["ru", "global"] = "ru"):
+    def __init__(self, name: str, folder=ItemFolder.RU):
         """
         Attention: This method is not most reliable and with frequent use may cause a rate limit
         Learn more: https://docs.github.com/en/rest/rate-limit
@@ -79,12 +82,12 @@ class WebItem(Item):
         Search for Item ID by name in stalcraft-database github repository
 
         name: Name of item (without quotes)
-        folder: Search folder ru/global, default ru
+        folder: Search folder ru or global, default ItemFolder.RU
         """
 
         super().__init__(name)
 
-        self.folder = folder
+        self.folder = folder.value
 
         self._get_listing()
         self._find_item()

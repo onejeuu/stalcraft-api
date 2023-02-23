@@ -46,6 +46,13 @@ class BaseSchema:
             yield key, value
 
 
+class RateLimit:
+    def __init__(self, response):
+        self.limit = response.headers.get("X-RateLimit-Limit")
+        self.remaining = response.headers.get("X-RateLimit-Remaining")
+        self.reset = datetime.fromtimestamp(response.headers.get("X-RateLimit-Reset"))
+
+
 class RegionInfo(BaseSchema):
     def __init__(self, region):
         self.id = region.get("id")
@@ -131,7 +138,7 @@ class CharacterProfile(BaseSchema):
         self.uuid = response.get("uuid")
         self.status = response.get("status")
         self.alliance = response.get("alliance")
-        self.last_login = response.get("lastLogin")
+        self.last_login = self.datetime(response.get("lastLogin"))
         self.displayed_achievements = response.get("displayedAchievements")
 
         clan = response.get("clan", {})
@@ -158,6 +165,7 @@ class Price(BaseSchema):
 class Lot(BaseSchema):
     def __init__(self, lot):
         self.item_id = lot.get("itemId")
+        self.amount = lot.get("amount")
         self.start_price = lot.get("startPrice")
         self.current_price = lot.get("currentPrice", self.start_price)
         self.buyout_price = lot.get("buyoutPrice")

@@ -222,7 +222,7 @@ handle_exception(lambda: client.auction("test").price_history(), StalcraftApiExc
 # To obtain information about the current rate limit values, you can use client.ratelimit
 # Warning: by default client.ratelimit is None until the first request is made (except for regions), so use caution
 
-from stalcraft import AppClient, LocalItem, WebItem, ItemFolder
+from stalcraft import AppClient
 
 TOKEN = "YOUR_TOKEN"
 

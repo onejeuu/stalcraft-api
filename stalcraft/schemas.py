@@ -1,6 +1,4 @@
 from datetime import datetime
-import json
-import os
 
 from . import Rank
 
@@ -44,13 +42,6 @@ class BaseSchema:
     def __rich_repr__(self):
         for key, value in self.__dict__.items():
             yield key, value
-
-
-class RateLimit:
-    def __init__(self, response):
-        self.limit = response.headers.get("X-RateLimit-Limit")
-        self.remaining = response.headers.get("X-RateLimit-Remaining")
-        self.reset = datetime.fromtimestamp(response.headers.get("X-RateLimit-Reset"))
 
 
 class RegionInfo(BaseSchema):

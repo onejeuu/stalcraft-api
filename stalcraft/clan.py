@@ -5,7 +5,6 @@ from . import schemas
 class Clan:
     def __init__(self, api: TokenApi | SecretApi, clan_id: str, region: Region, json: bool):
         self._api = api
-
         self.clan_id = clan_id
         self.region = region
         self.json = json
@@ -27,15 +26,7 @@ class Clan:
         return f"<{self.__class__.__name__}> {self._api.__repr__()} clan_id='{self.clan_id}' region='{self.region}'"
 
 
-class AppClan(Clan):
-    def __init__(self, api: TokenApi | SecretApi, clan_id: str, region: Region, json: bool):
-        super().__init__(api, clan_id, region, json)
-
-
 class UserClan(Clan):
-    def __init__(self, api: TokenApi | SecretApi, clan_id: str, region: Region, json: bool):
-        super().__init__(api, clan_id, region, json)
-
     def members(self):
         """
         Returns list of members in the given clan.

@@ -1,8 +1,6 @@
-from typing import Literal
 from pathlib import Path
 import requests
 import json
-import os
 
 from . import ItemFolder
 from .enums import StatusCode
@@ -36,9 +34,9 @@ class LocalItem(Item):
         Search for Item ID by name in file
 
         name: Name of item (without quotes)
-        path: Path to the file, by default built-in items.json
-        encoding: File encoding, default utf-8
-        folder: Search folder ru or global, default ItemFolder.RU
+        path: Path to the file. Defaults to built-in items.json
+        encoding: File encoding. Defaults to utf-8
+        folder: Search folder RU or GLOBAL. Defaults to RU
         """
 
         super().__init__(name)
@@ -82,7 +80,7 @@ class WebItem(Item):
         Search for Item ID by name in stalcraft-database github repository
 
         name: Name of item (without quotes)
-        folder: Search folder ru or global, default ItemFolder.RU
+        folder: Search folder RU or GLOBAL. Defaults to RU
         """
 
         super().__init__(name)

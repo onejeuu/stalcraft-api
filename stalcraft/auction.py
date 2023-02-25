@@ -19,8 +19,8 @@ class Auction:
         Prices are sorted in descending order by recorded time of purchase.
 
         Args:
-            offset: Amount of prices in list to skip, default 0
-            limit: Amount of prices to return, starting from offset, minimum 0, maximum 100, default 20
+            offset: Amount of clans in list to skip. Defaults to 0
+            limit: Amount of clans to return, starting from offset, (0-100). Defaults to 20
         """
 
         self._api._offset_and_limit(offset, limit)
@@ -43,8 +43,8 @@ class Auction:
         Lots are sorted based on given parameter.
 
         Args:
-            offset: Amount of lots in list to skip, default 0
-            limit: Amount of lots to return, starting from offset, minimum 0, maximum 100, default 20
+            offset: Amount of clans in list to skip. Defaults to 0
+            limit: Amount of clans to return, starting from offset, (0-100). Defaults to 20
             sort: Property to sort by, one of: TIME_CREATED, TIME_LEFT, CURRENT_PRICE, BUYOUT_PRICE
             order: Either ASCENDING or DESCENDING
         """

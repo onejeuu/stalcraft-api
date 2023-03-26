@@ -108,4 +108,4 @@ class Authorization:
         return response.json()
 
     def __repr__(self):
-        return f"{super().__repr__()} client_id='{self.client_id}' redirect_uri='{self.redirect_uri}'"
+        return f"<{self.__class__.__name__}> client_id='{self.client_id}' redirect_uri='{self.redirect_uri}'"

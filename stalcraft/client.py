@@ -1,4 +1,4 @@
-from . import Auction, BaseUrl, Clan, LocalItem, Region, SecretApi, TokenApi, UserClan, WebItem
+from . import TokenApi, SecretApi, Auction, Clan, UserClan, BaseUrl, Region, LocalItem, WebItem
 from . import schemas
 
 
@@ -120,27 +120,16 @@ class Client:
 
 
 class AppClient(Client):
-    def __init__(
-        self,
-        token: str | None = None,
-        client_id: str | None = None,
-        client_secret: str | None = None,
-        base_url: BaseUrl | str = BaseUrl.PRODUCTION,
-        json = False
-    ):
-        """
-        App Client for working with the API.
+    """
+    App Client for working with the API.
 
-        Args:
-            token: App access token for authorization
-            client_id: Application ID for authorization
-            client_secret: Application secret for authorization
-            base_url (optional): API base URL. Defaults to PRODUCTION
-            json (optional): if True response returned in raw format. Defaults to False
-        """
-
-        super().__init__(token, client_id, client_secret, base_url, json)
-
+    Args:
+        token: App access token for authorization
+        client_id: Application ID for authorization
+        client_secret: Application secret for authorization
+        base_url (optional): API base URL. Defaults to PRODUCTION
+        json (optional): if True response returned in raw format. Defaults to False
+    """
 
     def clan(self, clan_id: str, region=Region.RU):
         """
@@ -155,21 +144,16 @@ class AppClient(Client):
 
 
 class UserClient(Client):
-    def __init__(
-        self,
-        token: str,
-        base_url: BaseUrl | str = BaseUrl.PRODUCTION,
-        json = False
-    ):
-        """
-        User Client for working with the API.
+    """
+    User Client for working with the API.
 
-        Args:
-            token: User access token for authorization
-            base_url (optional): API base URL. Defaults to PRODUCTION
-            json (optional): if True response returned in raw format. Defaults to False
-        """
+    Args:
+        token: User access token for authorization
+        base_url (optional): API base URL. Defaults to PRODUCTION
+        json (optional): if True response returned in raw format. Defaults to False
+    """
 
+    def __init__(self, token: str, base_url: BaseUrl | str = BaseUrl.PRODUCTION, json = False):
         super().__init__(token=token, base_url=base_url, json=json)
 
     def characters(self, region=Region.RU):

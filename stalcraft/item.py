@@ -5,9 +5,7 @@ import json
 from . import ItemFolder
 from .enums import StatusCode
 
-from .exceptions import (
-    ListingJsonNotFound, ItemIdNotFound
-)
+from .exceptions import ListingJsonNotFound, ItemIdNotFound
 
 
 class Item:
@@ -25,7 +23,6 @@ class Item:
 
     def __repr__(self):
         return f"<{self.__class__.__name__}> name='{self.name}' item_id='{self.item_id}'"
-
 
 
 class LocalItem(Item):

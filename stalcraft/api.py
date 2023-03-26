@@ -11,7 +11,8 @@ from . import BaseUrl
 from .enums import StatusCode
 
 from .exceptions import (
-    InvalidToken, StalcraftApiException, InvalidParameter, Unauthorised, NotFound, RateLimitException
+    InvalidToken, StalcraftApiException,
+    InvalidParameter, Unauthorised, NotFound, RateLimitException
 )
 
 
@@ -52,6 +53,9 @@ class BaseApi:
         """
 
         match response.status_code:
+            case StatusCode.OK.value:
+                return response
+
             case StatusCode.INVALID_PARAMETER.value:
                 raise InvalidParameter(f"One of parameters is invalid: url='{url}' payload={payload}")
 
@@ -63,9 +67,6 @@ class BaseApi:
 
             case StatusCode.RATE_LIMIT.value:
                 raise RateLimitException(f"Too Many Requests: url='{url}' payload={payload}")
-
-            case StatusCode.OK.value:
-                return response
 
             case _:
                 raise StalcraftApiException(response)
@@ -93,7 +94,6 @@ class BaseApi:
         """
 
         url = f"{self._base_url}/{method}"
-
 
         response = self._get_response(url, payload)
         response = self._handle_response_status(response, url, payload)

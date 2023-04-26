@@ -5,7 +5,9 @@ import json
 from . import ItemFolder
 from .enums import StatusCode
 
-from .exceptions import ListingJsonNotFound, ItemIdNotFound
+from .exceptions import (
+    ListingJsonNotFound, ItemIdNotFound
+)
 
 
 class Item:

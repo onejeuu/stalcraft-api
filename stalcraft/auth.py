@@ -1,12 +1,14 @@
 import requests
 
+from . import schemas
+
 
 class Authorization:
     AUTHORIZE_URL = "https://exbo.net/oauth/authorize"
     TOKEN_URL = "https://exbo.net/oauth/token"
     USER_URL = "https://exbo.net/oauth/user"
 
-    def __init__(self, client_id: str, client_secret: str, scope="", redirect_uri="http://localhost"):
+    def __init__(self, client_id: str, client_secret: str, scope="", redirect_uri="http://localhost", json=True):
         """
         Constructor for Authorization.
 
@@ -15,16 +17,19 @@ class Authorization:
             client_secret: OAuth2 client secret
             scope (optional): Authorization scope requested by the client. Defaults to ""
             redirect_uri (optional): URI to redirect the user to after authorization. Defaults to "http://localhost"
+            json (optional): if True response returned in raw format. Defaults to True
         """
 
         self.client_id = client_id
         self.client_secret = client_secret
         self.scope = scope
         self.redirect_uri = redirect_uri
+        self.json = json
 
         self.code = ""
 
-    def get_user_code(self):
+    @property
+    def user_code_url(self):
         """
         Returns the URL that a user should visit to authorize the application.
         """
@@ -51,9 +56,12 @@ class Authorization:
             "redirect_uri": self.redirect_uri
         }
 
-        response = requests.post(self.TOKEN_URL, data=data)
+        response = requests.post(self.TOKEN_URL, data=data).json()
 
-        return response.json()
+        if self.json is True:
+            return response
+
+        return schemas.UserToken.parse_obj(response)
 
     def get_app_token(self):
         """
@@ -67,9 +75,12 @@ class Authorization:
             "scope": self.scope
         }
 
-        response = requests.post(self.TOKEN_URL, data=data)
+        response = requests.post(self.TOKEN_URL, data=data).json()
 
-        return response.json()
+        if self.json is True:
+            return response
+
+        return schemas.AppToken.parse_obj(response)
 
     def update_token(self, refresh_token: str):
         """
@@ -89,7 +100,10 @@ class Authorization:
 
         response = requests.post(self.TOKEN_URL, data=data)
 
-        return response.json()
+        if self.json is True:
+            return response
+
+        return schemas.UserToken.parse_obj(response)
 
     def info(self, token: str):
         """
@@ -103,9 +117,12 @@ class Authorization:
             "Authorization": f"Bearer {token}"
         }
 
-        response = requests.get(self.USER_URL, headers=headers)
+        response = requests.get(self.USER_URL, headers=headers).json()
 
-        return response.json()
+        if self.json is True:
+            return response
 
-    def __repr__(self):
+        return schemas.TokenInfo.parse_obj(response)
+
+    def __str__(self):
         return f"<{self.__class__.__name__}> client_id='{self.client_id}' redirect_uri='{self.redirect_uri}'"

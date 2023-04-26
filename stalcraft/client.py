@@ -42,7 +42,7 @@ class Client:
             return response
 
         return [
-            schemas.RegionInfo(region)
+            schemas.RegionInfo.parse_obj(region)
             for region in response
         ]
 
@@ -60,7 +60,7 @@ class Client:
         if self.json is True:
             return response
 
-        return schemas.Emission(response)
+        return schemas.Emission.parse_obj(response)
 
     def clans(self, offset=0, limit=20, region=Region.RU):
         """
@@ -82,7 +82,7 @@ class Client:
             return response
 
         return [
-            schemas.ClanInfo(clan)
+            schemas.ClanInfo.parse_obj(clan)
             for clan in response['data']
         ]
 
@@ -113,10 +113,10 @@ class Client:
         if self.json is True:
             return response
 
-        return schemas.CharacterProfile(response)
+        return schemas.CharacterProfile.parse_obj(response)
 
-    def __repr__(self):
-        return f"<{self.__class__.__name__}> {self._api.__repr__()}"
+    def __str__(self):
+        return f"<{self.__class__.__name__}> {self._api.__str__()}"
 
 
 class AppClient(Client):
@@ -171,7 +171,7 @@ class UserClient(Client):
             return response
 
         return [
-            schemas.Character(character)
+            schemas.Character.parse_obj(character)
             for character in response
         ]
 

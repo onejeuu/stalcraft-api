@@ -3,13 +3,14 @@ __pycache__/
 
 .env
 
-.venv/*
-.vscode/*
+.venv
+.vscode
 
-dist/*
+dist
 pyproject.toml
 
-tests/*
+tests
 test.py
 
+convert
 convert.py

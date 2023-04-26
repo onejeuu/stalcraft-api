@@ -33,7 +33,7 @@ class Auction:
             return response
 
         return [
-            schemas.Price(price)
+            schemas.Price.parse_obj(price)
             for price in response['prices']
         ]
 
@@ -59,9 +59,9 @@ class Auction:
             return response
 
         return [
-            schemas.Lot(lots)
-            for lots in response['lots']
+            schemas.Lot.parse_obj(lot)
+            for lot in response['lots']
         ]
 
-    def __repr__(self):
-        return f"<{self.__class__.__name__}> {self._api.__repr__()} item_id='{self.item_id}' region='{self.region}'"
+    def __str__(self):
+        return f"<{self.__class__.__name__}> {self._api.__str__()} item_id='{self.item_id}' region='{self.region}'"

@@ -1,11 +1,11 @@
 from typing import Any, Dict, Literal
-from dataclasses import dataclass
 from requests import Response
 from datetime import datetime
-import requests
-import base64
+from dataclasses import dataclass
 import pytz
 import json
+import base64
+import requests
 
 from . import BaseUrl
 from .enums import StatusCode
@@ -110,7 +110,7 @@ class BaseApi:
         assert offset >= 0, f"offset should be >= 0, got {offset}"
         assert limit in range(0, 101), f"limit should be between 0 and 100, got {limit}"
 
-    def __repr__(self):
+    def __str__(self):
         return f"base_url='{self._base_url}'"
 
 
@@ -160,8 +160,8 @@ class TokenApi(BaseApi):
         self.token_payload = payload
         return payload
 
-    def __repr__(self):
-        return f"{super().__repr__()} token='{self.part_of_token}'"
+    def __str__(self):
+        return f"{super().__str__()} token='{self.part_of_token}'"
 
 
 class SecretApi(BaseApi):
@@ -183,5 +183,5 @@ class SecretApi(BaseApi):
             "Content-Type": "application/json"
         }
 
-    def __repr__(self):
-        return f"{super().__repr__()} client_id='{self.client_id}' client_secret='{self.part_of_secret}'"
+    def __str__(self):
+        return f"{super().__str__()} client_id='{self.client_id}' client_secret='{self.part_of_secret}'"

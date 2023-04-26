@@ -1,169 +1,182 @@
-from datetime import datetime
+from uuid import UUID
+from typing import Optional, Any
+from pydantic import BaseModel, Field, validator
+from datetime import datetime, timedelta
 
 from . import Rank
 
 
-class BaseSchema:
-    def datetime(self, string: str, default=None):
+class DateTimeValidator:
+    @classmethod
+    def parse(cls, value):
         try:
-            return datetime.fromisoformat(string)
-
+            return datetime.fromisoformat(value)
         except Exception:
-            return default
+            return None
 
-    def _compare(self, other, method):
-        if isinstance(other, self.__class__):
-            return method(self, other)
-        return False
-
-    @property
-    def key(self):
-        return list(self.__dict__.keys())[0]
-
-    def __eq__(self, other):
-        return self._compare(other, lambda s, o: s.__dict__ == o.__dict__)
-
-    def __lt__(self, other):
-        return self._compare(other, lambda s, o: s.key < o.key)
-
-    def __le__(self, other):
-        return self._compare(other, lambda s, o: s.key <= o.key)
-
-    def __gt__(self, other):
-        return self._compare(other, lambda s, o: s.key > o.key)
-
-    def __ge__(self, other):
-        return self._compare(other, lambda s, o: s.key >= o.key)
-
-    def __repr__(self):
-        kws = [f"{key}={value!r}" for key, value in self.__dict__.items()]
-        return f"{self.__class__.__name__}({', '.join(kws)})"
-
-    def __rich_repr__(self):
-        for key, value in self.__dict__.items():
-            yield key, value
+    @classmethod
+    def expires_in(cls, value):
+        expires_time = datetime.now() + timedelta(seconds=value)
+        return expires_time
 
 
-class RegionInfo(BaseSchema):
-    def __init__(self, region):
-        self.id = region.get("id")
-        self.name = region.get("name")
+class RegionInfo(BaseModel):
+    """RegionInfo"""
+
+    id: str
+    name: str
 
 
-class Emission(BaseSchema):
-    def __init__(self, response):
-        self.current_start = self.datetime(response.get("currentStart"))
-        self.previous_start = self.datetime(response.get("previousStart"))
-        self.previous_end = self.datetime(response.get("previousEnd"))
+class Emission(BaseModel):
+    """EmissionResponse"""
+
+    current_start: Optional[datetime] = Field(None, alias="currentStart")
+    previous_start: datetime = Field(..., alias="previousStart")
+    previous_end: datetime = Field(..., alias="previousEnd")
+
+    @validator("current_start", "previous_start", "previous_end", pre=True)
+    def parse_datetime(cls, value):
+        return DateTimeValidator.parse(value)
 
 
-class ClanInfo(BaseSchema):
-    def __init__(self, clan):
-        self.id = clan.get("id")
-        self.name = clan.get("name")
-        self.tag = clan.get("tag")
-        self.level = clan.get("level")
-        self.level_points = clan.get("levelPoints")
-        self.registration_time = self.datetime(clan.get("registrationTime"))
-        self.alliance = clan.get("alliance")
-        self.description = clan.get("description")
-        self.leader = clan.get("leader")
-        self.member_count = clan.get("memberCount")
+class ClanInfo(BaseModel):
+    """ClanInfo"""
 
-    @property
-    def key(self):
-        return self.name
+    id: str
+    name: str
+    tag: str
+    level: int
+    level_points: int = Field(..., alias="levelPoints")
+    registration_time: datetime = Field(..., alias="registrationTime")
+    alliance: str
+    description: str
+    leader: str
+    member_count: int = Field(..., alias="memberCount")
 
-
-class CharacterInfo(BaseSchema):
-    def __init__(self, info):
-        self.id = info.get("id")
-        self.name = info.get("name")
-        self.creation_time = self.datetime(info.get("creationTime"))
-
-    @property
-    def key(self):
-        return self.name
+    @validator("registration_time", pre=True)
+    def parse_datetime(cls, value):
+        return DateTimeValidator.parse(value)
 
 
-class ClanMember(BaseSchema):
-    def __init__(self, member):
-        self.name = member.get("name")
-        self.rank = Rank[member.get("rank")]
-        self.join_time = self.datetime(member.get("joinTime"))
+class ClanMember(BaseModel):
+    """ClanMember"""
 
-    @property
-    def key(self):
-        return self.name
+    name: str
+    rank: Rank
+    join_time: datetime = Field(..., alias="joinTime")
 
+    @validator("rank", pre=True)
+    def parse_rank(cls, value):
+        return Rank[value]
 
-class CharacterClan(BaseSchema):
-    def __init__(self, clan):
-        clan_info = clan.get("info", {})
-        clan_member = clan.get("member", {})
-
-        self.info = ClanInfo(clan_info)
-        self.member = ClanMember(clan_member)
+    @validator("join_time", pre=True)
+    def parse_datetime(cls, value):
+        return DateTimeValidator.parse(value)
 
 
-class Character(BaseSchema):
-    def __init__(self, character):
-        info = character.get("information", {})
-        self.info = CharacterInfo(info)
+class CharacterClanInfo(BaseModel):
+    """CharacterClanInfo"""
 
-        clan = character.get("clan", {})
-        self.clan = CharacterClan(clan) if clan else None
+    info: ClanInfo
+    member: ClanMember
 
 
-class CharacterStatistic(BaseSchema):
-    def __init__(self, stat):
-        self.id = stat.get("id")
-        self.type = stat.get("type")
-        self.value = stat.get("value")
+class CharacterInfo(BaseModel):
+    """CharacterMetaInfo"""
+
+    id: str
+    name: str
+    creation_time: datetime = Field(..., alias="creationTime")
+
+    @validator("creation_time", pre=True)
+    def parse_datetime(cls, value):
+        return DateTimeValidator.parse(value)
 
 
+class CharacterClan(BaseModel):
+    """FullCharacterInfo"""
 
-class CharacterProfile(BaseSchema):
-    def __init__(self, response):
-        self.username = response.get("username")
-        self.uuid = response.get("uuid")
-        self.status = response.get("status")
-        self.alliance = response.get("alliance")
-        self.last_login = self.datetime(response.get("lastLogin"))
-        self.displayed_achievements = response.get("displayedAchievements")
-
-        clan = response.get("clan", {})
-        self.clan = CharacterClan(clan) if clan else None
-
-        self.stats = [
-            CharacterStatistic(stat)
-            for stat in response.get("stats", [])
-        ]
+    info: CharacterInfo = Field(..., alias="information")
+    clan: Optional[CharacterClanInfo] = Field(None)
 
 
-class Price(BaseSchema):
-    def __init__(self, price):
-        self.amount = price.get("amount")
-        self.price = price.get("price")
-        self.time = self.datetime(price.get("time"))
-        self.additional = price.get("additional")
+class CharacterStatistic(BaseModel):
+    """CharacterStatValue"""
 
-    @property
-    def key(self):
-        return self.price
+    id: str
+    type: str
+    value: Any
 
 
-class Lot(BaseSchema):
-    def __init__(self, lot):
-        self.item_id = lot.get("itemId")
-        self.amount = lot.get("amount")
-        self.start_price = lot.get("startPrice")
-        self.current_price = lot.get("currentPrice", self.start_price)
-        self.buyout_price = lot.get("buyoutPrice")
-        self.start_time = self.datetime(lot.get("startTime"))
-        self.end_time = self.datetime(lot.get("endTime"))
-        self.additional = lot.get("additional")
+class CharacterProfile(BaseModel):
+    """CharacterProfileData"""
 
-    @property
-    def key(self):
-        return self.buyout_price
+    username: str
+    uuid: UUID
+    status: str
+    alliance: str
+    last_login: Optional[datetime] = Field(..., alias="lastLogin")
+    displayed_achievements: list[str] = Field(..., alias="displayedAchievements")
+    clan: Optional[CharacterClanInfo] = Field(None)
+    stats: list[CharacterStatistic]
+
+    @validator("last_login", pre=True)
+    def parse_datetime(cls, value):
+        return DateTimeValidator.parse(value)
+
+
+class Price(BaseModel):
+    """PriceEntry"""
+
+    amount: int
+    price: int
+    time: datetime
+    additional: Optional[dict]
+
+    @validator("time", pre=True)
+    def parse_datetime(cls, value):
+        return DateTimeValidator.parse(value)
+
+
+class Lot(BaseModel):
+    """Lot"""
+
+    item_id: str = Field(..., alias="itemId")
+    amount: int
+    start_price: int = Field(..., alias="startPrice")
+    current_price: Optional[int] = Field(None, alias="currentPrice")
+    buyout_price: int = Field(..., alias="buyoutPrice")
+    start_time: datetime = Field(..., alias="startTime")
+    end_time: datetime = Field(..., alias="endTime")
+    additional: Optional[dict]
+
+    @validator("start_time", "end_time", pre=True)
+    def parse_datetime(cls, value):
+        return DateTimeValidator.parse(value)
+
+
+class TokenModel(BaseModel):
+    token_type: str
+    expires_in: datetime
+    access_token: str
+
+    @validator("expires_in", pre=True)
+    def parse_expires_in(cls, value):
+        return DateTimeValidator.expires_in(value)
+
+
+class AppToken(TokenModel):
+    pass
+
+
+class UserToken(TokenModel):
+    refresh_token: str
+
+
+class TokenInfo(BaseModel):
+    id: int
+    uuid: UUID
+    login: str
+    display_login: Optional[str]
+    distributor: str
+    distributor_id: Optional[str]

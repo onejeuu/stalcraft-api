@@ -20,10 +20,10 @@ class Clan:
         if self.json is True:
             return response
 
-        return schemas.ClanInfo(response)
+        return schemas.ClanInfo.parse_obj(response)
 
-    def __repr__(self):
-        return f"<{self.__class__.__name__}> {self._api.__repr__()} clan_id='{self.clan_id}' region='{self.region}'"
+    def __str__(self):
+        return f"<{self.__class__.__name__}> {self._api.__str__()} clan_id='{self.clan_id}' region='{self.region}'"
 
 
 class UserClan(Clan):
@@ -41,6 +41,6 @@ class UserClan(Clan):
             return response
 
         return [
-            schemas.ClanMember(member)
+            schemas.ClanMember.parse_obj(member)
             for member in response
         ]

@@ -1,8 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import Any
 
-from pydantic.types import NonNegativeInt
-
 from stalcraft import Auction, Region, schemas
 from stalcraft.api import SecretApi, TokenApi
 from stalcraft.default import Default
@@ -99,22 +97,22 @@ class BaseClient(ABC):
 
     def clans(
         self,
-        limit: NonNegativeInt = Default.LIMIT,
-        offset: NonNegativeInt = Default.OFFSET,
+        limit: int = Default.LIMIT,
+        offset: int = Default.OFFSET,
         region: Region = Default.REGION
     ) -> Any | Listing[schemas.ClanInfo]:
         """
         Returns all clans which are currently registered in the game on specified region.
 
         Args:
-            offset: Amount of clans in list to skip. Defaults to 0.
             limit: Amount of clans to return, starting from offset, (0-100). Defaults to 20.
+            offset: Amount of clans in list to skip. Defaults to 0.
             region: Stalcraft server region.
         """
 
         response = self._api.request_get(
             Method(region, "clans"),
-            Params(offset=offset, limit=limit)
+            Params(limit=limit, offset=offset)
         )
 
         return response if self.json else Listing(response, schemas.ClanInfo, "data", "totalClans")

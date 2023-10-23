@@ -1,7 +1,5 @@
 from typing import Any
 
-from pydantic.types import NonNegativeInt
-
 from stalcraft import Order, Region, Sort, schemas
 from stalcraft.api.base import BaseApi
 from stalcraft.default import Default
@@ -30,8 +28,8 @@ class Auction:
 
     def price_history(
         self,
-        limit: NonNegativeInt = Default.LIMIT,
-        offset: NonNegativeInt = Default.OFFSET,
+        limit: int = Default.LIMIT,
+        offset: int = Default.OFFSET,
         additional: bool = Default.ADDITIONAL
     ) -> Any | Listing[schemas.Price]:
         """
@@ -39,22 +37,22 @@ class Auction:
         Prices are sorted in descending order by recorded time of purchase.
 
         Args:
-            offset: Amount of clans in list to skip. Defaults to 0.
             limit: Amount of clans to return, starting from offset, (0-100). Defaults to 20.
+            offset: Amount of clans in list to skip. Defaults to 0.
             additional: Whether to include additional information (dict) about lots. Defaults to False.
         """
 
         response = self._api.request_get(
             Method(self.region, "auction", self.item_id, "history"),
-            Params(offset=offset, limit=limit, additional=str(additional))
+            Params(limit=limit, offset=offset, additional=str(additional))
         )
 
         return response if self.json else Listing(response, schemas.Price, "prices", "total")
 
     def lots(
         self,
-        limit: NonNegativeInt = Default.LIMIT,
-        offset: NonNegativeInt = Default.OFFSET,
+        limit: int = Default.LIMIT,
+        offset: int = Default.OFFSET,
         sort: Sort = Default.SORT,
         order: Order = Default.ORDER,
         additional: bool = Default.ADDITIONAL
@@ -64,8 +62,8 @@ class Auction:
         Lots are sorted based on given parameter.
 
         Args:
-            offset: Amount of clans in list to skip. Defaults to 0.
             limit: Amount of clans to return, starting from offset, (0-100). Defaults to 20.
+            offset: Amount of clans in list to skip. Defaults to 0.
             sort: Property to sort by. Defaults to TIME_CREATED.
             order: Either asc or desc. Defaults to ASCENDING.
             additional: Whether to include additional information (dict) about lots. Defaults to False.
@@ -73,7 +71,7 @@ class Auction:
 
         response = self._api.request_get(
             Method(self.region, "auction", self.item_id, "lots"),
-            Params(offset=offset, limit=limit, sort=sort, order=order, additional=str(additional))
+            Params(limit=limit, offset=offset, sort=sort, order=order, additional=str(additional))
         )
 
         return response if self.json else Listing(response, schemas.Lot, "lots", "total")

@@ -76,9 +76,9 @@ print(client.emission(Region.EU))
 <summary>🐇 Asyncio</summary>
 
 ```python
-from stalcraft.asyncio import AsyncAppClient
-from stalcraft import Region
 import asyncio
+from stalcraft import Region
+from stalcraft.asyncio import AsyncAppClient
 
 TOKEN = "YOUR_TOKEN"
 
@@ -142,7 +142,7 @@ print(app_auth.get_token())
 <summary>Get User Token</summary>
 
 ```python
-print(user_auth.code_url)
+print("Go to:", user_auth.code_url)
 
 code = input("Enter code:")
 
@@ -158,7 +158,7 @@ print(user_auth.get_token(code))
 <summary>Refresh User Token</summary>
 
 ```python
-REFRESH_TOKEN = "USER_REFRESH_TOKEN"
+REFRESH_TOKEN = "REFRESH_TOKEN"
 
 print(user_auth.refresh_token(REFRESH_TOKEN))
 ```
@@ -177,7 +177,7 @@ TOKEN = "YOUR_TOKEN"
 
 client = AppClient(token=TOKEN)
 
-print("Object:")
+print("Pydantic Object:")
 print(client.emission())
 
 client = AppClient(TOKEN, json=True)
@@ -193,7 +193,7 @@ print(client.emission())
 ### Output:
 
 ```python
-Object:
+Pydantic Object:
 Emission(
     current_start=None,
     previous_start=datetime.datetime(2023, 1, 30, 12, 0, 0, tzinfo=datetime.timezone.utc),

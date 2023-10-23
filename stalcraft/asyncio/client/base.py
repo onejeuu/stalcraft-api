@@ -1,8 +1,6 @@
 from abc import abstractmethod
 from typing import Any
 
-from pydantic.types import NonNegativeInt
-
 from stalcraft import Region, schemas
 from stalcraft.asyncio import AsyncAuction
 from stalcraft.asyncio.api import AsyncSecretApi, AsyncTokenApi
@@ -67,13 +65,13 @@ class AsyncBaseClient(BaseClient):
 
     async def clans(
         self,
-        limit: NonNegativeInt = Default.LIMIT,
-        offset: NonNegativeInt = Default.OFFSET,
+        limit: int = Default.LIMIT,
+        offset: int = Default.OFFSET,
         region: Region = Default.REGION
     ) -> Any | Listing[schemas.ClanInfo]:
         response = await self._api.request_get(
             Method(region, "clans"),
-            Params(offset=offset, limit=limit)
+            Params(limit=limit, offset=offset)
         )
 
         return response if self.json else Listing(response, schemas.ClanInfo, "data", "totalClans")

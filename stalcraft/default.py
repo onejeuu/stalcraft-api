@@ -11,8 +11,8 @@ class Default(NamedTuple):
     JSON = False
 
     # ? Requests
-    OFFSET = 0
     LIMIT = 20
+    OFFSET = 0
     SORT = Sort.TIME_CREATED
     ORDER = Order.ASCENDING
     ADDITIONAL = False

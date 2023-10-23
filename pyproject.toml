@@ -5,8 +5,9 @@ description = "stalcraft api unofficial python library"
 authors = ["onejeuu <bloodtrail@beber1k.ru>"]
 license = "MIT"
 readme = "README.md"
-packages = [{ include = "stalcraft" }]
+repository = "https://github.com/onejeuu/stalcraft-api"
 keywords = ["stalcraft", "api", "stalcraft-api", "api-client"]
+packages = [{ include = "stalcraft" }]
 
 [tool.poetry.dependencies]
 python = "^3.11"

@@ -1,6 +1,6 @@
 <h1 align="center">stalcraft-api unofficial python library</h1>
 
-<p align="center">
+<div align="center">
     <a href="https://pypi.org/project/stalcraft-api" alt="PyPi Package Version">
         <img src="https://img.shields.io/pypi/v/stalcraft-api.svg?style=flat-square"/>
     </a>
@@ -8,25 +8,27 @@
         <img src="https://img.shields.io/pypi/pyversions/stalcraft-api.svg?style=flat-square"/>
     </a>
     <a href="https://opensource.org/licenses/MIT" alt="MIT License">
-        <img src="https://img.shields.io/pypi/l/aiogram.svg?style=flat-squar"/>
+        <img src="https://img.shields.io/pypi/l/stalcraft-api.svg?style=flat-square"/>
     </a>
-</p>
+</div>
 
 
 <br>
 
-<p align="center">
-    <b>Official API documentation:</b> https://eapi.stalcraft.net
-</p>
-<p align="center">
-    <b>Before you can use the API, you must register your application and receive approval<b>
-</p>
-<p align="center">
-    <b>For testing Demo API is available<b>
-</p>
-<p align="center">
-    <a href="https://eapi.stalcraft.net/registration.html">more about applications</a>
-</p>
+<div align="center">
+    <p>
+        <b>Official API documentation:</b> https://eapi.stalcraft.net
+    </p>
+    <p>
+        <b>Before you can use the API, you must register your application and receive approval<b>
+    </p>
+    <p>
+        <b>For testing Demo API is available<b>
+    </p>
+    <p>
+        <a href="https://eapi.stalcraft.net/registration.html">more about applications</a>
+    </p>
+</div>
 
 
 <br>

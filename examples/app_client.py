@@ -27,8 +27,8 @@ print("List of clans with limit 2")
 print(client.clans(limit=2))
 
 print()
-print("Information about emission on NA server")
-print(client.emission(Region.NA))
+print("Information about emission on EU server")
+print(client.emission(Region.EUROPE))
 
 print()
 print(f"List of lots for item with id '{ITEM_ID}'")

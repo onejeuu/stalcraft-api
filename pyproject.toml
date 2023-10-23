@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "stalcraft-api"
+version = "1.0.0"
+description = "stalcraft api unofficial python library"
+authors = ["onejeuu <bloodtrail@beber1k.ru>"]
+license = "MIT"
+readme = "README.md"
+packages = [{ include = "stalcraft" }]
+keywords = ["stalcraft", "api", "stalcraft-api", "api-client"]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+pydantic = "^1.10.7"
+httpx = "^0.24.1"
+
+[tool.poetry.group.dev.dependencies]
+rich = "^13.5.3"
+pytest = "^7.4.2"
+python-dotenv = "^1.0.0"
+pytest-asyncio = "^0.21.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+ignore = ["E501"]

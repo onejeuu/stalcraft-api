@@ -2,11 +2,14 @@
 
 <p align="center">
     <a href="https://pypi.org/project/stalcraft-api" alt="PyPi Package Version">
-        <img src="https://img.shields.io/pypi/v/stalcraft-api.svg?style=flat-square"/></a>
+        <img src="https://img.shields.io/pypi/v/stalcraft-api.svg?style=flat-square"/>
+    </a>
     <a href="https://pypi.org/project/stalcraft-api" alt="Supported python versions">
-        <img src="https://img.shields.io/pypi/pyversions/stalcraft-api.svg?style=flat-square"/></a>
+        <img src="https://img.shields.io/pypi/pyversions/stalcraft-api.svg?style=flat-square"/>
+    </a>
     <a href="https://opensource.org/licenses/MIT" alt="MIT License">
-        <img src="https://img.shields.io/pypi/l/aiogram.svg?style=flat-squar"/></a>
+        <img src="https://img.shields.io/pypi/l/aiogram.svg?style=flat-squar"/>
+    </a>
 </p>
 
 
@@ -33,7 +36,7 @@
 ### Pip
 
 ```console
-pip install stalcraft-api --upgrade
+pip install stalcraft-api -U
 ```
 
 <details>
@@ -48,63 +51,87 @@ cd stalcraft-api
 ```
 
 ```console
-pip install -r requirements.txt
+poetry install
 ```
 </details>
 
 
 <br>
-<br>
 
 # ⚡ Quick Start
 
 ```python
-from stalcraft import AppClient
+from stalcraft import AppClient, Region
 
+# Only as example.
+# Do not store your credentials in code.
 TOKEN = "YOUR_TOKEN"
 
 client = AppClient(token=TOKEN)
+
+print(client.emission(Region.EU))
 ```
 
+<details>
+<summary>🐇 Asyncio</summary>
+
+```python
+from stalcraft.asyncio import AsyncAppClient
+from stalcraft import Region
+import asyncio
+
+TOKEN = "YOUR_TOKEN"
+
+async def main():
+    client = AsyncAppClient(token=TOKEN)
+
+    print(await client.emission(Region.EU))
+
+asyncio.run(main())
+```
+
+</details>
+
 <br>
-<br>
+
 
 # 🚫 Exceptions
 
 ```
-Exception
+StalcraftApiException
 ├── InvalidToken
-├── StalcraftApiException
-│   ├── Unauthorised
-│   ├── InvalidParameter
-│   ├── NotFound
-│   └── RateLimitException
-└── ItemException
+├── MissingCredentials
+├── ApiRequestError
+│   ├── RequestUnauthorised
+│   ├── RequestInvalidParameter
+│   ├── RequestNotFound
+│   └── RateLimitReached
+└── ItemIdError
     ├── ListingJsonNotFound
     └── ItemIdNotFound
 ```
 
 <br>
-<br>
 
-# 🔑 Tokens
+# 🔑 Authorization
 
 ```python
-from stalcraft import Authorization
+from stalcraft import AppAuth, UserAuth
 
+# Only as example.
+# Do not store your credentials in code.
 CLIENT_ID = "YOUR_CLIENT_ID"
 CLIENT_SECRET = "YOUR_CLIENT_SECRET"
 
-auth = Authorization(client_id=CLIENT_ID, client_secret=CLIENT_SECRET)
+app_auth = AppAuth(CLIENT_ID, CLIENT_SECRET)
+user_auth = UserAuth(CLIENT_ID, CLIENT_SECRET)
 ```
 
 <details>
 <summary>Get App Token</summary>
 
 ```python
-print()
-print("Get App Token")
-print(auth.get_app_token())
+print(app_auth.get_token())
 ```
 
 </details>
@@ -115,18 +142,12 @@ print(auth.get_app_token())
 <summary>Get User Token</summary>
 
 ```python
-print()
-print("Get User Code")
-print(auth.user_code_url)
+print(user_auth.code_url)
 
-auth.input_code()
-
-# or
-# auth.code = "USER_CODE"
+code = input("Enter code:")
 
 print()
-print("Get User Token")
-print(auth.get_user_token())
+print(user_auth.get_token(code))
 ```
 
 </details>
@@ -139,15 +160,12 @@ print(auth.get_user_token())
 ```python
 REFRESH_TOKEN = "USER_REFRESH_TOKEN"
 
-print()
-print("Refresh User Token")
-print(auth.update_token(REFRESH_TOKEN))
+print(user_auth.refresh_token(REFRESH_TOKEN))
 ```
 
 </details>
 
 
-<br>
 <br>
 
 # 📋 Output Formats
@@ -159,14 +177,13 @@ TOKEN = "YOUR_TOKEN"
 
 client = AppClient(token=TOKEN)
 
-print()
 print("Object:")
 print(client.emission())
 
-client.json = True
+client = AppClient(TOKEN, json=True)
 
 # or
-# client = AppClient(TOKEN, json=True)
+# client.json = True
 
 print()
 print("Json:")
@@ -185,7 +202,7 @@ Emission(
 
 Json:
 {
-    'previousStart': '2023-01-30T05:16:52Z',
-    'previousEnd': '2023-01-30T05:21:52Z'
+    'previousStart': '2023-01-30T12:00:00Z',
+    'previousEnd': '2023-01-30T12:05:00Z'
 }
 ```

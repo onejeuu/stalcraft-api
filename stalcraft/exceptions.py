@@ -1,34 +1,17 @@
-class InvalidToken(Exception):
-    pass
+class StalcraftApiException(Exception): ...
 
+# * Basic
+class InvalidToken(StalcraftApiException): ...
+class MissingCredentials(StalcraftApiException): ...
 
-class StalcraftApiException(Exception):
-    pass
+# * Api Requests
+class ApiRequestError(StalcraftApiException): ...
+class RequestUnauthorised(ApiRequestError): ...
+class RequestInvalidParameter(ApiRequestError): ...
+class RequestNotFound(ApiRequestError): ...
+class RateLimitReached(ApiRequestError): ...
 
-
-class Unauthorised(StalcraftApiException):
-    pass
-
-
-class InvalidParameter(StalcraftApiException):
-    pass
-
-
-class NotFound(StalcraftApiException):
-    pass
-
-
-class RateLimitException(StalcraftApiException):
-    pass
-
-
-class ItemException(Exception):
-    pass
-
-
-class ListingJsonNotFound(ItemException):
-    pass
-
-
-class ItemIdNotFound(ItemException):
-    pass
+# * Item Id
+class ItemIdError(StalcraftApiException): ...
+class ListingJsonNotFound(ItemIdError): ...
+class ItemIdNotFound(ItemIdError): ...

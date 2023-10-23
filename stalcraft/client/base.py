@@ -58,8 +58,6 @@ class BaseClient(ABC):
             region: Stalcraft server region.
         """
 
-        print(region)
-
         return Auction(self._api, item_id, region, self.json)
 
     def emission(

@@ -5,7 +5,7 @@ from stalcraft import Region, UserClient
 # Do not store your credentials in code.
 TOKEN = "YOUR_TOKEN"
 
-NICKNAME = "Test-1"
+NICKNAME = "REPLACE_ME"
 CLAN_ID = "5ea2c08c-23f7-4366-98b8-40292267a03f"
 
 

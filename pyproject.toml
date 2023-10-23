@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "stalcraft-api"
-version = "1.0.1"
+version = "1.0.2"
 description = "stalcraft api unofficial python library"
 authors = ["onejeuu <bloodtrail@beber1k.ru>"]
 license = "MIT"
@@ -9,7 +9,7 @@ packages = [{ include = "stalcraft" }]
 keywords = ["stalcraft", "api", "stalcraft-api", "api-client"]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.11"
 pydantic = "^1.10.0"
 httpx = "^0.25.0"
 

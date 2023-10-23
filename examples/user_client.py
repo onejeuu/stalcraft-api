@@ -1,4 +1,4 @@
-from stalcraft import UserClient, Region
+from stalcraft import Region, UserClient
 
 
 # Only as example.
@@ -6,7 +6,7 @@ from stalcraft import UserClient, Region
 TOKEN = "YOUR_TOKEN"
 
 NICKNAME = "Test-1"
-CLAN_ID = "647d6c53-b3d7-4d30-8d08-de874eb1d845"
+CLAN_ID = "5ea2c08c-23f7-4366-98b8-40292267a03f"
 
 
 client = UserClient(token=TOKEN)

@@ -1,14 +1,15 @@
-from stalcraft.asyncio import AsyncUserClient
-from stalcraft import BaseUrl, Region
 import asyncio
+
+from stalcraft import BaseUrl, Region
+from stalcraft.asyncio import AsyncUserClient
 
 
 # Only as example.
 # Do not store your credentials in code.
 TOKEN = "YOUR_TOKEN"
 
-NICKNAME = "Test-1"
-CLAN_ID = "647d6c53-b3d7-4d30-8d08-de874eb1d845"
+NICKNAME = "REPLACE_ME"
+CLAN_ID = "5ea2c08c-23f7-4366-98b8-40292267a03f"
 
 
 async def main():

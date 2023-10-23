@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "stalcraft-api"
-version = "1.0.2"
+version = "1.0.3"
 description = "stalcraft api unofficial python library"
 authors = ["onejeuu <bloodtrail@beber1k.ru>"]
 license = "MIT"

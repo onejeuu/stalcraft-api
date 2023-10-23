@@ -1,5 +1,5 @@
+from stalcraft import AppClient, ItemFolder, LocalItem, WebItem
 from stalcraft.exceptions import ItemIdError
-from stalcraft import AppClient, LocalItem, WebItem, ItemFolder
 
 
 # Only as example.

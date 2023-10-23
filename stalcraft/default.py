@@ -1,7 +1,5 @@
 from typing import NamedTuple
 
-from pydantic.types import NonNegativeInt
-
 from stalcraft.consts import BaseUrl, ItemFolder
 from stalcraft.enums import Order, Region, Sort
 
@@ -13,8 +11,8 @@ class Default(NamedTuple):
     JSON = False
 
     # ? Requests
-    OFFSET: NonNegativeInt = 0
-    LIMIT: NonNegativeInt = 20
+    OFFSET = 0
+    LIMIT = 20
     SORT = Sort.TIME_CREATED
     ORDER = Order.ASCENDING
     ADDITIONAL = False

@@ -1,6 +1,7 @@
-from stalcraft.asyncio import AsyncAppClient
-from stalcraft import Region, Sort, Order
 import asyncio
+
+from stalcraft import LocalItem, Order, Region, Sort
+from stalcraft.asyncio import AsyncAppClient
 
 
 # Only as example.
@@ -9,8 +10,8 @@ TOKEN = "YOUR_TOKEN"
 CLIENT_ID = "YOUR_CLIENT_ID"
 CLIENT_SECRET = "YOUR_CLIENT_SECRET"
 
-ITEM_ID = "1r756"
-CLAN_ID = "647d6c53-b3d7-4d30-8d08-de874eb1d845"
+ITEM_ID = LocalItem("Гадюка")
+CLAN_ID = "5ea2c08c-23f7-4366-98b8-40292267a03f"
 
 
 async def main():

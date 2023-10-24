@@ -1,17 +1,21 @@
 from abc import ABC, abstractproperty
-from typing import Any, Dict, Tuple, TypeAlias
+from pathlib import Path
+from typing import Any, Dict, Optional, TypeAlias, TypedDict
 
 import httpx
 
 from stalcraft import exceptions as exc
 from stalcraft.consts import StatusCode
-from stalcraft.default import Default
+from stalcraft.defaults import Default
 from stalcraft.schemas import RateLimit
-from stalcraft.utils import Method, Params
 
 
-RequestParams: TypeAlias = Dict[str, Any]
 RequestHeaders: TypeAlias = Dict[str, str]
+
+
+class HttpxConfig(TypedDict):
+    base_url: str
+    timeout: httpx.Timeout
 
 
 class BaseApi(ABC):
@@ -31,32 +35,24 @@ class BaseApi(ABC):
     def _timeout(self):
         return httpx.Timeout(Default.TIMEOUT_SECONDS)
 
-    def _parse_request_args(self, method: str | Method, params: RequestParams | Params) -> Tuple[str, RequestParams]:
-        if isinstance(method, Method):
-            method = method.parse()
+    @property
+    def _httpx_config(self) -> HttpxConfig:
+        return {"base_url": self._base_url, "timeout": self._timeout}
 
-        if isinstance(params, Params):
-            params = params.parse()
+    def _parse_response(self, response: httpx.Response) -> Any:
+        validate_status_code(response)
+        self._ratelimit = RateLimit.parse_obj(response.headers)
+        return response.json()
 
-        return method, params
-
-    def _update_rate_limit(self, headers: httpx.Headers) -> None:
-        self._ratelimit = RateLimit.parse_obj(headers)
-
-    def request_get(self, method: str | Method, params: RequestParams | Params = {}) -> Any:
+    def request_get(self, url: Path, params: Optional[httpx.QueryParams] = None) -> Any:
         """
         Makes GET request to Stalcraft API
         """
 
-        method, params = self._parse_request_args(method, params)
+        with httpx.Client(**self._httpx_config) as client:
+            response = client.get(url=url.as_posix(), params=params, headers=self.headers)
 
-        with httpx.Client(base_url=self._base_url, timeout=self._timeout) as client:
-            response = client.get(url=method, params=params, headers=self.headers)
-
-        validate_status_code(response)
-        self._update_rate_limit(response.headers)
-
-        return response.json()
+        return self._parse_response(response)
 
     def __str__(self):
         return f"<{self.__class__.__name__}> base_url='{self._base_url}'"

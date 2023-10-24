@@ -1,10 +1,12 @@
 import warnings
 from typing import Optional
 
-from stalcraft import Clan, Region
+from stalcraft import Region
 from stalcraft import exceptions as exc
+from stalcraft.api import SecretApi, TokenApi
+from stalcraft.clan import Clan
 from stalcraft.client.base import BaseClient
-from stalcraft.default import Default
+from stalcraft.defaults import Default
 
 
 class AppClient(BaseClient):
@@ -38,10 +40,10 @@ class AppClient(BaseClient):
 
     def _get_api(self):
         if self._token:
-            return self._TOKEN_API(self._token, self._base_url)
+            return TokenApi(self._token, self._base_url)
 
         if self._client_id and self._client_secret:
-            return self._SECRET_API(self._client_id, self._client_secret, self._base_url)
+            return SecretApi(self._client_id, self._client_secret, self._base_url)
 
         raise exc.MissingCredentials("No token or client_id with client_secret provided.")
 

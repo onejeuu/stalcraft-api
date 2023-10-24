@@ -1,9 +1,10 @@
 from stalcraft import Region
 from stalcraft import exceptions as exc
+from stalcraft.asyncio.api import AsyncSecretApi, AsyncTokenApi
 from stalcraft.asyncio.clan import AsyncClan
 from stalcraft.asyncio.client.base import AsyncBaseClient
 from stalcraft.client import AppClient
-from stalcraft.default import Default
+from stalcraft.defaults import Default
 
 
 class AsyncAppClient(AppClient, AsyncBaseClient):
@@ -20,10 +21,10 @@ class AsyncAppClient(AppClient, AsyncBaseClient):
 
     def _get_api(self):
         if self._token:
-            return self._TOKEN_API(self._token, self.base_url)
+            return AsyncTokenApi(self._token, self.base_url)
 
         if self._client_id and self._client_secret:
-            return self._SECRET_API(self._client_id, self._client_secret, self.base_url)
+            return AsyncSecretApi(self._client_id, self._client_secret, self.base_url)
 
         raise exc.MissingCredentials("No token or client_id with client_secret provided.")
 

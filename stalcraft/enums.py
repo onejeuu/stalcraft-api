@@ -28,3 +28,8 @@ class Rank(StrEnum):
     OFFICER = auto()
     COLONEL = auto()
     LEADER = auto()
+
+
+class ItemsFolder(StrEnum):
+    RU = auto()
+    GLOBAL = EU = NA = SEA = auto()

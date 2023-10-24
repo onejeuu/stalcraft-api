@@ -2,14 +2,11 @@
 
 <div align="center">
     <a href="https://pypi.org/project/stalcraft-api" alt="PyPi Package Version">
-        <img src="https://img.shields.io/pypi/v/stalcraft-api.svg?style=flat-square"/>
-    </a>
+        <img src="https://img.shields.io/pypi/v/stalcraft-api.svg?style=flat-square"/></a>
     <a href="https://pypi.org/project/stalcraft-api" alt="Supported python versions">
-        <img src="https://img.shields.io/pypi/pyversions/stalcraft-api.svg?style=flat-square"/>
-    </a>
+        <img src="https://img.shields.io/pypi/pyversions/stalcraft-api.svg?style=flat-square"/></a>
     <a href="https://opensource.org/licenses/MIT" alt="MIT License">
-        <img src="https://img.shields.io/pypi/l/stalcraft-api.svg?style=flat-square"/>
-    </a>
+        <img src="https://img.shields.io/pypi/l/stalcraft-api.svg?style=flat-square"/></a>
 </div>
 
 

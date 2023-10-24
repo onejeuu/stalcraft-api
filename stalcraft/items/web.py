@@ -4,13 +4,14 @@ from typing import Any
 import httpx
 
 from stalcraft.consts import ItemsDatabase, StatusCode
-from stalcraft.default import Default
+from stalcraft.defaults import Default
+from stalcraft.enums import ItemsFolder
 from stalcraft.exceptions import ListingJsonNotFound
 from stalcraft.items.base import BaseItem
 
 
 class WebItem(BaseItem):
-    def __init__(self, name: str, folder: str = Default.ITEMS_FOLDER):
+    def __init__(self, name: str, folder: ItemsFolder = Default.ITEMS_FOLDER):
         """
         Attention: This method is sync only.
         Attention: This method is not most reliable and with frequent use may cause a rate limit.

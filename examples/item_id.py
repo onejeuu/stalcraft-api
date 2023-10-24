@@ -1,4 +1,4 @@
-from stalcraft import AppClient, ItemFolder, LocalItem, WebItem
+from stalcraft import AppClient, ItemsFolder, LocalItem, WebItem
 from stalcraft.exceptions import ItemIdError
 
 
@@ -25,7 +25,7 @@ print(client.auction(item_id).lots(limit=1))
 print()
 print("(Not reliable)")
 print("Find item id by listing.json in stalcraft-database github repository")
-item_id = WebItem("Snowflake", folder=ItemFolder.GLOBAL)
+item_id = WebItem("Snowflake", folder=ItemsFolder.GLOBAL)
 print(client.auction(item_id).lots(limit=1))
 
 

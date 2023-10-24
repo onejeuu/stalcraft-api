@@ -1,11 +1,13 @@
+from pathlib import Path
 from typing import Any, List, Optional
 
-from stalcraft import Region, UserClan
+from stalcraft import Region
 from stalcraft import exceptions as exc
 from stalcraft import schemas
-from stalcraft.default import Default
+from stalcraft.api import TokenApi
+from stalcraft.clan import UserClan
 from stalcraft.client.base import BaseClient
-from stalcraft.utils import Method
+from stalcraft.defaults import Default
 
 
 class UserClient(BaseClient):
@@ -30,7 +32,7 @@ class UserClient(BaseClient):
 
     def _get_api(self):
         if self._token:
-            return self._TOKEN_API(self._token, self._base_url)
+            return TokenApi(self._token, self._base_url)
 
         raise exc.MissingCredentials("No token provided.")
 
@@ -61,7 +63,7 @@ class UserClient(BaseClient):
         """
 
         response = self._api.request_get(
-            Method(region, "characters")
+            Path(region, "characters")
         )
 
         return response if self.json else [schemas.Character.parse_obj(character) for character in response]
@@ -80,7 +82,7 @@ class UserClient(BaseClient):
         """
 
         response = self._api.request_get(
-            Method(region, "friends", character)
+            Path(region, "friends", character)
         )
 
         return response

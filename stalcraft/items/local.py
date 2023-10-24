@@ -1,12 +1,13 @@
 import json
 from pathlib import Path
 
-from stalcraft.default import Default
+from stalcraft.defaults import Default
+from stalcraft.enums import ItemsFolder
 from stalcraft.items.base import BaseItem
 
 
 class LocalItem(BaseItem):
-    def __init__(self, name: str, folder: str = Default.ITEMS_FOLDER):
+    def __init__(self, name: str, folder: ItemsFolder = Default.ITEMS_FOLDER):
         """
         Search for Item ID by name in built-in file.
 
@@ -20,10 +21,9 @@ class LocalItem(BaseItem):
 
         super().__init__(name)
 
-        root_path = Path(__file__).resolve().parent
-        path = Path(root_path / "listing" / folder / "listing.json")
+        root = Path(__file__).resolve().parent
 
-        self.path = path
+        self.path = Path(root / "listing" / folder / "listing.json")
 
         self._load_items_from_file()
         self._find_item_id()

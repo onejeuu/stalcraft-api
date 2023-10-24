@@ -1,19 +1,19 @@
 from abc import abstractmethod
+from pathlib import Path
 from typing import Any
 
+from httpx import QueryParams
+
 from stalcraft import Region, schemas
-from stalcraft.asyncio import AsyncAuction
-from stalcraft.asyncio.api import AsyncSecretApi, AsyncTokenApi
+from stalcraft.asyncio.api.base import AsyncBaseApi
+from stalcraft.asyncio.auction import AsyncAuction
 from stalcraft.client.base import BaseClient
-from stalcraft.default import Default
+from stalcraft.defaults import Default
 from stalcraft.items import ItemId
-from stalcraft.utils import Listing, Method, Params
+from stalcraft.utils import Listing
 
 
 class AsyncBaseClient(BaseClient):
-    _TOKEN_API = AsyncTokenApi
-    _SECRET_API = AsyncSecretApi
-
     def __init__(
         self,
         base_url: str = Default.BASE_URL,
@@ -25,12 +25,12 @@ class AsyncBaseClient(BaseClient):
         self._api = self._get_api()
 
     @abstractmethod
-    def _get_api(self) -> _TOKEN_API | _SECRET_API:
+    def _get_api(self) -> AsyncBaseApi:
         ...
 
     async def regions(self) -> Any | list[schemas.RegionInfo]:
         response = await self._api.request_get(
-            Method("regions")
+            Path("regions")
         )
 
         return response if self.json else [schemas.RegionInfo.parse_obj(region) for region in response]
@@ -47,7 +47,7 @@ class AsyncBaseClient(BaseClient):
         region: Region = Default.REGION
     ) -> Any | schemas.Emission:
         response = await self._api.request_get(
-            Method(region, "emission")
+            Path(region, "emission")
         )
 
         return response if self.json else schemas.Emission.parse_obj(response)
@@ -58,7 +58,7 @@ class AsyncBaseClient(BaseClient):
         region: Region = Default.REGION
     ) -> Any | schemas.CharacterProfile:
         response = await self._api.request_get(
-            Method(region, "character", "by-name", character, "profile")
+            Path(region, "character", "by-name", character, "profile")
         )
 
         return response if self.json else schemas.CharacterProfile.parse_obj(response)
@@ -70,8 +70,8 @@ class AsyncBaseClient(BaseClient):
         region: Region = Default.REGION
     ) -> Any | Listing[schemas.ClanInfo]:
         response = await self._api.request_get(
-            Method(region, "clans"),
-            Params(limit=limit, offset=offset)
+            Path(region, "clans"),
+            QueryParams(limit=limit, offset=offset)
         )
 
         return response if self.json else Listing(response, schemas.ClanInfo, "data", "totalClans")

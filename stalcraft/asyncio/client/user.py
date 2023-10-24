@@ -1,13 +1,14 @@
+from pathlib import Path
 from typing import Any
 
 from stalcraft import Region
 from stalcraft import exceptions as exc
 from stalcraft import schemas
+from stalcraft.asyncio.api import AsyncTokenApi
 from stalcraft.asyncio.clan import AsyncUserClan
 from stalcraft.asyncio.client.base import AsyncBaseClient
 from stalcraft.client.user import UserClient
-from stalcraft.default import Default
-from stalcraft.utils import Method
+from stalcraft.defaults import Default
 
 
 class AsyncUserClient(UserClient, AsyncBaseClient):
@@ -22,7 +23,7 @@ class AsyncUserClient(UserClient, AsyncBaseClient):
 
     def _get_api(self):
         if self._token:
-            return self._TOKEN_API(self._token, self.base_url)
+            return AsyncTokenApi(self._token, self.base_url)
 
         raise exc.MissingCredentials("No token provided.")
 
@@ -38,7 +39,7 @@ class AsyncUserClient(UserClient, AsyncBaseClient):
         region: Region = Default.REGION
     ) -> Any | list[schemas.Character]:
         response = await self._api.request_get(
-            Method(region, "characters")
+            Path(region, "characters")
         )
 
         return response if self.json else [schemas.Character.parse_obj(character) for character in response]
@@ -49,7 +50,7 @@ class AsyncUserClient(UserClient, AsyncBaseClient):
         region: Region = Default.REGION
     ) -> Any | list[str]:
         response = await self._api.request_get(
-            Method(region, "friends", character)
+            Path(region, "friends", character)
         )
 
         return response

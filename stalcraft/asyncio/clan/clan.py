@@ -1,8 +1,9 @@
+from pathlib import Path
 from typing import Any
 
-from stalcraft import Clan, Region, schemas
+from stalcraft import Region, schemas
 from stalcraft.asyncio.api.base import AsyncBaseApi
-from stalcraft.utils import Method
+from stalcraft.clan import Clan
 
 
 class AsyncClan(Clan):
@@ -18,7 +19,7 @@ class AsyncClan(Clan):
 
     async def info(self) -> Any | schemas.ClanInfo:
         response = await self._api.request_get(
-            Method(self.region, "clan", self.clan_id, "info")
+            Path(self.region, "clan", self.clan_id, "info")
         )
 
         return response if self.json else schemas.ClanInfo.parse_obj(response)

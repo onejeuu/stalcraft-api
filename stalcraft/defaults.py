@@ -1,7 +1,7 @@
 from typing import NamedTuple
 
-from stalcraft.consts import BaseUrl, ItemFolder
-from stalcraft.enums import Order, Region, Sort
+from stalcraft.consts import BaseUrl
+from stalcraft.enums import Order, Region, Sort, ItemsFolder
 
 
 class Default(NamedTuple):
@@ -23,7 +23,7 @@ class Default(NamedTuple):
     SCOPE = ""
 
     # ? Some requests in auction can take a LARGE amount of time.
-    TIMEOUT_SECONDS = 60.0
+    TIMEOUT_SECONDS = 120.0
 
     # ? Items Ids
-    ITEMS_FOLDER = ItemFolder.RU
+    ITEMS_FOLDER = ItemsFolder.RU

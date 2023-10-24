@@ -1,10 +1,14 @@
+from pathlib import Path
 from typing import Any
 
-from stalcraft import Auction, Order, Region, Sort, schemas
+from httpx import QueryParams
+
+from stalcraft import Order, Region, Sort, schemas
 from stalcraft.asyncio.api.base import AsyncBaseApi
-from stalcraft.default import Default
+from stalcraft.auction import Auction
+from stalcraft.defaults import Default
 from stalcraft.items import ItemId
-from stalcraft.utils import Listing, Method, Params
+from stalcraft.utils import Listing
 
 
 class AsyncAuction(Auction):
@@ -25,8 +29,8 @@ class AsyncAuction(Auction):
         additional: bool = Default.ADDITIONAL
     ) -> Any | Listing[schemas.Price]:
         response = await self._api.request_get(
-            Method(self.region, "auction", self.item_id, "history"),
-            Params(limit=limit, offset=offset, additional=str(additional))
+            Path(self.region, "auction", self.item_id, "history"),
+            QueryParams(limit=limit, offset=offset, additional=additional)
         )
 
         return response if self.json else Listing(response, schemas.Price, "prices", "total")
@@ -40,8 +44,8 @@ class AsyncAuction(Auction):
         additional: bool = Default.ADDITIONAL
     ) -> Any | Listing[schemas.Lot]:
         response = await self._api.request_get(
-            Method(self.region, "auction", self.item_id, "lots"),
-            Params(limit=limit, offset=offset, sort=sort, order=order, additional=str(additional))
+            Path(self.region, "auction", self.item_id, "lots"),
+            QueryParams(limit=limit, offset=offset, sort=sort, order=order, additional=additional)
         )
 
         return response if self.json else Listing(response, schemas.Lot, "lots", "total")

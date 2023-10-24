@@ -1,6 +1,6 @@
 import asyncio
 
-from stalcraft import ItemFolder, LocalItem, WebItem
+from stalcraft import ItemsFolder, LocalItem, WebItem
 from stalcraft.asyncio import AsyncAppClient
 from stalcraft.exceptions import ItemIdError
 
@@ -26,7 +26,7 @@ async def main():
     print()
     print("(Not reliable)")
     print("Find item id by listing.json in stalcraft-database github repository")
-    item_id = WebItem("Snowflake", folder=ItemFolder.GLOBAL)
+    item_id = WebItem("Snowflake", folder=ItemsFolder.GLOBAL)
     print(await client.auction(item_id).lots(limit=1))
 
     print()

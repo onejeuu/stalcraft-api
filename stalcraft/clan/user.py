@@ -1,8 +1,8 @@
+from pathlib import Path
 from typing import Any
 
 from stalcraft import schemas
 from stalcraft.clan import Clan
-from stalcraft.utils import Method
 
 
 class UserClan(Clan):
@@ -14,7 +14,7 @@ class UserClan(Clan):
         """
 
         response = self._api.request_get(
-            Method(self.region, "clan", self.clan_id, "members")
+            Path(self.region, "clan", self.clan_id, "members")
         )
 
         return response if self.json else [schemas.ClanMember.parse_obj(member) for member in response]

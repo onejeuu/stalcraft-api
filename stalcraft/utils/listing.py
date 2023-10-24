@@ -5,7 +5,7 @@ T = TypeVar("T")
 
 
 class BaseListing(List[T]):
-    def __init__(self, items: List[T], total: int=0):
+    def __init__(self, items: List[T], total: int = 0):
         super().__init__(items)
         self.total = total
 
@@ -17,12 +17,15 @@ class Listing(BaseListing[T]):
     Which is needed to specify total number of game items in database.
     """
 
+    DATA_NAME = "data"
+    TOTAL_NAME = "total"
+
     def __init__(
         self,
         response: Any,
         schema: Any,
-        data_name: str = "data",
-        total_name: str = "total"
+        data_name: str = DATA_NAME,
+        total_name: str = TOTAL_NAME
     ):
         items = [
             schema.parse_obj(entry)

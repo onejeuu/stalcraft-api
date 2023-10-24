@@ -1,10 +1,11 @@
 from typing import Any
 
+from httpx import QueryParams
+
 from stalcraft import schemas
 from stalcraft.auth.base import BaseAuth
 from stalcraft.consts import AuthUrl
-from stalcraft.default import Default
-from stalcraft.utils import Params
+from stalcraft.defaults import Default
 
 
 class UserAuth(BaseAuth):
@@ -14,7 +15,7 @@ class UserAuth(BaseAuth):
         Returns the URL that a user should visit to authorize the application.
         """
 
-        params = Params(
+        params = QueryParams(
             client_id = self._client_id,
             redirect_uri = self.redirect_uri,
             scope = self.scope,

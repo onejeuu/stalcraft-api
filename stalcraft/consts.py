@@ -18,11 +18,6 @@ class ItemsDatabase(NamedTuple):
     BRANCH = "main"
 
 
-class ItemFolder(NamedTuple):
-    RU = "ru"
-    GLOBAL = "global"
-
-
 class StatusCode(NamedTuple):
     OK = 200
     INVALID_PARAMETER = 400

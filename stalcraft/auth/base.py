@@ -4,7 +4,7 @@ from typing import Any, Dict
 import httpx
 
 from stalcraft.api.base import validate_status_code
-from stalcraft.default import Default
+from stalcraft.defaults import Default
 
 
 class BaseAuth(ABC):

@@ -1,17 +1,18 @@
 from abc import ABC, abstractmethod
+from pathlib import Path
 from typing import Any
 
-from stalcraft import Auction, Region, schemas
-from stalcraft.api import SecretApi, TokenApi
-from stalcraft.default import Default
+from httpx import QueryParams
+
+from stalcraft import Region, schemas
+from stalcraft.api.base import BaseApi
+from stalcraft.auction import Auction
+from stalcraft.defaults import Default
 from stalcraft.items import ItemId
-from stalcraft.utils import Listing, Method, Params
+from stalcraft.utils import Listing
 
 
 class BaseClient(ABC):
-    _TOKEN_API = TokenApi
-    _SECRET_API = SecretApi
-
     def __init__(
         self,
         base_url: str = Default.BASE_URL,
@@ -23,7 +24,7 @@ class BaseClient(ABC):
         self._api = self._get_api()
 
     @abstractmethod
-    def _get_api(self) -> _TOKEN_API | _SECRET_API:
+    def _get_api(self) -> BaseApi:
         ...
 
     @property
@@ -38,7 +39,7 @@ class BaseClient(ABC):
         """
 
         response = self._api.request_get(
-            Method("regions")
+            Path("regions")
         )
 
         return response if self.json else [schemas.RegionInfo.parse_obj(region) for region in response]
@@ -70,7 +71,7 @@ class BaseClient(ABC):
         """
 
         response = self._api.request_get(
-            Method(region, "emission")
+            Path(region, "emission")
         )
 
         return response if self.json else schemas.Emission.parse_obj(response)
@@ -90,7 +91,7 @@ class BaseClient(ABC):
         """
 
         response = self._api.request_get(
-            Method(region, "character", "by-name", character, "profile")
+            Path(region, "character", "by-name", character, "profile")
         )
 
         return response if self.json else schemas.CharacterProfile.parse_obj(response)
@@ -111,8 +112,8 @@ class BaseClient(ABC):
         """
 
         response = self._api.request_get(
-            Method(region, "clans"),
-            Params(limit=limit, offset=offset)
+            Path(region, "clans"),
+            QueryParams(limit=limit, offset=offset)
         )
 
         return response if self.json else Listing(response, schemas.ClanInfo, "data", "totalClans")

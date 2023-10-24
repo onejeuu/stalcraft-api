@@ -1,11 +1,13 @@
+from pathlib import Path
 from typing import Any
+
+from httpx import QueryParams
 
 from stalcraft import Order, Region, Sort, schemas
 from stalcraft.api.base import BaseApi
-from stalcraft.default import Default
+from stalcraft.defaults import Default
 from stalcraft.items import ItemId
-from stalcraft.items.base import BaseItem
-from stalcraft.utils import Listing, Method, Params
+from stalcraft.utils import Listing
 
 
 class Auction:
@@ -17,14 +19,9 @@ class Auction:
         json: bool
     ):
         self._api = api
-        self.item_id = self._parse_item_id(item_id)
+        self.item_id = str(item_id)
         self.region = region
         self.json = json
-
-    def _parse_item_id(self, item_id: ItemId):
-        if isinstance(item_id, BaseItem):
-            item_id = item_id.parse()
-        return item_id
 
     def price_history(
         self,
@@ -43,8 +40,8 @@ class Auction:
         """
 
         response = self._api.request_get(
-            Method(self.region, "auction", self.item_id, "history"),
-            Params(limit=limit, offset=offset, additional=str(additional))
+            Path(self.region, "auction", self.item_id, "history"),
+            QueryParams(limit=limit, offset=offset, additional=additional)
         )
 
         return response if self.json else Listing(response, schemas.Price, "prices", "total")
@@ -70,8 +67,8 @@ class Auction:
         """
 
         response = self._api.request_get(
-            Method(self.region, "auction", self.item_id, "lots"),
-            Params(limit=limit, offset=offset, sort=sort, order=order, additional=str(additional))
+            Path(self.region, "auction", self.item_id, "lots"),
+            QueryParams(limit=limit, offset=offset, sort=sort, order=order, additional=additional)
         )
 
         return response if self.json else Listing(response, schemas.Lot, "lots", "total")

@@ -23,10 +23,10 @@ class AppClient(BaseClient):
 
         Args:
             token: App access token.
-            client_id: Application ID.
-            client_secret: Application secret.
+            client_id: OAuth2 application ID.
+            client_secret: OAuth2 application secret.
             base_url (optional): API base url. Defaults to PRODUCTION.
-            json (optional): if True response returned in raw format. Defaults to False.
+            json (optional): Raw response format. Defaults to False.
         """
 
         self._token = token

@@ -82,7 +82,7 @@ class BaseClient(ABC):
         region: Region = Default.REGION
     ) -> Any | schemas.CharacterProfile:
         """
-        Returns information about player's profile.
+        Returns information about players profile.
         Includes alliance, profile description, last login time, stats, etc.
 
         Args:

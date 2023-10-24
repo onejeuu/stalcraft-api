@@ -34,8 +34,8 @@ class Auction:
         Prices are sorted in descending order by recorded time of purchase.
 
         Args:
-            limit: Amount of clans to return, starting from offset, (0-100). Defaults to 20.
-            offset: Amount of clans in list to skip. Defaults to 0.
+            limit: Amount of prices to return, starting from offset, (0-100). Defaults to 20.
+            offset: Amount of prices in list to skip. Defaults to 0.
             additional: Whether to include additional information (dict) about lots. Defaults to False.
         """
 
@@ -59,8 +59,8 @@ class Auction:
         Lots are sorted based on given parameter.
 
         Args:
-            limit: Amount of clans to return, starting from offset, (0-100). Defaults to 20.
-            offset: Amount of clans in list to skip. Defaults to 0.
+            limit: Amount of lots to return, starting from offset, (0-100). Defaults to 20.
+            offset: Amount of lots in list to skip. Defaults to 0.
             sort: Property to sort by. Defaults to TIME_CREATED.
             order: Either asc or desc. Defaults to ASCENDING.
             additional: Whether to include additional information (dict) about lots. Defaults to False.

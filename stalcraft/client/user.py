@@ -23,7 +23,7 @@ class UserClient(BaseClient):
         Args:
             token: User access token.
             base_url (optional): API base url. Defaults to PRODUCTION.
-            json (optional): if True response returned in raw format. Defaults to False.
+            json (optional): Raw response format. Defaults to False.
         """
 
         self._token = token

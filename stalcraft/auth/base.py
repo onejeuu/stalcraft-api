@@ -20,11 +20,11 @@ class BaseAuth(ABC):
         Constructor for Authorization.
 
         Args:
-            client_id: OAuth2 client ID.
-            client_secret: OAuth2 client secret.
-            scope (optional): Authorization scope requested by the client. Defaults to "".
-            redirect_uri (optional): URI to redirect the user to after authorization. Defaults to "http://localhost".
-            json (optional): if True response returned in raw format. Defaults to True.
+            client_id: OAuth2 application ID.
+            client_secret: OAuth2 application secret.
+            scope (optional): Authorization scope requested by client. Defaults to "".
+            redirect_uri (optional): URI to redirect user to after authorization. Defaults to "http://localhost".
+            json (optional): Raw response format. Defaults to True.
         """
 
         self._client_id = client_id

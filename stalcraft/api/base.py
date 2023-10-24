@@ -37,7 +37,7 @@ class BaseApi(ABC):
 
     @property
     def _httpx_config(self) -> HttpxConfig:
-        return {"base_url": self._base_url, "timeout": self._timeout}
+        return HttpxConfig(base_url=self._base_url, timeout=self._timeout)
 
     def _parse_response(self, response: httpx.Response) -> Any:
         validate_status_code(response)

@@ -12,15 +12,6 @@ from stalcraft.defaults import Default
 
 
 class AsyncUserClient(UserClient, AsyncBaseClient):
-    """
-    Async User Client for working with the API.
-
-    Args:
-        token: User access token.
-        base_url (optional): API base url. Defaults to PRODUCTION.
-        json (optional): if True response returned in raw format. Defaults to False.
-    """
-
     def _get_api(self):
         if self._token:
             return AsyncTokenApi(self._token, self.base_url)

@@ -8,17 +8,6 @@ from stalcraft.defaults import Default
 
 
 class AsyncAppClient(AppClient, AsyncBaseClient):
-    """
-    Async App Client for working with the API.
-
-    Args:
-        token: App access token.
-        client_id: Application ID.
-        client_secret: Application secret.
-        base_url (optional): API base url. Defaults to PRODUCTION.
-        json (optional): if True response returned in raw format. Defaults to False.
-    """
-
     def _get_api(self):
         if self._token:
             return AsyncTokenApi(self._token, self.base_url)

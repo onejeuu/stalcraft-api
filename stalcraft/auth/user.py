@@ -29,7 +29,7 @@ class UserAuth(BaseAuth):
         Returns an OAuth2 token for the user, using the authorization code.
 
         Args:
-            code: Authorization code acquired after user authorized in your app by "code_url".
+            code: Authorization code received after user authorized in your app by "code_url".
         """
 
         response = self._request_post(

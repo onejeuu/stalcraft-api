@@ -49,6 +49,9 @@ class BaseApi(ABC):
         Makes GET request to Stalcraft API
         """
 
+        if params:
+            params = httpx.QueryParams({k: v for k, v in params.items() if v})
+
         with httpx.Client(**self._httpx_config) as client:
             response = client.get(url=url.as_posix(), params=params, headers=self.headers)
 

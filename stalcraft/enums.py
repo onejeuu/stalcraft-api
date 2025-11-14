@@ -8,11 +8,19 @@ class Region(StrEnum):
     SEA = SOUTH_EAST_ASIA = auto()
 
 
-class Sort(StrEnum):
+class AuctionSort(StrEnum):
     TIME_CREATED = auto()
     TIME_LEFT = auto()
     CURRENT_PRICE = auto()
     BUYOUT_PRICE = auto()
+
+
+Sort = AuctionSort
+
+
+class OperationSort(StrEnum):
+    DATE_FINISH = auto()
+    DIFFICULTY = auto()
 
 
 class Order(StrEnum):

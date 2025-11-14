@@ -112,3 +112,33 @@ class Lot(BaseModel):
     start_time: datetime = Field(..., alias="startTime")
     end_time: datetime = Field(..., alias="endTime")
     additional: Optional[Dict[str, Any]]
+
+
+class OperationParticipant(BaseModel):
+    """OperationSessionParticipant"""
+
+    username: str
+    death: int
+    mob_kills: int = Field(..., alias="mobKills")
+    damage_received: float = Field(..., alias="damageReceived")
+    damage_dealt: float = Field(..., alias="damageDealt")
+    armor_class: str = Field(..., alias="armorClass")
+    armor_item_id: Optional[str] = Field(None, alias="armorItemId")
+    armor_level: int = Field(..., alias="armorLevel")
+    primary_weapon_item_id: Optional[str] = Field(None, alias="primaryWeaponItemId")
+    primary_weapon_level: int = Field(..., alias="primaryWeaponLevel")
+    secondary_weapon_item_id: Optional[str] = Field(None, alias="secondaryWeaponItemId")
+    secondary_weapon_level: int = Field(..., alias="secondaryWeaponLevel")
+
+
+class OperationSession(BaseModel):
+    """OperationSession"""
+
+    id: int
+    map: str
+    start_time: datetime = Field(..., alias="startTime")
+    end_time: datetime = Field(..., alias="endTime")
+    difficulty: int
+    duration_seconds: float = Field(..., alias="sessionDurationSeconds")
+    reward: float = Field(..., alias="difficultyReward")
+    participants: list[OperationParticipant]

@@ -35,6 +35,9 @@ build-backend = "setuptools.build_meta"
 [tool.setuptools]
 packages = { find = { include = ["stalcraft", "stalcraft.*"] } }
 
+[tool.setuptools.package-data]
+stalcraft = ["**/*.json"]
+
 [tool.setuptools.dynamic]
 version = {attr = "stalcraft.__version__"}
 

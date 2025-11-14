@@ -1,7 +1,7 @@
 from typing import NamedTuple
 
 from stalcraft.consts import BaseUrl
-from stalcraft.enums import Order, Region, Sort, ItemsFolder
+from stalcraft.enums import OperationSort, Order, Region, Sort, ItemsFolder
 
 
 class Default(NamedTuple):
@@ -14,6 +14,7 @@ class Default(NamedTuple):
     LIMIT = 20
     OFFSET = 0
     SORT = Sort.TIME_CREATED
+    OPERTATION_SORT = OperationSort.DATE_FINISH
     ORDER = Order.ASCENDING
     ADDITIONAL = False
 

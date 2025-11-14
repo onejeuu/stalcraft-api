@@ -3,7 +3,8 @@ from .api import (
     ClanInfo, ClanMember,
     CharacterClan, CharacterInfo, Character,
     CharacterStatistic, CharacterProfile,
-    Price, Lot
+    Price, Lot,
+    OperationParticipant, OperationSession
 )
 
 from .auth import (

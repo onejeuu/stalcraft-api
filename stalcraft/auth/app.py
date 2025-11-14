@@ -21,4 +21,4 @@ class AppAuth(BaseAuth):
             }
         )
 
-        return response if self.json else schemas.AppToken.parse_obj(response)
+        return response if self.json else schemas.AppToken.model_validate(response)

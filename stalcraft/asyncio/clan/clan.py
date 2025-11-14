@@ -22,4 +22,4 @@ class AsyncClan(Clan):
             Path(self.region, "clan", self.clan_id, "info")
         )
 
-        return response if self.json else schemas.ClanInfo.parse_obj(response)
+        return response if self.json else schemas.ClanInfo.model_validate(response)

@@ -17,4 +17,4 @@ class UserClan(Clan):
             Path(self.region, "clan", self.clan_id, "members")
         )
 
-        return response if self.json else [schemas.ClanMember.parse_obj(member) for member in response]
+        return response if self.json else [schemas.ClanMember.model_validate(member) for member in response]

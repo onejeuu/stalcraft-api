@@ -28,7 +28,7 @@ class Listing(BaseListing[T]):
         total_name: str = TOTAL_NAME
     ):
         items = [
-            schema.parse_obj(entry)
+            schema.model_validate(entry)
             for entry in response[data_name]
         ]
         total = response.get(total_name, 0)

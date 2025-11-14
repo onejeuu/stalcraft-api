@@ -19,7 +19,7 @@ class AsyncUserAuth(AsyncBaseAuth, UserAuth):
             }
         )
 
-        return response if self.json else schemas.UserToken.parse_obj(response)
+        return response if self.json else schemas.UserToken.model_validate(response)
 
     async def refresh_token(self, refresh_token: str) -> Any | schemas.UserToken:
         response = await self._request_post(
@@ -33,7 +33,7 @@ class AsyncUserAuth(AsyncBaseAuth, UserAuth):
             }
         )
 
-        return response if self.json else schemas.UserToken.parse_obj(response)
+        return response if self.json else schemas.UserToken.model_validate(response)
 
     async def token_info(self, token: str) -> Any | schemas.TokenInfo:
         response = await self._request_get(
@@ -43,4 +43,4 @@ class AsyncUserAuth(AsyncBaseAuth, UserAuth):
             }
         )
 
-        return response if self.json else schemas.TokenInfo.parse_obj(response)
+        return response if self.json else schemas.TokenInfo.model_validate(response)

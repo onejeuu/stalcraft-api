@@ -66,7 +66,7 @@ class UserClient(BaseClient):
             Path(region, "characters")
         )
 
-        return response if self.json else [schemas.Character.parse_obj(character) for character in response]
+        return response if self.json else [schemas.Character.model_validate(character) for character in response]
 
     def friends(
         self,

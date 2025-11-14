@@ -33,7 +33,7 @@ class AsyncBaseClient(BaseClient):
             Path("regions")
         )
 
-        return response if self.json else [schemas.RegionInfo.parse_obj(region) for region in response]
+        return response if self.json else [schemas.RegionInfo.model_validate(region) for region in response]
 
     def auction(
         self,
@@ -50,7 +50,7 @@ class AsyncBaseClient(BaseClient):
             Path(region, "emission")
         )
 
-        return response if self.json else schemas.Emission.parse_obj(response)
+        return response if self.json else schemas.Emission.model_validate(response)
 
     async def character_profile(
         self,
@@ -61,7 +61,7 @@ class AsyncBaseClient(BaseClient):
             Path(region, "character", "by-name", character, "profile")
         )
 
-        return response if self.json else schemas.CharacterProfile.parse_obj(response)
+        return response if self.json else schemas.CharacterProfile.model_validate(response)
 
     async def clans(
         self,

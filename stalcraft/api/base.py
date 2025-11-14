@@ -41,7 +41,7 @@ class BaseApi(ABC):
 
     def _parse_response(self, response: httpx.Response) -> Any:
         validate_status_code(response)
-        self._ratelimit = RateLimit.parse_obj(response.headers)
+        self._ratelimit = RateLimit.model_validate(response.headers)
         return response.json()
 
     def request_get(self, url: Path, params: Optional[httpx.QueryParams] = None) -> Any:

@@ -27,7 +27,7 @@ class Clan:
             Path(self.region, "clan", self.clan_id, "info")
         )
 
-        return response if self.json else schemas.ClanInfo.parse_obj(response)
+        return response if self.json else schemas.ClanInfo.model_validate(response)
 
     def __str__(self):
         return f"<{self.__class__.__name__}> clan_id='{self.clan_id}' region='{self.region}'"

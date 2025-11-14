@@ -1,28 +1,42 @@
-[tool.poetry]
+[project]
 name = "stalcraft-api"
-version = "1.1.1"
 description = "stalcraft api unofficial python library"
-authors = ["onejeuu <bloodtrail@beber1k.ru>"]
-license = "MIT"
-readme = "README.md"
-repository = "https://github.com/onejeuu/stalcraft-api"
 keywords = ["stalcraft", "api", "stalcraft-api", "api-client"]
-packages = [{ include = "stalcraft" }]
 
-[tool.poetry.dependencies]
-python = "^3.11"
-pydantic = "^1.10.0"
-httpx = "^0.25.0"
+authors = [{ name = "onejeuu", email = "mail@66rk.ru" }]
 
-[tool.poetry.group.dev.dependencies]
-rich = "^13.6.0"
-pytest = "^7.4.2"
-python-dotenv = "^1.0.0"
-pytest-asyncio = "^0.21.1"
+dynamic = ["version"]
+
+requires-python = ">=3.11"
+
+readme = "README.md"
+license = "MIT"
+
+dependencies = [
+    "pydantic>=1.10.0",
+    "httpx>=0.25.0",
+]
+
+[dependency-groups]
+dev = [
+    "rich>=13.6.0",
+    "pytest>=7.4.2",
+    "python-dotenv>=1.0.0",
+    "pytest-asyncio>=0.21.1",
+]
+
+[project.urls]
+Repository = "https://github.com/onejeuu/stalcraft-api"
 
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = { find = { include = ["stalcraft", "stalcraft.*"] } }
+
+[tool.setuptools.dynamic]
+version = {attr = "stalcraft.__version__"}
 
 [tool.ruff]
 ignore = ["E501"]

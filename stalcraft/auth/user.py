@@ -43,7 +43,7 @@ class UserAuth(BaseAuth):
             }
         )
 
-        return response if self.json else schemas.UserToken.parse_obj(response)
+        return response if self.json else schemas.UserToken.model_validate(response)
 
     def refresh_token(self, refresh_token: str) -> Any | schemas.UserToken:
         """
@@ -64,7 +64,7 @@ class UserAuth(BaseAuth):
             }
         )
 
-        return response if self.json else schemas.UserToken.parse_obj(response)
+        return response if self.json else schemas.UserToken.model_validate(response)
 
     def token_info(self, token: str) -> Any | schemas.TokenInfo:
         """
@@ -81,4 +81,4 @@ class UserAuth(BaseAuth):
             }
         )
 
-        return response if self.json else schemas.TokenInfo.parse_obj(response)
+        return response if self.json else schemas.TokenInfo.model_validate(response)

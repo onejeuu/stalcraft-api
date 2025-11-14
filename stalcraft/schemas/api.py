@@ -68,7 +68,7 @@ class Character(BaseModel):
     """FullCharacterInfo"""
 
     info: CharacterInfo = Field(..., alias="information")
-    clan: Optional[CharacterClan]
+    clan: Optional[CharacterClan] = Field(None)
 
 
 class CharacterStatistic(BaseModel):
@@ -88,7 +88,7 @@ class CharacterProfile(BaseModel):
     alliance: str
     last_login: Optional[datetime] = Field(None, alias="lastLogin")
     displayed_achievements: list[str] = Field(..., alias="displayedAchievements")
-    clan: Optional[CharacterClan]
+    clan: Optional[CharacterClan] = Field(None)
     stats: list[CharacterStatistic]
 
 

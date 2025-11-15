@@ -3,7 +3,7 @@ class BaseUrl:
     PRODUCTION = "http://eapi.stalcraft.net"
 
 
-class AuthUrl:
+class OAuthUrl:
     AUTHORIZE = "https://exbo.net/oauth/authorize"
     TOKEN = "https://exbo.net/oauth/token"
     USER = "https://exbo.net/oauth/user"

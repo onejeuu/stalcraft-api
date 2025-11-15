@@ -1,6 +1,7 @@
 from typing import Any, Dict, TypeAlias
 from urllib.parse import urlencode
 
+
 QueryParams: TypeAlias = Dict[str, Any]
 
 

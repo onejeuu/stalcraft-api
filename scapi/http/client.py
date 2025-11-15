@@ -1,5 +1,6 @@
 from typing import Any, Optional
-from .base import BaseHTTPClient, Params, Headers, Data
+
+from .base import BaseHTTPClient, Data, Headers, Params
 
 
 class HTTPClient(BaseHTTPClient):

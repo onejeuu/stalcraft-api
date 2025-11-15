@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from .consts import BaseUrl
-from .enums import Order, Realm, Region, SortAuction, SortOperation
+from .enums import DatabaseMode, Order, Realm, Region, SortAuction, SortOperation
 
 
 class Default:
@@ -27,5 +27,6 @@ class Default:
     RESPONSE_TYPE = "code"
     SCOPE = ""
 
-    # Items
-    ITEMS_DATABASE_PATH = Path.home() / "scapi" / "items.db"
+    # Database
+    DATABASE_PATH = Path.home() / "scapi" / "stalcraft.db"
+    DATABASE_MODE = DatabaseMode.DEFAULT

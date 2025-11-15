@@ -1,9 +1,11 @@
 from datetime import datetime
 from typing import Any, Dict, Optional, TypeAlias
 from uuid import UUID
-from pydantic import BaseModel, Field, field_validator
+
+from pydantic import BaseModel, Field
 
 from scapi.enums import Alliance, Rank
+
 
 Additional: TypeAlias = Dict[str, Any]
 

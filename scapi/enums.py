@@ -50,3 +50,8 @@ class Rank(UpStrEnum):
     OFFICER = auto()
     COLONEL = auto()
     LEADER = auto()
+
+
+class DatabaseMode(StrEnum):
+    DEFAULT = auto()
+    FULL = auto()

@@ -35,3 +35,6 @@ packages = { find = { include = ["scapi", "scapi.*"] } }
 [tool.setuptools.dynamic]
 version = { attr = "scapi.__version__" }
 
+[tool.isort]
+lines_after_imports = 2
+skip = ["__init__.py"]

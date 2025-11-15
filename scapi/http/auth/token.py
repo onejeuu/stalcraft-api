@@ -1,6 +1,7 @@
 import base64
 import json
 from typing import Any, Dict, TypeAlias
+
 from scapi.defaults import Default
 from scapi.http.client import HTTPClient
 

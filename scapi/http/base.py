@@ -9,6 +9,7 @@ from scapi.defaults import Default
 from .params import Params
 from .ratelimit import RateLimit
 
+
 Headers: TypeAlias = Dict[str, str]
 
 JsonData: TypeAlias = Dict[str, Any]

@@ -1,0 +1,55 @@
+import warnings
+from typing import Optional
+
+from scapi.client.clan.app import AppClan
+from scapi.defaults import Default
+from scapi.enums import Region
+from scapi.http.auth.creds import ClientCredentialsClient
+from scapi.http.auth.token import BearerTokenClient
+
+from .base import BaseClient
+
+
+class AppClient(BaseClient):
+    def __init__(
+        self,
+        token: Optional[str] = None,
+        client_id: Optional[str] = None,
+        client_secret: Optional[str] = None,
+        base_url: str = Default.BASE_URL,
+        timeout: int = Default.TIMEOUT,
+    ):
+        self._token = token
+        self._client_id = client_id
+        self._client_secret = client_secret
+        self._timeout = timeout
+
+        super().__init__(base_url)
+
+        if token and (client_id or client_secret):
+            warnings.warn("TODO")
+
+    def _create_http_client(self):
+        if self._client_id and self._client_secret:
+            return ClientCredentialsClient(
+                self._client_id,
+                self._client_secret,
+                self._base_url,
+                self._timeout,
+            )
+
+        if self._token:
+            return BearerTokenClient(
+                self._token,
+                self._base_url,
+                self._timeout,
+            )
+
+        raise Exception("No token or client_id with client_secret provided.")
+
+    def clan(
+        self,
+        clan_id: str,
+        region: Region = Default.REGION,
+    ) -> AppClan:
+        return AppClan(self._http, clan_id, region)

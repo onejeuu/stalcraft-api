@@ -5,6 +5,9 @@ class ScDatabaseModel(SQLModel):
     pass
 
 
+meta = ScDatabaseModel.metadata
+
+
 class Metadata(ScDatabaseModel, table=True):
     __tablename__: str = "metadata"
 

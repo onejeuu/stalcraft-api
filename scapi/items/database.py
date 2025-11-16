@@ -3,7 +3,6 @@ import os
 import tempfile
 import zipfile
 from datetime import datetime
-from io import BytesIO
 from os import PathLike
 from pathlib import Path
 from typing import Any, Optional
@@ -47,36 +46,43 @@ class StalcraftDatabase:
         mode = mode or self._mode
         await self._create_tables()
 
-        # Compare commit hashes
+        # Get local and remote commit hashes
         local_commit = await self._get_local_commit()
         remote_commit = await self._github.latest_commit()
 
-        # Stop if up to date
+        # Stop if database is up to date
         if local_commit == remote_commit and not force:
-            await self._update_metadata(MetadataKey.STATUS, "up to date")
-            await self._update_metadata(MetadataKey.CHEKED, datetime.now().isoformat())
+            await self._set_metadata(MetadataKey.STATUS, "up to date")
+            await self._set_metadata(MetadataKey.CHEKED, datetime.now().isoformat())
             return False
 
-        # Create database
+        # Create clear database
         if not local_commit or force:
-            match mode:
-                case RepoSyncMode.ARCHIVE:
-                    await self._download_archive()
-
-                case RepoSyncMode.FILES | _:
-                    await self._download_files()
-
-            await self._update_metadata_completed(remote_commit)
+            await self._rebuild_database(mode)
+            await self._set_metadata_completed(remote_commit)
             return True
 
-        # Update diff
-        await self._download_diff(local_commit, remote_commit)
-        await self._update_metadata_completed(remote_commit)
+        # Update database by diff
+        await self._update_diff(local_commit, remote_commit)
+        await self._set_metadata_completed(remote_commit)
         return True
 
     async def _create_tables(self):
         async with self._engine.begin() as conn:
-            await conn.run_sync(models.ScDatabaseModel.metadata.create_all)
+            await conn.run_sync(models.meta.create_all)
+
+    async def _rebuild_database(self, mode: RepoSyncMode):
+        async with self._sessionmaker() as session:
+            async with session.begin():
+                for table in reversed(models.meta.sorted_tables):
+                    await session.exec(table.delete())
+
+                match mode:
+                    case RepoSyncMode.ARCHIVE:
+                        await self._download_archive(session)
+
+                    case RepoSyncMode.FILES | _:
+                        await self._download_files(session)
 
     async def _get_local_commit(self) -> str:
         async with self._sessionmaker() as session:
@@ -84,19 +90,19 @@ class StalcraftDatabase:
             local_commit = (await session.exec(query)).first()
         return local_commit or ""
 
-    async def _update_metadata(self, key: str, value: Any):
+    async def _set_metadata(self, key: str, value: Any):
         async with self._sessionmaker() as session:
             async with session.begin():
                 await session.merge(models.Metadata(key=key, value=str(value)))
 
-    async def _update_metadata_completed(self, commit: str):
+    async def _set_metadata_completed(self, commit: str):
         now = datetime.now().isoformat()
-        await self._update_metadata(MetadataKey.COMMIT, commit)
-        await self._update_metadata(MetadataKey.UPDATED, now)
-        await self._update_metadata(MetadataKey.CHEKED, now)
-        await self._update_metadata(MetadataKey.STATUS, "updated")
+        await self._set_metadata(MetadataKey.COMMIT, commit)
+        await self._set_metadata(MetadataKey.UPDATED, now)
+        await self._set_metadata(MetadataKey.CHEKED, now)
+        await self._set_metadata(MetadataKey.STATUS, "updated")
 
-    async def _download_files(self):
+    async def _download_files(self, session: AsyncSession):
         # Get root files
         contents = await self._github.contents()
 
@@ -119,22 +125,23 @@ class StalcraftDatabase:
             )
 
         # Download files and add to database
-        async with self._sessionmaker() as session:
-            async with session.begin():
-                blobs = await asyncio.gather(*[download_file(item) for item in files])
-                session.add_all(blobs)
+        blobs = await asyncio.gather(*[download_file(item) for item in files])
+        session.add_all(blobs)
 
-    async def _download_archive(self):
-        # Create temp file
+    async def _download_archive(self, session: AsyncSession):
+        # Create temp archive file
         with tempfile.NamedTemporaryFile(delete=False, prefix="scapi-db-", suffix=".zip") as tmp:
             filename = tmp.name
 
-        async def parse_archive():
+        try:
+            # Download archive to temp
+            await self._github.archive(output=filename)
+
             # Open downloaded repository archive
             with zipfile.ZipFile(filename) as zip:
                 root = zip.namelist()[0]  # Root directory name
 
-                # Parse all files
+                # Add all files to database session
                 for name in zip.namelist():
                     if name.endswith("/"):
                         continue
@@ -146,19 +153,11 @@ class StalcraftDatabase:
                     # Add file blob to session
                     session.add(models.FileBlob(path=path, content=content, size=len(content)))
 
-        try:
-            # Download archive to temp file
-            await self._github.archive(output=filename)
-
-            # Add all files to database session
-            async with self._sessionmaker() as session:
-                async with session.begin():
-                    await parse_archive()
-
         finally:
             os.unlink(filename)
 
-    async def _download_diff(self, base: str, head: str):
+    async def _update_diff(self, base: str, head: str):
+        # TODO: update me! asyncio download!
         diff = await self._github.diff(base=base, head=head)
 
         async with self._sessionmaker() as session:

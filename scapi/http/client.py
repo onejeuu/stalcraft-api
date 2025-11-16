@@ -1,4 +1,4 @@
-from typing import Any, Optional
+from typing import Optional
 
 from .base import BaseHTTPClient, Data, Headers, Params
 
@@ -6,27 +6,27 @@ from .base import BaseHTTPClient, Data, Headers, Params
 class HTTPClient(BaseHTTPClient):
     async def GET(
         self,
-        endpoint: str,
+        url: str,
         params: Optional[Params] = None,
         headers: Optional[Headers] = None,
-    ) -> Any:
+    ):
         return await self._request(
             "GET",
-            endpoint,
+            url=url,
             params=params,
             headers=headers,
         )
 
     async def POST(
         self,
-        endpoint: str,
+        url: str,
         params: Optional[Params] = None,
         headers: Optional[Headers] = None,
         data: Optional[Data] = None,
-    ) -> Any:
+    ):
         return await self._request(
             "POST",
-            endpoint,
+            url=url,
             params=params,
             data=data,
             headers=headers,
@@ -34,14 +34,14 @@ class HTTPClient(BaseHTTPClient):
 
     async def PUT(
         self,
-        endpoint: str,
+        url: str,
         params: Optional[Params] = None,
         headers: Optional[Headers] = None,
         data: Optional[Data] = None,
-    ) -> Any:
+    ):
         return await self._request(
             "PUT",
-            endpoint,
+            url=url,
             params=params,
             data=data,
             headers=headers,
@@ -49,27 +49,27 @@ class HTTPClient(BaseHTTPClient):
 
     async def DELETE(
         self,
-        endpoint: str,
+        url: str,
         params: Optional[Params] = None,
         headers: Optional[Headers] = None,
-    ) -> Any:
+    ):
         return await self._request(
             "DELETE",
-            endpoint,
+            url=url,
             params=params,
             headers=headers,
         )
 
     async def PATCH(
         self,
-        endpoint: str,
+        url: str,
         params: Optional[Params] = None,
         headers: Optional[Headers] = None,
         data: Optional[Data] = None,
-    ) -> Any:
+    ):
         return await self._request(
             "PATCH",
-            endpoint,
+            url=url,
             params=params,
             data=data,
             headers=headers,

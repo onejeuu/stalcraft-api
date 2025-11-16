@@ -1,5 +1,5 @@
 from scapi import models
-from scapi.consts import AuthUrl
+from scapi.consts import OAuthUrl
 from scapi.defaults import Default
 from scapi.http.params import Params
 
@@ -11,7 +11,7 @@ class UserOAuth(BaseOAuth):
     def code_url(
         self,
         response_type: str = Default.RESPONSE_TYPE,
-        endpoint: str = AuthUrl.AUTHORIZE,
+        endpoint: str = OAuthUrl.AUTHORIZE,
     ) -> str:
         params = Params(
             client_id=self._client_id,
@@ -25,7 +25,7 @@ class UserOAuth(BaseOAuth):
     async def get_token(
         self,
         code: str,
-        endpoint: str = AuthUrl.TOKEN,
+        endpoint: str = OAuthUrl.TOKEN,
     ) -> models.oauth.UserToken:
         response = await self._http.POST(
             endpoint=endpoint,
@@ -43,7 +43,7 @@ class UserOAuth(BaseOAuth):
     async def refresh_token(
         self,
         refresh_token: str,
-        endpoint: str = AuthUrl.TOKEN,
+        endpoint: str = OAuthUrl.TOKEN,
     ) -> models.oauth.UserToken:
         response = await self._http.POST(
             endpoint=endpoint,
@@ -62,7 +62,7 @@ class UserOAuth(BaseOAuth):
     async def token_info(
         self,
         token: str,
-        endpoint: str = AuthUrl.USER,
+        endpoint: str = OAuthUrl.USER,
     ) -> models.oauth.TokenInfo:
         response = await self._http.GET(
             endpoint=endpoint,

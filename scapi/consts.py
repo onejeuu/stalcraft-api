@@ -13,3 +13,4 @@ class ItemsRepository:
     OWNER = "EXBO-Studio"
     REPOSITORY = "stalcraft-database"
     BRANCH = "main"
+    TIMEOUT = 300

@@ -1,5 +1,5 @@
 from scapi import models
-from scapi.consts import AuthUrl
+from scapi.consts import OAuthUrl
 
 from .base import BaseOAuth
 
@@ -7,7 +7,7 @@ from .base import BaseOAuth
 class AppOAuth(BaseOAuth):
     async def get_token(
         self,
-        endpoint: str = AuthUrl.TOKEN,
+        endpoint: str = OAuthUrl.TOKEN,
     ) -> models.oauth.AppToken:
         response = await self._http.POST(
             endpoint=endpoint,

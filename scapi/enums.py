@@ -52,6 +52,6 @@ class Rank(UpStrEnum):
     LEADER = auto()
 
 
-class DatabaseMode(StrEnum):
-    DEFAULT = auto()
-    FULL = auto()
+class RepoSyncMode(StrEnum):
+    FILES = DEFAULT = auto()
+    ARCHIVE = FULL = auto()

@@ -1,16 +1,17 @@
+import asyncio
 import zipfile
 from datetime import datetime
 from io import BytesIO
 from os import PathLike
 from pathlib import Path
-from typing import Any, Optional, TypeAlias
+from typing import Any, Optional
 
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 from sqlmodel import delete, select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from scapi.defaults import Default
-from scapi.enums import DatabaseMode
+from scapi.enums import RepoSyncMode
 
 from . import models
 from .enums import MetadataKey
@@ -19,14 +20,12 @@ from .github import GitHubClient
 
 VERSION = "1.0"
 
-JSON: TypeAlias = dict[str, Any]
-
 
 class StalcraftDatabase:
     def __init__(
         self,
         path: PathLike[str] = Default.DATABASE_PATH,
-        mode: DatabaseMode = Default.DATABASE_MODE,
+        mode: RepoSyncMode = Default.SYNC_MODE,
         github: Optional[GitHubClient] = None,
     ):
         self._path = Path(path)
@@ -40,7 +39,7 @@ class StalcraftDatabase:
 
     async def sync(
         self,
-        mode: Optional[DatabaseMode] = None,
+        mode: Optional[RepoSyncMode] = None,
         force: bool = False,
     ) -> bool:
         mode = mode or self._mode
@@ -52,24 +51,25 @@ class StalcraftDatabase:
 
         # Stop if up to date
         if local_commit == remote_commit and not force:
-            await self._update_metadata(MetadataKey.LAST_CHEKED, datetime.now().isoformat())
+            await self._update_metadata(MetadataKey.STATUS, "up to date")
+            await self._update_metadata(MetadataKey.CHEKED, datetime.now().isoformat())
             return False
 
         # Create database
         if not local_commit or force:
             match mode:
-                case DatabaseMode.FULL:
+                case RepoSyncMode.ARCHIVE:
                     await self._download_archive()
 
-                case _:
+                case RepoSyncMode.FILES | _:
                     await self._download_files()
 
-            await self._update_metadata_success(remote_commit)
+            await self._update_metadata_completed(remote_commit)
             return True
 
         # Update diff
         await self._download_diff(local_commit, remote_commit)
-        await self._update_metadata_success(remote_commit)
+        await self._update_metadata_completed(remote_commit)
         return True
 
     async def _create_tables(self):
@@ -78,46 +78,54 @@ class StalcraftDatabase:
 
     async def _get_local_commit(self) -> str:
         async with self._sessionmaker() as session:
-            query = select(models.Metadata.value).where(models.Metadata.key == MetadataKey.LAST_COMMIT)
+            query = select(models.Metadata.value).where(models.Metadata.key == MetadataKey.COMMIT)
             local_commit = (await session.exec(query)).first()
         return local_commit or ""
 
-    async def _update_metadata(self, key: str, value: str):
+    async def _update_metadata(self, key: str, value: Any):
         async with self._sessionmaker() as session:
             async with session.begin():
-                await session.merge(models.Metadata(key=key, value=value))
+                await session.merge(models.Metadata(key=key, value=str(value)))
 
-    async def _update_metadata_success(self, last_commit: str):
-        dt = datetime.now().isoformat()
-        await self._update_metadata(MetadataKey.LAST_COMMIT, last_commit)
-        await self._update_metadata(MetadataKey.LAST_UPDATED, dt)
-        await self._update_metadata(MetadataKey.LAST_CHEKED, dt)
+    async def _update_metadata_completed(self, commit: str):
+        now = datetime.now().isoformat()
+        await self._update_metadata(MetadataKey.COMMIT, commit)
+        await self._update_metadata(MetadataKey.UPDATED, now)
+        await self._update_metadata(MetadataKey.CHEKED, now)
+        await self._update_metadata(MetadataKey.STATUS, "updated")
 
     async def _download_files(self):
-        root = await self._github.contents()
+        contents = await self._github.contents()
 
+        # Load subdirs files
+        dirs = [item for item in contents if item["type"] == "dir"]
+        subcontents = await asyncio.gather(*[self._github.GET(dir["url"]) for dir in dirs])
+
+        # Create targets list
+        files = [item for item in contents if item["type"] == "file"]
+        files.extend(item for sublist in subcontents for item in sublist if item["type"] == "file")
+
+        # Download file and create blob model
+        async def download_file(item: dict[str, Any]):
+            data = await self._github.GET(item["download_url"])
+            content = data.encode()
+            return models.FileBlob(
+                path=item["path"],
+                content=content,
+                size=len(content),
+            )
+
+        # Download files and merge to database
         async with self._sessionmaker() as session:
             async with session.begin():
-                for item in root:
-                    if item["type"] == "dir":
-                        files = await self._github.GET(item["url"])
-                        for file in files:
-                            if file["type"] == "file":
-                                content = await self._github.GET(file["download_url"])
-                                content = content.encode()
-                                await session.merge(
-                                    models.FileBlob(
-                                        path=file["path"],
-                                        content=content,
-                                        size=len(content),
-                                    )
-                                )
+                blobs = await asyncio.gather(*[download_file(item) for item in files])
+
+                for blob in blobs:
+                    await session.merge(blob)
 
     async def _download_archive(self):
         content = await self._github.archive()
 
-        # TODO: delete old files
-        # Add files to database
         with zipfile.ZipFile(BytesIO(content)) as zip:
             async with self._sessionmaker() as session:
                 async with session.begin():

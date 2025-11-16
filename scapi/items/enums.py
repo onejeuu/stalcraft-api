@@ -4,6 +4,7 @@ from strenum import LowercaseStrEnum as StrEnum
 
 
 class MetadataKey(StrEnum):
-    LAST_COMMIT = auto()
-    LAST_UPDATED = auto()
-    LAST_CHEKED = auto()
+    COMMIT = auto()
+    UPDATED = auto()
+    CHEKED = auto()
+    STATUS = auto()

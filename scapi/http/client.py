@@ -9,12 +9,16 @@ class HTTPClient(BaseHTTPClient):
         url: str,
         params: Optional[Params] = None,
         headers: Optional[Headers] = None,
+        timeout: Optional[int] = None,
+        filename: Optional[str] = None,
     ):
         return await self._request(
-            "GET",
+            method="GET",
             url=url,
             params=params,
             headers=headers,
+            timeout=timeout,
+            filename=filename,
         )
 
     async def POST(
@@ -23,13 +27,15 @@ class HTTPClient(BaseHTTPClient):
         params: Optional[Params] = None,
         headers: Optional[Headers] = None,
         data: Optional[Data] = None,
+        timeout: Optional[int] = None,
     ):
         return await self._request(
-            "POST",
+            method="POST",
             url=url,
             params=params,
             data=data,
             headers=headers,
+            timeout=timeout,
         )
 
     async def PUT(
@@ -38,13 +44,15 @@ class HTTPClient(BaseHTTPClient):
         params: Optional[Params] = None,
         headers: Optional[Headers] = None,
         data: Optional[Data] = None,
+        timeout: Optional[int] = None,
     ):
         return await self._request(
-            "PUT",
+            method="PUT",
             url=url,
             params=params,
             data=data,
             headers=headers,
+            timeout=timeout,
         )
 
     async def DELETE(
@@ -52,12 +60,14 @@ class HTTPClient(BaseHTTPClient):
         url: str,
         params: Optional[Params] = None,
         headers: Optional[Headers] = None,
+        timeout: Optional[int] = None,
     ):
         return await self._request(
-            "DELETE",
+            method="DELETE",
             url=url,
             params=params,
             headers=headers,
+            timeout=timeout,
         )
 
     async def PATCH(
@@ -66,11 +76,13 @@ class HTTPClient(BaseHTTPClient):
         params: Optional[Params] = None,
         headers: Optional[Headers] = None,
         data: Optional[Data] = None,
+        timeout: Optional[int] = None,
     ):
         return await self._request(
-            "PATCH",
+            method="PATCH",
             url=url,
             params=params,
             data=data,
             headers=headers,
+            timeout=timeout,
         )

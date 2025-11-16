@@ -12,11 +12,12 @@ readme = "README.md"
 dynamic = ["version"]
 
 dependencies = [
-    "pydantic>=2.12.0",
     "aiohttp>=3.13.0",
-    "strenum>=0.4.15",
     "aiosqlite>=0.21.0",
+    "aiofiles>=25.1.0",
+    "pydantic>=2.12.0",
     "sqlmodel>=0.0.27",
+    "strenum>=0.4.15",
 ]
 
 [dependency-groups]

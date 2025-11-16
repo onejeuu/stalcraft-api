@@ -1,6 +1,7 @@
 from typing import Any, Dict, Optional, TypeAlias
 from urllib.parse import urljoin
 
+import aiofiles
 from aiohttp import ClientResponse, ClientSession, ClientTimeout
 from pydantic import ValidationError
 
@@ -14,6 +15,9 @@ Headers: TypeAlias = Dict[str, str]
 
 JsonData: TypeAlias = Dict[str, Any]
 Data: TypeAlias = JsonData | str | bytes
+
+
+CHUNK_SIZE = 1024 * 8
 
 
 class BaseHTTPClient:
@@ -36,6 +40,7 @@ class BaseHTTPClient:
         headers: Optional[Headers] = None,
         data: Optional[Data] = None,
         timeout: Optional[int] = None,
+        filename: Optional[str] = None,
     ) -> Any:
         url = urljoin(self._base_url + "/", url.lstrip("/"))
 
@@ -44,22 +49,16 @@ class BaseHTTPClient:
         rheaders = {**self._headers, **(headers or {})}
 
         async with ClientSession(timeout=rtimeout) as session:
-            response = await session.request(
-                method=method,
-                url=url,
-                params=rparams,
-                headers=rheaders,
-                data=data,
-            )
-            return await self._handle(response)
+            async with session.request(method=method, url=url, params=rparams, headers=rheaders, data=data) as response:
+                await self._update_ratelimit(response)
 
-    async def _handle(self, response: ClientResponse) -> Any:
-        await self._update_ratelimit(response)
+                if not (200 <= response.status < 300):
+                    await self._on_error(response)
 
-        if not (200 <= response.status < 300):
-            await self._onerror(response)
+                if filename:
+                    return await self._stream_to_file(response, filename)
 
-        return await self._parse(response)
+                return await self._parse(response)
 
     async def _parse(self, response: ClientResponse) -> Any:
         content_type = response.headers.get("content-type", "").lower()
@@ -76,6 +75,12 @@ class BaseHTTPClient:
         finally:
             await response.release()
 
+    async def _stream_to_file(self, response: ClientResponse, filename: str):
+        async with aiofiles.open(filename, "wb") as f:
+            async for chunk in response.content.iter_chunked(CHUNK_SIZE):
+                await f.write(chunk)
+        return filename
+
     async def _update_ratelimit(self, response: ClientResponse) -> None:
         try:
             self._ratelimit = RateLimit.model_validate(response.headers)
@@ -83,7 +88,7 @@ class BaseHTTPClient:
         except ValidationError:
             pass
 
-    async def _onerror(self, response: ClientResponse) -> None:
+    async def _on_error(self, response: ClientResponse) -> None:
         try:
             data = await response.json()
             msg = data.get("error", data.get("message"))

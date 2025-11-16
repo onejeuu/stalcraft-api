@@ -95,9 +95,10 @@ class StalcraftDatabase:
         await self._update_metadata(MetadataKey.STATUS, "updated")
 
     async def _download_files(self):
+        # Get root files
         contents = await self._github.contents()
 
-        # Load subdirs files
+        # Get subdirs files
         dirs = [item for item in contents if item["type"] == "dir"]
         subcontents = await asyncio.gather(*[self._github.GET(dir["url"]) for dir in dirs])
 
@@ -115,30 +116,35 @@ class StalcraftDatabase:
                 size=len(content),
             )
 
-        # Download files and merge to database
+        # Download files and add to database
         async with self._sessionmaker() as session:
             async with session.begin():
                 blobs = await asyncio.gather(*[download_file(item) for item in files])
-
-                for blob in blobs:
-                    await session.merge(blob)
+                session.add_all(blobs)
 
     async def _download_archive(self):
+        # !!! TODO: save to fs
+        # Download full archive
         content = await self._github.archive()
 
+        # Open repository archive
         with zipfile.ZipFile(BytesIO(content)) as zip:
             async with self._sessionmaker() as session:
                 async with session.begin():
+                    # Root directory name
                     root = zip.namelist()[0]
 
+                    # Add all files to database session
                     for name in zip.namelist():
                         if name.endswith("/"):
                             continue
 
-                        rel = name.replace(root, "", 1)
+                        # Get relative path and file content
+                        path = name.replace(root, "", 1)
                         content = zip.read(name)
 
-                        session.add(models.FileBlob(path=rel, content=content, size=len(content)))
+                        # Add file blob to session
+                        session.add(models.FileBlob(path=path, content=content, size=len(content)))
 
     async def _download_diff(self, base: str, head: str):
         diff = await self._github.diff(base=base, head=head)

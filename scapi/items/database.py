@@ -1,4 +1,6 @@
 import asyncio
+import os
+import tempfile
 import zipfile
 from datetime import datetime
 from io import BytesIO
@@ -123,28 +125,38 @@ class StalcraftDatabase:
                 session.add_all(blobs)
 
     async def _download_archive(self):
-        # !!! TODO: save to fs
-        # Download full archive
-        content = await self._github.archive()
+        # Create temp file
+        with tempfile.NamedTemporaryFile(delete=False, prefix="scapi-db-", suffix=".zip") as tmp:
+            filename = tmp.name
 
-        # Open repository archive
-        with zipfile.ZipFile(BytesIO(content)) as zip:
+        async def parse_archive():
+            # Open downloaded repository archive
+            with zipfile.ZipFile(filename) as zip:
+                root = zip.namelist()[0]  # Root directory name
+
+                # Parse all files
+                for name in zip.namelist():
+                    if name.endswith("/"):
+                        continue
+
+                    # Get relative path and file content
+                    path = name.replace(root, "", 1)
+                    content = zip.read(name)
+
+                    # Add file blob to session
+                    session.add(models.FileBlob(path=path, content=content, size=len(content)))
+
+        try:
+            # Download archive to temp file
+            await self._github.archive(output=filename)
+
+            # Add all files to database session
             async with self._sessionmaker() as session:
                 async with session.begin():
-                    # Root directory name
-                    root = zip.namelist()[0]
+                    await parse_archive()
 
-                    # Add all files to database session
-                    for name in zip.namelist():
-                        if name.endswith("/"):
-                            continue
-
-                        # Get relative path and file content
-                        path = name.replace(root, "", 1)
-                        content = zip.read(name)
-
-                        # Add file blob to session
-                        session.add(models.FileBlob(path=path, content=content, size=len(content)))
+        finally:
+            os.unlink(filename)
 
     async def _download_diff(self, base: str, head: str):
         diff = await self._github.diff(base=base, head=head)

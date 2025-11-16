@@ -42,6 +42,9 @@ class GitHubClient(BearerTokenClient):
         data = await self.GET(f"https://api.github.com/repos/{self._slug}/contents/{path}")
         return data
 
-    async def archive(self):
-        data = await self.GET(f"https://github.com/{self._slug}/archive/refs/heads/{self._branch}.zip")
+    async def archive(self, output: Optional[str] = None):
+        data = await self.GET(
+            f"https://github.com/{self._slug}/archive/refs/heads/{self._branch}.zip",
+            filename=output,
+        )
         return data

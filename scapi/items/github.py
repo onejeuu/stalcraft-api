@@ -12,7 +12,7 @@ HEADERS = {
 }
 
 
-class GitHubClient(TokenHTTPClient):
+class GitHubClient:
     def __init__(
         self,
         token: Optional[str] = None,
@@ -28,24 +28,24 @@ class GitHubClient(TokenHTTPClient):
         self._branch = branch
         self._slug = f"{owner}/{repository}"
 
-        super().__init__(token=token, timeout=timeout)
+        self._http = TokenHTTPClient(token=token, timeout=timeout)
 
     async def latest_commit(self) -> str:
-        data = await self.GET(f"https://api.github.com/repos/{self._slug}/commits/{self._branch}")
+        data = await self._http.GET(f"https://api.github.com/repos/{self._slug}/commits/{self._branch}")
         return data["sha"]
 
     async def diff(self, base: str, head: str) -> dict[str, Any]:
-        return await self.GET(f"https://api.github.com/repos/{self._slug}/compare/{base}...{head}")
+        return await self._http.GET(f"https://api.github.com/repos/{self._slug}/compare/{base}...{head}")
 
     async def contents(self, path: str = ""):
-        return await self.GET(f"https://api.github.com/repos/{self._slug}/contents/{path}")
+        return await self._http.GET(f"https://api.github.com/repos/{self._slug}/contents/{path}")
 
     async def rawfile(self, path: str, ref: Optional[str] = None):
         ref = ref or self._branch
-        return await self.GET(f"https://raw.githubusercontent.com/{self._slug}/{ref}/{path}", raw=True)
+        return await self._http.GET(f"https://raw.githubusercontent.com/{self._slug}/{ref}/{path}", raw=True)
 
     async def archive(self, output: Optional[str] = None):
-        data = await self.GET(
+        data = await self._http.GET(
             f"https://github.com/{self._slug}/archive/refs/heads/{self._branch}.zip",
             filename=output,
         )

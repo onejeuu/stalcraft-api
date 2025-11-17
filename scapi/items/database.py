@@ -116,7 +116,7 @@ class StalcraftDatabase:
 
         # Get subdirs files
         dirs = [item for item in contents if item["type"] == "dir"]
-        subcontents = await asyncio.gather(*[self._github.GET(dir["url"]) for dir in dirs])
+        subcontents = await asyncio.gather(*[self._github.contents(dir["path"]) for dir in dirs])
 
         # Create targets files list
         files = [item for item in contents if item["type"] == "file"]

@@ -2,7 +2,7 @@ from scapi.defaults import Default
 from scapi.http.client import HTTPClient
 
 
-class ClientCredentialsClient(HTTPClient):
+class CredentialsHTTPClient(HTTPClient):
     def __init__(
         self,
         client_id: str,

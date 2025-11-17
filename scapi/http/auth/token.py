@@ -7,7 +7,7 @@ from scapi.http.client import HTTPClient
 TokenPayload: TypeAlias = Dict[str, Any]
 
 
-class BearerTokenClient(HTTPClient):
+class TokenHTTPClient(HTTPClient):
     def __init__(
         self,
         token: Optional[str] = None,

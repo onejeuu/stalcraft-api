@@ -3,7 +3,7 @@ from typing import List, Optional
 from scapi import models
 from scapi.defaults import Default
 from scapi.enums import Region
-from scapi.http.auth.token import BearerTokenClient
+from scapi.http.auth.token import TokenHTTPClient
 
 from .base import BaseClient
 from .clan.user import UserClan
@@ -23,10 +23,10 @@ class UserClient(BaseClient):
 
     def _create_http_client(self):
         if self._token:
-            return BearerTokenClient(
-                self._token,
-                self._base_url,
-                self._timeout,
+            return TokenHTTPClient(
+                token=self._token,
+                base_url=self._base_url,
+                timeout=self._timeout,
             )
 
         raise Exception("No token provided.")
@@ -39,9 +39,7 @@ class UserClient(BaseClient):
             url=f"{region}/characters",
         )
 
-        return [
-            models.api.Character.model_validate(character) for character in response
-        ]
+        return [models.api.Character.model_validate(character) for character in response]
 
     async def friends(
         self,

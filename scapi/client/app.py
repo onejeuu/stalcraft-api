@@ -4,8 +4,8 @@ from typing import Optional
 from scapi.client.clan.app import AppClan
 from scapi.defaults import Default
 from scapi.enums import Region
-from scapi.http.auth.creds import ClientCredentialsClient
-from scapi.http.auth.token import BearerTokenClient
+from scapi.http.auth.creds import CredentialsHTTPClient
+from scapi.http.auth.token import TokenHTTPClient
 
 from .base import BaseClient
 
@@ -31,18 +31,18 @@ class AppClient(BaseClient):
 
     def _create_http_client(self):
         if self._client_id and self._client_secret:
-            return ClientCredentialsClient(
-                self._client_id,
-                self._client_secret,
-                self._base_url,
-                self._timeout,
+            return CredentialsHTTPClient(
+                client_id=self._client_id,
+                client_secret=self._client_secret,
+                base_url=self._base_url,
+                timeout=self._timeout,
             )
 
         if self._token:
-            return BearerTokenClient(
-                self._token,
-                self._base_url,
-                self._timeout,
+            return TokenHTTPClient(
+                token=self._token,
+                base_url=self._base_url,
+                timeout=self._timeout,
             )
 
         raise Exception("No token or client_id with client_secret provided.")

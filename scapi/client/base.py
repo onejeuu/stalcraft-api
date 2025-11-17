@@ -50,7 +50,7 @@ class BaseClient(ABC):
         region: Region = Default.REGION,
     ) -> models.api.CharacterProfile:
         response = await self._http.GET(
-            url=f"{region}/character/by-name/{username}/profile"
+            url=f"{region}/character/by-name/{username}/profile",
         )
 
         return models.api.CharacterProfile.model_validate(response)

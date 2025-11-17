@@ -27,7 +27,7 @@ class BaseHTTPClient:
         timeout: int = Default.TIMEOUT,
         headers: Optional[Headers] = None,
     ):
-        self._base_url = base_url
+        self._base_url = base_url.rstrip("/")
         self._headers = headers or {}
         self._timeout = ClientTimeout(timeout)
         self._ratelimit: Optional[RateLimit] = None

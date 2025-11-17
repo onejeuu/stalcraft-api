@@ -24,7 +24,6 @@ class Default:
 
     # OAuth
     REDIRECT_URI = "http://localhost"
-    RESPONSE_TYPE = "code"
     SCOPE = ""
 
     # Database

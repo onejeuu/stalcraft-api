@@ -5,10 +5,10 @@ from uuid import UUID
 from pydantic import BaseModel, field_validator
 
 
-class TokenModel(BaseModel):
+class BaseToken(BaseModel):
     token_type: str
-    expires_in: datetime
     access_token: str
+    expires_in: datetime
 
     @field_validator("expires_in", mode="before")
     @classmethod
@@ -21,15 +21,15 @@ class TokenModel(BaseModel):
             return None
 
 
-class AppToken(TokenModel):
+class AppToken(BaseToken):
     pass
 
 
-class UserToken(TokenModel):
+class UserToken(BaseToken):
     refresh_token: str
 
 
-class TokenInfo(BaseModel):
+class UserInfo(BaseModel):
     id: int
     uuid: UUID
     login: str

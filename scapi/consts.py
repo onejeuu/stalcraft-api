@@ -2,11 +2,7 @@ class BaseUrl:
     DEMO = "http://dapi.stalcraft.net"
     PRODUCTION = "http://eapi.stalcraft.net"
 
-
-class OAuthUrl:
-    AUTHORIZE = "https://exbo.net/oauth/authorize"
-    TOKEN = "https://exbo.net/oauth/token"
-    USER = "https://exbo.net/oauth/user"
+    OAUTH = "https://exbo.net/oauth"
 
 
 class ItemsRepository:

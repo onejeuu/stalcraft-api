@@ -29,7 +29,7 @@ class BaseClient(ABC):
         self,
     ) -> list[models.api.RegionInfo]:
         response = await self._http.GET(
-            endpoint="regions",
+            url="regions",
         )
 
         return [models.api.RegionInfo.model_validate(region) for region in response]
@@ -39,7 +39,7 @@ class BaseClient(ABC):
         region: Region = Default.REGION,
     ) -> models.api.Emission:
         response = await self._http.GET(
-            endpoint=f"{region}/emission",
+            url=f"{region}/emission",
         )
 
         return models.api.Emission.model_validate(response)
@@ -50,7 +50,7 @@ class BaseClient(ABC):
         region: Region = Default.REGION,
     ) -> models.api.CharacterProfile:
         response = await self._http.GET(
-            endpoint=f"{region}/character/by-name/{username}/profile"
+            url=f"{region}/character/by-name/{username}/profile"
         )
 
         return models.api.CharacterProfile.model_validate(response)
@@ -62,7 +62,7 @@ class BaseClient(ABC):
         region: Region = Default.REGION,
     ) -> Listing[models.api.ClanInfo]:
         response = await self._http.GET(
-            endpoint=f"{region}/clans",
+            url=f"{region}/clans",
             params=Params(limit=limit, offset=offset),
         )
 
@@ -81,7 +81,7 @@ class BaseClient(ABC):
         region: Region = Default.REGION,
     ) -> Listing[models.api.OperationSession]:
         response = await self._http.GET(
-            endpoint=f"{region}/operations/sessions",
+            url=f"{region}/operations/sessions",
             params=Params(
                 limit=limit,
                 offset=offset,

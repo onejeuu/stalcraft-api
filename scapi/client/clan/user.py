@@ -8,7 +8,7 @@ class UserClan(AppClan):
         self,
     ) -> list[models.api.ClanMember]:
         response = await self._http.GET(
-            endpoint=f"{self.region}/clan/{self.clan_id}/members",
+            url=f"{self.region}/clan/{self.clan_id}/members",
         )
 
         return [models.api.ClanMember.model_validate(member) for member in response]

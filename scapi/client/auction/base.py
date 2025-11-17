@@ -24,7 +24,7 @@ class Auction:
         additional: bool = Default.ADDITIONAL,
     ) -> Listing[models.api.Price]:
         response = await self._http.GET(
-            endpoint=f"{self.region}/auction/{self.item_id}/history",
+            url=f"{self.region}/auction/{self.item_id}/history",
             params=Params(
                 limit=limit,
                 offset=offset,
@@ -43,7 +43,7 @@ class Auction:
         additional: bool = Default.ADDITIONAL,
     ) -> Listing[models.api.Lot]:
         response = await self._http.GET(
-            endpoint=f"{self.region}/auction/{self.item_id}/lots",
+            url=f"{self.region}/auction/{self.item_id}/lots",
             params=Params(
                 limit=limit,
                 offset=offset,

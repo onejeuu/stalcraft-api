@@ -53,14 +53,14 @@ class BaseHTTPClient:
         # Create session and send request
         async with ClientSession(timeout=rtimeout) as session:
             async with session.request(method=method, url=url, params=rparams, headers=rheaders, data=data) as response:
-                # Update ratelimit headers
+                # Update ratelimit by response headers
                 await self._update_ratelimit(response)
 
-                # Validate status code
+                # Validate response status code
                 if not (200 <= response.status < 300):
                     await self._on_error(response)
 
-                # Stream data to file path
+                # Stream response data to file path
                 if filename:
                     return await self._stream_to_file(response, filename)
 
@@ -87,7 +87,6 @@ class BaseHTTPClient:
 
     async def _stream_to_file(self, response: ClientResponse, filename: str) -> str:
         async with aiofiles.open(filename, "wb") as f:
-            # Download file by chunks
             async for chunk in response.content.iter_chunked(CHUNK_SIZE):
                 await f.write(chunk)
         return filename

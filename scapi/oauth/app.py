@@ -7,10 +7,10 @@ from .base import BaseOAuth
 class AppOAuth(BaseOAuth):
     async def get_token(
         self,
-        endpoint: str = OAuthUrl.TOKEN,
+        url: str = OAuthUrl.TOKEN,
     ) -> models.oauth.AppToken:
         response = await self._http.POST(
-            endpoint=endpoint,
+            url=url,
             data={
                 "client_id": self._client_id,
                 "client_secret": self._client_secret,

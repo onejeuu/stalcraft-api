@@ -36,7 +36,7 @@ class UserClient(BaseClient):
         region: Region = Default.REGION,
     ) -> List[models.api.Character]:
         response = await self._http.GET(
-            endpoint=f"{region}/characters",
+            url=f"{region}/characters",
         )
 
         return [

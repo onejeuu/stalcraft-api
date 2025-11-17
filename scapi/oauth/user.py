@@ -11,7 +11,7 @@ class UserOAuth(BaseOAuth):
     def code_url(
         self,
         response_type: str = Default.RESPONSE_TYPE,
-        endpoint: str = OAuthUrl.AUTHORIZE,
+        url: str = OAuthUrl.AUTHORIZE,
     ) -> str:
         params = Params(
             client_id=self._client_id,
@@ -20,15 +20,15 @@ class UserOAuth(BaseOAuth):
             response_type=response_type,
         )
 
-        return f"{endpoint}?{params}"
+        return f"{url}?{params}"
 
     async def get_token(
         self,
         code: str,
-        endpoint: str = OAuthUrl.TOKEN,
+        url: str = OAuthUrl.TOKEN,
     ) -> models.oauth.UserToken:
         response = await self._http.POST(
-            endpoint=endpoint,
+            url=url,
             data={
                 "client_id": self._client_id,
                 "client_secret": self._client_secret,
@@ -43,10 +43,10 @@ class UserOAuth(BaseOAuth):
     async def refresh_token(
         self,
         refresh_token: str,
-        endpoint: str = OAuthUrl.TOKEN,
+        url: str = OAuthUrl.TOKEN,
     ) -> models.oauth.UserToken:
         response = await self._http.POST(
-            endpoint=endpoint,
+            url=url,
             data={
                 "client_id": self._client_id,
                 "client_secret": self._client_secret,
@@ -62,10 +62,10 @@ class UserOAuth(BaseOAuth):
     async def token_info(
         self,
         token: str,
-        endpoint: str = OAuthUrl.USER,
+        url: str = OAuthUrl.USER,
     ) -> models.oauth.TokenInfo:
         response = await self._http.GET(
-            endpoint=endpoint,
+            url=url,
             headers={"Authorization": f"Bearer {token}"},
         )
 

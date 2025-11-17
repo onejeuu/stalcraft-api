@@ -35,12 +35,13 @@ class GitHubClient(BearerTokenClient):
         return data["sha"]
 
     async def diff(self, base: str, head: str) -> dict[str, Any]:
-        data = await self.GET(f"https://api.github.com/repos/{self._slug}/compare/{base}...{head}")
-        return data
+        return await self.GET(f"https://api.github.com/repos/{self._slug}/compare/{base}...{head}")
 
     async def contents(self, path: str = ""):
-        data = await self.GET(f"https://api.github.com/repos/{self._slug}/contents/{path}")
-        return data
+        return await self.GET(f"https://api.github.com/repos/{self._slug}/contents/{path}")
+
+    async def rawfile(self, commit: str, path: str):
+        return await self.GET(f"https://raw.githubusercontent.com/{self._slug}/{commit}/{path}")
 
     async def archive(self, output: Optional[str] = None):
         data = await self.GET(

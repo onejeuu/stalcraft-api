@@ -52,8 +52,7 @@ class StalcraftDatabase:
 
         # Stop if database is up to date
         if local_commit == remote_commit and not force:
-            await self._set_metadata(MetadataKey.STATUS, "up to date")
-            await self._set_metadata(MetadataKey.CHEKED, datetime.now().isoformat())
+            await self._set_metadata_uptodate()
             return False
 
         # Create clear database
@@ -72,11 +71,14 @@ class StalcraftDatabase:
             await conn.run_sync(models.meta.create_all)
 
     async def _rebuild_database(self, mode: RepoSyncMode):
+        # Open rebuild transaction
         async with self._sessionmaker() as session:
             async with session.begin():
+                # Drop tables
                 for table in reversed(models.meta.sorted_tables):
                     await session.exec(table.delete())
 
+                # Download repository by mode
                 match mode:
                     case RepoSyncMode.ARCHIVE:
                         await self._download_archive(session)
@@ -102,27 +104,28 @@ class StalcraftDatabase:
         await self._set_metadata(MetadataKey.CHEKED, now)
         await self._set_metadata(MetadataKey.STATUS, "updated")
 
+    async def _set_metadata_uptodate(self):
+        await self._set_metadata(MetadataKey.STATUS, "up to date")
+        await self._set_metadata(MetadataKey.CHEKED, datetime.now().isoformat())
+
     async def _download_files(self, session: AsyncSession):
-        # Get root files
+        # Get repository root files
         contents = await self._github.contents()
 
         # Get subdirs files
         dirs = [item for item in contents if item["type"] == "dir"]
         subcontents = await asyncio.gather(*[self._github.GET(dir["url"]) for dir in dirs])
 
-        # Create targets list
+        # Create targets files list
         files = [item for item in contents if item["type"] == "file"]
         files.extend(item for sublist in subcontents for item in sublist if item["type"] == "file")
 
+        # TODO: semaphore
         # Download file and create blob model
         async def download_file(item: dict[str, Any]):
             data = await self._github.GET(item["download_url"])
             content = data.encode()
-            return models.FileBlob(
-                path=item["path"],
-                content=content,
-                size=len(content),
-            )
+            return models.FileBlob(path=item["path"], content=content, size=len(content))
 
         # Download files and add to database
         blobs = await asyncio.gather(*[download_file(item) for item in files])
@@ -154,28 +157,37 @@ class StalcraftDatabase:
                     session.add(models.FileBlob(path=path, content=content, size=len(content)))
 
         finally:
+            # Delete temp archive file
             os.unlink(filename)
 
     async def _update_diff(self, base: str, head: str):
-        # TODO: update me! asyncio download!
+        # Get repository diff from base commit to head commit
         diff = await self._github.diff(base=base, head=head)
 
+        # TODO: filter by mode
+        # Create targets files list
+        to_download = [file for file in diff["files"] if file["status"] in ("added", "modified")]
+        to_delete = [file for file in diff["files"] if file["status"] in ("deleted",)]
+
+        # TODO: semaphore
+        # Download file and create blob model
+        async def download_file(file: dict[str, Any]):
+            path = file["filename"]
+            content = await self._github.rawfile(commit=head, path=path)
+            if isinstance(content, str):
+                content = content.encode()
+            return models.FileBlob(path=path, content=content, size=len(content))
+
+        # Download files
+        blobs = await asyncio.gather(*[download_file(file) for file in to_download])
+
+        # Update database
         async with self._sessionmaker() as session:
             async with session.begin():
-                for file in diff.get("files", []):
-                    filename = file.get("filename")
-                    status = file.get("status")
-                    url = file.get("raw_url")
+                # Merge new and changed files
+                for blob in blobs:
+                    await session.merge(blob)
 
-                    if url and filename and status in ("added", "modified"):
-                        content = await self._github.GET(url)
-                        await session.merge(
-                            models.FileBlob(
-                                path=filename,
-                                content=content,
-                                size=len(content),
-                            )
-                        )
-
-                    if filename and status == "deleted":
-                        await session.exec(delete(models.FileBlob).where(models.FileBlob.path == filename))
+                # Delete outdated files
+                for file in to_delete:
+                    await session.exec(delete(models.FileBlob).where(models.FileBlob.path == file["filename"]))

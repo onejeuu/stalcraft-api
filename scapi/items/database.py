@@ -125,9 +125,9 @@ class StalcraftDatabase:
         # TODO: semaphore
         # Download file and create blob model
         async def download_file(item: dict[str, Any]):
-            data = await self._github.GET(item["download_url"])
-            content = data.encode()
-            return models.FileBlob(path=item["path"], content=content, size=len(content))
+            path = item["path"]
+            content = await self._github.rawfile(path=path)
+            return models.FileBlob(path=path, content=content, size=len(content))
 
         # Download files and add to database
         blobs = await asyncio.gather(*[download_file(item) for item in files])
@@ -173,9 +173,9 @@ class StalcraftDatabase:
 
         # TODO: semaphore
         # Download file and create blob model
-        async def download_file(file: dict[str, Any]):
-            path = file["filename"]
-            content = await self._github.rawfile(commit=head, path=path)
+        async def download_file(item: dict[str, Any]):
+            path = item["filename"]
+            content = await self._github.rawfile(ref=head, path=path)
             return models.FileBlob(path=path, content=content, size=len(content))
 
         # Download files

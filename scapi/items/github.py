@@ -40,8 +40,9 @@ class GitHubClient(BearerTokenClient):
     async def contents(self, path: str = ""):
         return await self.GET(f"https://api.github.com/repos/{self._slug}/contents/{path}")
 
-    async def rawfile(self, commit: str, path: str):
-        return await self.GET(f"https://raw.githubusercontent.com/{self._slug}/{commit}/{path}", raw=True)
+    async def rawfile(self, path: str, ref: Optional[str] = None):
+        ref = ref or self._branch
+        return await self.GET(f"https://raw.githubusercontent.com/{self._slug}/{ref}/{path}", raw=True)
 
     async def archive(self, output: Optional[str] = None):
         data = await self.GET(

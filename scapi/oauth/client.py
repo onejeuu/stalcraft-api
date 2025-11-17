@@ -30,11 +30,13 @@ class OAuthClient:
         self,
         scope: Optional[str] = None,
         redirect_uri: Optional[str] = None,
+        state: Optional[str] = None,
     ) -> str:
         params = Params(
             client_id=self._client_id,
             redirect_uri=redirect_uri or self.redirect_uri,
             scope=scope or self.scope,
+            state=state,
             response_type="code",
         )
 

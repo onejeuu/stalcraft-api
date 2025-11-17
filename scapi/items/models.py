@@ -1,11 +1,8 @@
-from sqlmodel import Field, SQLModel
+from sqlmodel import Field, MetaData, SQLModel
 
 
 class ScDatabaseModel(SQLModel):
-    pass
-
-
-meta = ScDatabaseModel.metadata
+    metadata = MetaData()
 
 
 class Metadata(ScDatabaseModel, table=True):
@@ -23,7 +20,11 @@ class FileBlob(ScDatabaseModel, table=True):
     size: int
 
 
-class Translation(ScDatabaseModel, table=True):
+class ScDatabaseParsed(ScDatabaseModel):
+    metadata = MetaData()
+
+
+class Translation(ScDatabaseParsed, table=True):
     __tablename__: str = "translation"
 
     entity_type: str = Field(primary_key=True)
@@ -33,7 +34,7 @@ class Translation(ScDatabaseModel, table=True):
     text: str = Field(index=True)
 
 
-class BaseItem(ScDatabaseModel):
+class BaseItem(ScDatabaseParsed):
     id: str = Field(primary_key=True)
     realm: str = Field(primary_key=True)
 
@@ -64,7 +65,7 @@ class Settlement(BaseItem, table=True):
     pass
 
 
-class BaseBarter(ScDatabaseModel):
+class BaseBarter(ScDatabaseParsed):
     item_id: str = Field(primary_key=True)
     realm: str = Field(primary_key=True)
 

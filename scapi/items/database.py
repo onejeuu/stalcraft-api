@@ -4,13 +4,14 @@ from pathlib import Path
 from typing import Optional
 
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
-from sqlmodel import select
+from sqlmodel import MetaData, select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from scapi.defaults import Default
 from scapi.enums import RepoSyncMode
 
 from . import models
+from .convert import DatabaseNormalizer
 from .download import RepoSyncer
 from .enums import MetadataKey
 from .github import GitHubClient
@@ -66,16 +67,27 @@ class StalcraftDatabase:
             await self._set_metadata_completed(session, mode, remote_commit)
         return True
 
+    async def convert(self):
+        async with self._sessionmaker.begin() as session:
+            await self._drop_tables(session, models.ScDatabaseParsed.metadata)
+
+            dbnrm = DatabaseNormalizer(session=session)
+            await dbnrm.convert()
+
     async def _create_tables(self):
         self._path.parent.mkdir(parents=True, exist_ok=True)
 
         async with self._engine.begin() as conn:
-            await conn.run_sync(models.meta.create_all)
+            await conn.run_sync(models.ScDatabaseModel.metadata.create_all)
+            await conn.run_sync(models.ScDatabaseParsed.metadata.create_all)
+
+    async def _drop_tables(self, session: AsyncSession, metadata: MetaData):
+        for table in reversed(metadata.sorted_tables):
+            await session.exec(table.delete())
 
     async def _rebuild_database(self, session: AsyncSession, mode: RepoSyncMode):
         # Drop tables
-        for table in reversed(models.meta.sorted_tables):
-            await session.exec(table.delete())
+        await self._drop_tables(session, models.ScDatabaseModel.metadata)
 
         # Download repository by mode
         match mode:

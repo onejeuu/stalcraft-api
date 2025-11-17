@@ -1,22 +1,20 @@
-import asyncio
-import os
-import tempfile
-import zipfile
 from datetime import datetime
 from os import PathLike
 from pathlib import Path
-from typing import Any, Optional
+from typing import Optional
 
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
-from sqlmodel import delete, select
+from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from scapi.defaults import Default
 from scapi.enums import RepoSyncMode
 
 from . import models
+from .download import RepoSyncer
 from .enums import MetadataKey
 from .github import GitHubClient
+from .models import Metadata
 
 
 VERSION = "1.0"
@@ -32,6 +30,7 @@ class StalcraftDatabase:
         self._path = Path(path)
         self._mode = mode
         self._github = github or GitHubClient()
+        self._syncer = RepoSyncer(self._github)
 
         self._engine = create_async_engine(f"sqlite+aiosqlite:///{self._path}")
         self._sessionmaker = async_sessionmaker(self._engine, class_=AsyncSession, expire_on_commit=False)
@@ -63,7 +62,7 @@ class StalcraftDatabase:
 
         # Update database by diff
         async with self._sessionmaker.begin() as session:
-            await self._update_diff(session, local_commit, remote_commit)
+            await self._syncer.diff(session, mode, local_commit, remote_commit)
             await self._set_metadata_completed(session, mode, remote_commit)
         return True
 
@@ -81,109 +80,27 @@ class StalcraftDatabase:
         # Download repository by mode
         match mode:
             case RepoSyncMode.ARCHIVE:
-                await self._download_archive(session)
+                await self._syncer.archive(session)
 
             case RepoSyncMode.FILES | _:
-                await self._download_files(session)
+                await self._syncer.files(session)
 
     async def _get_local_commit(self) -> str:
         async with self._sessionmaker() as session:
-            query = select(models.Metadata.value).where(models.Metadata.key == MetadataKey.COMMIT)
+            query = select(Metadata.value).where(Metadata.key == MetadataKey.COMMIT)
             local_commit = (await session.exec(query)).first()
         return local_commit or ""
 
-    async def _set_metadata(self, session: AsyncSession, key: str, value: Any):
-        await session.merge(models.Metadata(key=key, value=str(value)))
-
     async def _set_metadata_completed(self, session: AsyncSession, mode: RepoSyncMode, commit: str):
         now = datetime.now().isoformat()
-        await self._set_metadata(session, MetadataKey.MODE, mode)
-        await self._set_metadata(session, MetadataKey.COMMIT, commit)
-        await self._set_metadata(session, MetadataKey.CHEKED, now)
-        await self._set_metadata(session, MetadataKey.UPDATED, now)
-        await self._set_metadata(session, MetadataKey.STATUS, "updated")
+        await session.merge(Metadata(key=MetadataKey.MODE, value=mode))
+        await session.merge(Metadata(key=MetadataKey.COMMIT, value=commit))
+        await session.merge(Metadata(key=MetadataKey.CHEKED, value=now))
+        await session.merge(Metadata(key=MetadataKey.UPDATED, value=now))
+        await session.merge(Metadata(key=MetadataKey.STATUS, value="updated"))
 
     async def _set_metadata_uptodate(self, session: AsyncSession, mode: RepoSyncMode):
-        await self._set_metadata(session, MetadataKey.MODE, mode)
-        await self._set_metadata(session, MetadataKey.CHEKED, datetime.now().isoformat())
-        await self._set_metadata(session, MetadataKey.STATUS, "up to date")
-
-    async def _download_files(self, session: AsyncSession):
-        # Get repository root files
-        contents = await self._github.contents()
-
-        # Get subdirs files
-        dirs = [item for item in contents if item["type"] == "dir"]
-        subcontents = await asyncio.gather(*[self._github.contents(dir["path"]) for dir in dirs])
-
-        # Create targets files list
-        files = [item for item in contents if item["type"] == "file"]
-        files.extend(item for sublist in subcontents for item in sublist if item["type"] == "file")
-
-        # TODO: semaphore
-        # Download file and create blob model
-        async def download_file(item: dict[str, Any]):
-            path = item["path"]
-            content = await self._github.rawfile(path=path)
-            return models.FileBlob(path=path, content=content, size=len(content))
-
-        # Download files and add to database
-        blobs = await asyncio.gather(*[download_file(item) for item in files])
-        session.add_all(blobs)
-
-    async def _download_archive(self, session: AsyncSession):
-        # Create temp archive file
-        with tempfile.NamedTemporaryFile(delete=False, prefix="scapi-db-", suffix=".zip") as tmp:
-            filename = tmp.name
-
-        try:
-            # Download archive to temp
-            await self._github.archive(output=filename)
-
-            # Open downloaded repository archive
-            with zipfile.ZipFile(filename) as zip:
-                root = zip.namelist()[0]  # Root directory name
-
-                # Add all files to database session
-                for name in zip.namelist():
-                    if name.endswith("/"):
-                        continue
-
-                    # Get relative path and file content
-                    path = name.replace(root, "", 1)
-                    content = zip.read(name)
-
-                    # Add file blob to session
-                    session.add(models.FileBlob(path=path, content=content, size=len(content)))
-
-        finally:
-            # Delete temp archive file
-            os.unlink(filename)
-
-    async def _update_diff(self, session: AsyncSession, base: str, head: str):
-        # Get repository diff from base commit to head commit
-        diff = await self._github.diff(base=base, head=head)
-
-        # TODO: download to temp? init files -> sync full -> memory overflow
-        # TODO: filter by mode
-        # Create targets files list
-        to_download = [file for file in diff["files"] if file["status"] in ("added", "modified")]
-        to_delete = [file for file in diff["files"] if file["status"] in ("deleted",)]
-
-        # TODO: semaphore
-        # Download file and create blob model
-        async def download_file(item: dict[str, Any]):
-            path = item["filename"]
-            content = await self._github.rawfile(ref=head, path=path)
-            return models.FileBlob(path=path, content=content, size=len(content))
-
-        # Download files
-        blobs = await asyncio.gather(*[download_file(file) for file in to_download])
-
-        # Merge new and changed files
-        for blob in blobs:
-            await session.merge(blob)
-
-        # Delete outdated files
-        for file in to_delete:
-            await session.exec(delete(models.FileBlob).where(models.FileBlob.path == file["filename"]))
+        now = datetime.now().isoformat()
+        await session.merge(Metadata(key=MetadataKey.MODE, value=mode))
+        await session.merge(Metadata(key=MetadataKey.CHEKED, value=now))
+        await session.merge(Metadata(key=MetadataKey.STATUS, value="up to date"))

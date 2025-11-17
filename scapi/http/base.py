@@ -86,9 +86,9 @@ class BaseHTTPClient:
         return await response.read()
 
     async def _stream_to_file(self, response: ClientResponse, filename: str) -> str:
-        async with aiofiles.open(filename, "wb") as f:
+        async with aiofiles.open(filename, "wb") as fp:
             async for chunk in response.content.iter_chunked(CHUNK_SIZE):
-                await f.write(chunk)
+                await fp.write(chunk)
         return filename
 
     async def _update_ratelimit(self, response: ClientResponse) -> None:

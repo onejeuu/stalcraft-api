@@ -40,13 +40,16 @@ class GitHubClient:
     async def contents(self, path: str = ""):
         return await self._http.GET(f"https://api.github.com/repos/{self._slug}/contents/{path}")
 
-    async def rawfile(self, path: str, ref: Optional[str] = None):
+    async def rawfile(self, path: str, ref: Optional[str] = None, output: Optional[str] = None):
         ref = ref or self._branch
-        return await self._http.GET(f"https://raw.githubusercontent.com/{self._slug}/{ref}/{path}", raw=True)
+        return await self._http.GET(
+            f"https://raw.githubusercontent.com/{self._slug}/{ref}/{path}",
+            filename=output,
+            raw=True,
+        )
 
     async def archive(self, output: Optional[str] = None):
-        data = await self._http.GET(
+        return await self._http.GET(
             f"https://github.com/{self._slug}/archive/refs/heads/{self._branch}.zip",
             filename=output,
         )
-        return data

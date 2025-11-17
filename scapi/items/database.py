@@ -36,8 +36,6 @@ class StalcraftDatabase:
         self._engine = create_async_engine(f"sqlite+aiosqlite:///{self._path}")
         self._sessionmaker = async_sessionmaker(self._engine, class_=AsyncSession, expire_on_commit=False)
 
-        self._path.parent.mkdir(parents=True, exist_ok=True)
-
     async def sync(
         self,
         mode: Optional[RepoSyncMode] = None,
@@ -50,43 +48,43 @@ class StalcraftDatabase:
         local_commit = await self._get_local_commit()
         remote_commit = await self._github.latest_commit()
 
-        # Stop if database is up to date
+        # Stop sync if database is up to date
         if local_commit == remote_commit and not force:
-            await self._set_metadata_uptodate()
+            async with self._sessionmaker.begin() as session:
+                await self._set_metadata_uptodate(session, mode)
             return False
 
-        # TODO: update meta is same transaction
         # Create clear database
         if not local_commit or force:
-            await self._rebuild_database(mode)
-            await self._set_metadata_completed(remote_commit)
+            async with self._sessionmaker.begin() as session:
+                await self._rebuild_database(session, mode)
+                await self._set_metadata_completed(session, mode, remote_commit)
             return True
 
-        # TODO: update meta is same transaction
         # Update database by diff
-        await self._update_diff(local_commit, remote_commit)
-        await self._set_metadata_completed(remote_commit)
+        async with self._sessionmaker.begin() as session:
+            await self._update_diff(session, local_commit, remote_commit)
+            await self._set_metadata_completed(session, mode, remote_commit)
         return True
 
     async def _create_tables(self):
+        self._path.parent.mkdir(parents=True, exist_ok=True)
+
         async with self._engine.begin() as conn:
             await conn.run_sync(models.meta.create_all)
 
-    async def _rebuild_database(self, mode: RepoSyncMode):
-        # Open rebuild transaction
-        async with self._sessionmaker() as session:
-            async with session.begin():
-                # Drop tables
-                for table in reversed(models.meta.sorted_tables):
-                    await session.exec(table.delete())
+    async def _rebuild_database(self, session: AsyncSession, mode: RepoSyncMode):
+        # Drop tables
+        for table in reversed(models.meta.sorted_tables):
+            await session.exec(table.delete())
 
-                # Download repository by mode
-                match mode:
-                    case RepoSyncMode.ARCHIVE:
-                        await self._download_archive(session)
+        # Download repository by mode
+        match mode:
+            case RepoSyncMode.ARCHIVE:
+                await self._download_archive(session)
 
-                    case RepoSyncMode.FILES | _:
-                        await self._download_files(session)
+            case RepoSyncMode.FILES | _:
+                await self._download_files(session)
 
     async def _get_local_commit(self) -> str:
         async with self._sessionmaker() as session:
@@ -94,21 +92,21 @@ class StalcraftDatabase:
             local_commit = (await session.exec(query)).first()
         return local_commit or ""
 
-    async def _set_metadata(self, key: str, value: Any):
-        async with self._sessionmaker() as session:
-            async with session.begin():
-                await session.merge(models.Metadata(key=key, value=str(value)))
+    async def _set_metadata(self, session: AsyncSession, key: str, value: Any):
+        await session.merge(models.Metadata(key=key, value=str(value)))
 
-    async def _set_metadata_completed(self, commit: str):
+    async def _set_metadata_completed(self, session: AsyncSession, mode: RepoSyncMode, commit: str):
         now = datetime.now().isoformat()
-        await self._set_metadata(MetadataKey.COMMIT, commit)
-        await self._set_metadata(MetadataKey.CHEKED, now)
-        await self._set_metadata(MetadataKey.UPDATED, now)
-        await self._set_metadata(MetadataKey.STATUS, "updated")
+        await self._set_metadata(session, MetadataKey.MODE, mode)
+        await self._set_metadata(session, MetadataKey.COMMIT, commit)
+        await self._set_metadata(session, MetadataKey.CHEKED, now)
+        await self._set_metadata(session, MetadataKey.UPDATED, now)
+        await self._set_metadata(session, MetadataKey.STATUS, "updated")
 
-    async def _set_metadata_uptodate(self):
-        await self._set_metadata(MetadataKey.CHEKED, datetime.now().isoformat())
-        await self._set_metadata(MetadataKey.STATUS, "up to date")
+    async def _set_metadata_uptodate(self, session: AsyncSession, mode: RepoSyncMode):
+        await self._set_metadata(session, MetadataKey.MODE, mode)
+        await self._set_metadata(session, MetadataKey.CHEKED, datetime.now().isoformat())
+        await self._set_metadata(session, MetadataKey.STATUS, "up to date")
 
     async def _download_files(self, session: AsyncSession):
         # Get repository root files
@@ -162,10 +160,11 @@ class StalcraftDatabase:
             # Delete temp archive file
             os.unlink(filename)
 
-    async def _update_diff(self, base: str, head: str):
+    async def _update_diff(self, session: AsyncSession, base: str, head: str):
         # Get repository diff from base commit to head commit
         diff = await self._github.diff(base=base, head=head)
 
+        # TODO: download to temp? init files -> sync full -> memory overflow
         # TODO: filter by mode
         # Create targets files list
         to_download = [file for file in diff["files"] if file["status"] in ("added", "modified")]
@@ -181,13 +180,10 @@ class StalcraftDatabase:
         # Download files
         blobs = await asyncio.gather(*[download_file(file) for file in to_download])
 
-        # Update database
-        async with self._sessionmaker() as session:
-            async with session.begin():
-                # Merge new and changed files
-                for blob in blobs:
-                    await session.merge(blob)
+        # Merge new and changed files
+        for blob in blobs:
+            await session.merge(blob)
 
-                # Delete outdated files
-                for file in to_delete:
-                    await session.exec(delete(models.FileBlob).where(models.FileBlob.path == file["filename"]))
+        # Delete outdated files
+        for file in to_delete:
+            await session.exec(delete(models.FileBlob).where(models.FileBlob.path == file["filename"]))

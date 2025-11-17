@@ -55,12 +55,14 @@ class StalcraftDatabase:
             await self._set_metadata_uptodate()
             return False
 
+        # TODO: update meta is same transaction
         # Create clear database
         if not local_commit or force:
             await self._rebuild_database(mode)
             await self._set_metadata_completed(remote_commit)
             return True
 
+        # TODO: update meta is same transaction
         # Update database by diff
         await self._update_diff(local_commit, remote_commit)
         await self._set_metadata_completed(remote_commit)
@@ -100,13 +102,13 @@ class StalcraftDatabase:
     async def _set_metadata_completed(self, commit: str):
         now = datetime.now().isoformat()
         await self._set_metadata(MetadataKey.COMMIT, commit)
-        await self._set_metadata(MetadataKey.UPDATED, now)
         await self._set_metadata(MetadataKey.CHEKED, now)
+        await self._set_metadata(MetadataKey.UPDATED, now)
         await self._set_metadata(MetadataKey.STATUS, "updated")
 
     async def _set_metadata_uptodate(self):
-        await self._set_metadata(MetadataKey.STATUS, "up to date")
         await self._set_metadata(MetadataKey.CHEKED, datetime.now().isoformat())
+        await self._set_metadata(MetadataKey.STATUS, "up to date")
 
     async def _download_files(self, session: AsyncSession):
         # Get repository root files
@@ -174,8 +176,6 @@ class StalcraftDatabase:
         async def download_file(file: dict[str, Any]):
             path = file["filename"]
             content = await self._github.rawfile(commit=head, path=path)
-            if isinstance(content, str):
-                content = content.encode()
             return models.FileBlob(path=path, content=content, size=len(content))
 
         # Download files

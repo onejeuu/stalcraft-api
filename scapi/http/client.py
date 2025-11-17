@@ -11,6 +11,7 @@ class HTTPClient(BaseHTTPClient):
         headers: Optional[Headers] = None,
         timeout: Optional[int] = None,
         filename: Optional[str] = None,
+        raw: bool = False,
     ):
         return await self._request(
             method="GET",
@@ -19,6 +20,7 @@ class HTTPClient(BaseHTTPClient):
             headers=headers,
             timeout=timeout,
             filename=filename,
+            raw=raw,
         )
 
     async def POST(
@@ -28,6 +30,7 @@ class HTTPClient(BaseHTTPClient):
         headers: Optional[Headers] = None,
         data: Optional[Data] = None,
         timeout: Optional[int] = None,
+        raw: bool = False,
     ):
         return await self._request(
             method="POST",
@@ -36,6 +39,7 @@ class HTTPClient(BaseHTTPClient):
             data=data,
             headers=headers,
             timeout=timeout,
+            raw=raw,
         )
 
     async def PUT(
@@ -45,6 +49,7 @@ class HTTPClient(BaseHTTPClient):
         headers: Optional[Headers] = None,
         data: Optional[Data] = None,
         timeout: Optional[int] = None,
+        raw: bool = False,
     ):
         return await self._request(
             method="PUT",
@@ -53,6 +58,7 @@ class HTTPClient(BaseHTTPClient):
             data=data,
             headers=headers,
             timeout=timeout,
+            raw=raw,
         )
 
     async def DELETE(
@@ -61,6 +67,7 @@ class HTTPClient(BaseHTTPClient):
         params: Optional[Params] = None,
         headers: Optional[Headers] = None,
         timeout: Optional[int] = None,
+        raw: bool = False,
     ):
         return await self._request(
             method="DELETE",
@@ -68,6 +75,7 @@ class HTTPClient(BaseHTTPClient):
             params=params,
             headers=headers,
             timeout=timeout,
+            raw=raw,
         )
 
     async def PATCH(
@@ -77,6 +85,7 @@ class HTTPClient(BaseHTTPClient):
         headers: Optional[Headers] = None,
         data: Optional[Data] = None,
         timeout: Optional[int] = None,
+        raw: bool = False,
     ):
         return await self._request(
             method="PATCH",
@@ -85,4 +94,5 @@ class HTTPClient(BaseHTTPClient):
             data=data,
             headers=headers,
             timeout=timeout,
+            raw=raw,
         )

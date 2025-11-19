@@ -1,11 +1,10 @@
-import asyncio
 from datetime import datetime
 from os import PathLike
 from pathlib import Path
 from typing import Optional
 
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
-from sqlmodel import MetaData, select
+from sqlmodel import MetaData, select, text
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from scapi.defaults import Default
@@ -70,10 +69,7 @@ class StalcraftDatabase:
         async with self._sessionmaker.begin() as session:
             await self._drop_tables(session, models.ScDatabaseParsed.metadata)
 
-            rows = {}
-            parsers = [parser(session, rows) for parser in parsing.parsers]
-
-            await asyncio.gather(*[parser.parse() for parser in parsers])
+            rows = await parsing.normalize(session)
             session.add_all(rows.values())
 
     async def _create_tables(self):

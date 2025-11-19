@@ -5,6 +5,21 @@ class ScDatabaseModel(SQLModel):
     metadata = MetaData()
 
 
+class ScDatabaseParsed(ScDatabaseModel):
+    metadata = MetaData()
+
+
+class BaseItem(ScDatabaseParsed):
+    realm: str = Field(primary_key=True)
+    id: str = Field(primary_key=True)
+
+
+class BaseBarter(ScDatabaseParsed):
+    realm: str = Field(primary_key=True)
+    item_id: str = Field(primary_key=True)
+    settlement_id: str = Field(primary_key=True)
+
+
 class Metadata(ScDatabaseModel, table=True):
     __tablename__: str = "metadata"
 
@@ -20,10 +35,6 @@ class FileBlob(ScDatabaseModel, table=True):
     size: int
 
 
-class ScDatabaseParsed(ScDatabaseModel):
-    metadata = MetaData()
-
-
 class Translation(ScDatabaseParsed, table=True):
     __tablename__: str = "translation"
 
@@ -32,11 +43,6 @@ class Translation(ScDatabaseParsed, table=True):
     field: str = Field(primary_key=True)
     language: str = Field(primary_key=True)
     text: str = Field(index=True)
-
-
-class BaseItem(ScDatabaseParsed):
-    id: str = Field(primary_key=True)
-    realm: str = Field(primary_key=True)
 
 
 class ItemListing(BaseItem, table=True):
@@ -63,13 +69,6 @@ class Settlement(BaseItem, table=True):
     __tablename__: str = "settlements"
 
     pass
-
-
-class BaseBarter(ScDatabaseParsed):
-    item_id: str = Field(primary_key=True)
-    realm: str = Field(primary_key=True)
-
-    settlement_id: str = Field(primary_key=True, foreign_key="settlements.id")
 
 
 class BarterRecipe(BaseBarter, table=True):

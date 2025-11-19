@@ -7,9 +7,8 @@ from typing import Optional
 from sqlmodel import col, delete
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-from scapi.items.github import GitHubClient
-
 from .enums import SyncMode
+from .github import GitHubClient
 from .models import FileBlob
 
 

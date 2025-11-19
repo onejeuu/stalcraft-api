@@ -32,7 +32,7 @@ def _tablename(model: type[BaseModel]) -> str:
 
 
 async def _load_file(session: AsyncSession, filename: str) -> AsyncIterator[tuple[str, Any]]:
-    realms = {f"{r.value}/{filename}": r.lower() for r in Realm}
+    realms = {f"{r}/{filename}": str(r) for r in Realm}
     query = select(models.FileBlob).where(col(models.FileBlob.path).in_(realms.keys()))
 
     for blob in await session.exec(query):
@@ -48,8 +48,8 @@ async def _parse_listings(session: AsyncSession, rows: Rows):
             entity_id = data["data"].split("/")[-1].replace(".json", "")
 
             rows[(tablename, realm, entity_id)] = model(
-                id=entity_id,
                 realm=realm,
+                id=entity_id,
                 color=data["color"],
                 state=data["status"]["state"],
             )
@@ -66,8 +66,8 @@ async def _parse_stats(session: AsyncSession, rows: Rows):
             entity_id = data["id"]
 
             rows[(tablename, realm, entity_id)] = model(
-                id=entity_id,
                 realm=realm,
+                id=entity_id,
                 category=data["category"],
                 type=data["type"],
             )
@@ -84,8 +84,8 @@ async def _parse_achievements(session: AsyncSession, rows: Rows):
             entity_id = data["id"]
 
             rows[(tablename, realm, entity_id)] = model(
-                id=entity_id,
                 realm=realm,
+                id=entity_id,
                 points=data["points"],
             )
 
@@ -106,8 +106,8 @@ async def _parse_settlement(rows: Rows, realm: str, data: Any):
     settlement_id = data["settlementTitle"]["key"].split(".")[2]
 
     rows[(tablename, realm, settlement_id)] = model(
-        id=settlement_id,
         realm=realm,
+        id=settlement_id,
     )
 
     await _parse_translation(rows, tablename, settlement_id, data, "settlementTitle")
@@ -122,8 +122,8 @@ async def _parse_recipes(rows: Rows, realm: str, recipes: list[Any], settlement_
         item_id = data["item"]
 
         rows[(tablename, realm, settlement_id, item_id)] = model(
-            item_id=item_id,
             realm=realm,
+            item_id=item_id,
             settlement_id=settlement_id,
             required_level=data["settlementRequiredLevel"],
         )
@@ -137,8 +137,8 @@ async def _parse_offers(rows: Rows, realm: str, offers: list[Any], settlement_id
 
     for index, data in enumerate(offers, start=1):
         rows[(tablename, realm, settlement_id, item_id, str(index))] = model(
-            item_id=item_id,
             realm=realm,
+            item_id=item_id,
             settlement_id=settlement_id,
             index=index,
             cost=data["cost"],
@@ -156,8 +156,8 @@ async def _parse_requirements(rows: Rows, realm: str, requirements: list[Any], s
         required_item_id = data["item"]
 
         rows[(tablename, realm, recipe_id, required_item_id)] = model(
-            item_id=recipe_id,
             realm=realm,
+            item_id=recipe_id,
             settlement_id=settlement_id,
             required_item_id=required_item_id,
             amount=data["amount"],

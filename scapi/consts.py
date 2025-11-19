@@ -1,7 +1,6 @@
 class BaseUrl:
     DEMO = "http://dapi.stalcraft.net"
     PRODUCTION = EXTERNAL = "http://eapi.stalcraft.net"
-
     OAUTH = "https://exbo.net/oauth"
 
 

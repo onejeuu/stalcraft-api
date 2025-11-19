@@ -1,7 +1,7 @@
 from datetime import datetime
 from os import PathLike
 from pathlib import Path
-from typing import Optional
+from typing import NamedTuple, Optional
 
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 from sqlmodel import MetaData, select
@@ -17,6 +17,11 @@ from .repository import Repository
 
 
 VERSION = version.generate()
+
+
+class CommitsPair(NamedTuple):
+    local: str
+    remote: str
 
 
 class StalcraftDatabase:
@@ -35,38 +40,59 @@ class StalcraftDatabase:
         self._engine = create_async_engine(f"sqlite+aiosqlite:///{self._path}")
         self._sessionmaker = async_sessionmaker(self._engine, class_=AsyncSession, expire_on_commit=False)
 
+    async def get_commits_pair(
+        self,
+    ) -> CommitsPair:
+        local = await self._get_metadata(MetadataKey.COMMIT)
+        remote = await self._github.latest_commit()
+        return CommitsPair(local, remote)
+
+    async def is_uptodate(
+        self,
+    ) -> bool:
+        commits = await self.get_commits_pair()
+        return commits.local == commits.remote
+
     async def sync(
         self,
         mode: Optional[SyncMode] = None,
+        normalize: bool = True,
         force: bool = False,
     ) -> bool:
         mode = mode or self._mode
         await self._validate_database()
 
         # Get local and remote commit hashes
-        local_commit = await self._get_metadata(MetadataKey.COMMIT)
-        remote_commit = await self._github.latest_commit()
+        commits = await self.get_commits_pair()
 
         # Stop sync if database is up to date
-        if local_commit == remote_commit and not force:
+        if commits.local == commits.remote and not force:
             async with self._sessionmaker.begin() as session:
                 await self._set_metadata_uptodate(session, mode)
             return False
 
         # Create clear database
-        if not local_commit or force:
+        if not commits.local or force:
             async with self._sessionmaker.begin() as session:
                 await self._rebuild_database(session, mode)
-                await self._set_metadata_completed(session, mode, remote_commit)
+                await self._set_metadata_completed(session, mode, commits.remote)
+
+                if normalize:
+                    await self.normalize()
             return True
 
         # Update database by diff
         async with self._sessionmaker.begin() as session:
-            await self._repo.sync_diff(session, mode, local_commit, remote_commit)
-            await self._set_metadata_completed(session, mode, remote_commit)
+            await self._repo.sync_diff(session, mode, commits.local, commits.remote)
+            await self._set_metadata_completed(session, mode, commits.remote)
+
+            if normalize:
+                await self.normalize()
         return True
 
-    async def normalize(self):
+    async def normalize(
+        self,
+    ) -> None:
         await self._validate_database()
 
         async with self._sessionmaker.begin() as session:

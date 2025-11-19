@@ -27,7 +27,7 @@ class Repository:
         self._github = github
         self._semaphore = asyncio.Semaphore(CONCURRENT_DOWNLOAD_LIMIT)
 
-    async def sync_archive(self, session: AsyncSession):
+    async def sync_archive(self, session: AsyncSession) -> None:
         # Create temp archive file
         with tempfile.NamedTemporaryFile(prefix=TEMP_PREFIX, suffix=".zip", delete=False) as tmp:
             filename = tmp.name
@@ -58,7 +58,7 @@ class Repository:
         finally:
             os.unlink(filename)
 
-    async def sync_index(self, session: AsyncSession):
+    async def sync_index(self, session: AsyncSession) -> None:
         # Get repository root files
         contents = await self._github.contents()
 
@@ -74,7 +74,7 @@ class Repository:
         blobs = await asyncio.gather(*[self._download_file(item["path"]) for item in files])
         session.add_all(blobs)
 
-    async def sync_diff(self, session: AsyncSession, mode: SyncMode, base: str, head: str):
+    async def sync_diff(self, session: AsyncSession, mode: SyncMode, base: str, head: str) -> None:
         # Get repository diff from base commit to head commit
         diff = await self._github.diff(base=base, head=head)
 
@@ -98,7 +98,7 @@ class Repository:
         for filename in to_delete:
             await session.exec(delete(FileBlob).where(col(FileBlob.path) == filename))
 
-    async def _download_file(self, path: str, ref: Optional[str] = None):
+    async def _download_file(self, path: str, ref: Optional[str] = None) -> FileBlob:
         async with self._semaphore:
             content = await self._github.rawfile(path=path, ref=ref)
             return FileBlob(path=path, content=content, size=len(content))

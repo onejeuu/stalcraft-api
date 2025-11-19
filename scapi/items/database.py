@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Optional
 
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
-from sqlmodel import MetaData, select, text
+from sqlmodel import MetaData, select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from scapi.defaults import Default
@@ -19,15 +19,18 @@ from .repository import Repository
 VERSION = "1.0"
 
 
+
+
 class StalcraftDatabase:
     def __init__(
         self,
         path: PathLike[str] = Default.DATABASE_PATH,
-        mode: SyncMode = Default.SYNC_MODE,
+        mode: SyncMode = SyncMode.DEFAULT,
         github: Optional[GitHubClient] = None,
     ):
         self._path = Path(path)
         self._mode = mode
+
         self._github = github or GitHubClient()
         self._repo = Repository(self._github)
 

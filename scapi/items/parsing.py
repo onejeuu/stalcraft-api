@@ -165,18 +165,21 @@ async def _parse_requirements(rows: Rows, realm: str, requirements: list[Any], s
 
 
 async def _parse_translation(rows: Rows, entity_type: str, entity_id: str, data: Any, field_name: str):
-    field_data = data.get(field_name, {})
+    model = models.Translation
+    tablename = _tablename(model)
 
-    match field_data.get("type"):
+    translation = data.get(field_name, {})
+
+    match translation.get("type"):
         case "translation":
-            text_items = field_data["lines"].items()
+            text_items = translation["lines"].items()
         case "text":
-            text_items = [("any", field_data["text"])]
+            text_items = [("any", translation["text"])]
         case _:
             return
 
     for lang, text in text_items:
-        rows[("translation", lang, entity_id)] = models.Translation(
+        rows[(tablename, lang, entity_id)] = model(
             entity_type=entity_type,
             entity_id=entity_id,
             field=field_name,

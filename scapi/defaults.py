@@ -2,7 +2,6 @@ from pathlib import Path
 
 from .consts import BaseUrl
 from .enums import Order, Realm, Region, SortAuction, SortOperation
-from .items.enums import SyncMode
 
 
 class Default:
@@ -29,4 +28,3 @@ class Default:
 
     # Database
     DATABASE_PATH = Path.home() / "scapi" / "stalcraft.db"
-    SYNC_MODE = SyncMode.DEFAULT

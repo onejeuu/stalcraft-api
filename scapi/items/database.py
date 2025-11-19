@@ -9,16 +9,14 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 
 from scapi.defaults import Default
 
-from . import models, parsing
+from . import models, parsing, version
 from .enums import MetadataKey, SyncMode
 from .github import GitHubClient
 from .models import Metadata
 from .repository import Repository
 
 
-VERSION = "1.0"
-
-
+VERSION = version.generate()
 
 
 class StalcraftDatabase:
@@ -43,10 +41,10 @@ class StalcraftDatabase:
         force: bool = False,
     ) -> bool:
         mode = mode or self._mode
-        await self._create_tables()
+        await self._validate_database()
 
         # Get local and remote commit hashes
-        local_commit = await self._get_local_commit()
+        local_commit = await self._get_metadata(MetadataKey.COMMIT)
         remote_commit = await self._github.latest_commit()
 
         # Stop sync if database is up to date
@@ -69,8 +67,10 @@ class StalcraftDatabase:
         return True
 
     async def normalize(self):
+        await self._validate_database()
+
         async with self._sessionmaker.begin() as session:
-            await self._drop_tables(session, models.ScDatabaseParsed.metadata)
+            await self._clear_tables(session, models.ScDatabaseParsed.metadata)
 
             rows = await parsing.normalize(session)
             session.add_all(rows.values())
@@ -82,13 +82,30 @@ class StalcraftDatabase:
             await conn.run_sync(models.ScDatabaseModel.metadata.create_all)
             await conn.run_sync(models.ScDatabaseParsed.metadata.create_all)
 
-    async def _drop_tables(self, session: AsyncSession, metadata: MetaData):
+    async def _drop_tables(self):
+        async with self._engine.begin() as conn:
+            await conn.run_sync(models.ScDatabaseModel.metadata.drop_all)
+            await conn.run_sync(models.ScDatabaseParsed.metadata.drop_all)
+
+    async def _clear_tables(self, session: AsyncSession, metadata: MetaData):
         for table in reversed(metadata.sorted_tables):
             await session.exec(table.delete())
 
+    async def _validate_database(self):
+        await self._create_tables()
+
+        version = await self._get_metadata(MetadataKey.VERSION)
+
+        if version and version != VERSION:
+            await self._drop_tables()
+            await self._create_tables()
+
+        async with self._sessionmaker.begin() as session:
+            await session.merge(Metadata(key=MetadataKey.VERSION, value=str(VERSION)))
+
     async def _rebuild_database(self, session: AsyncSession, mode: SyncMode):
         # Drop tables
-        await self._drop_tables(session, models.ScDatabaseModel.metadata)
+        await self._clear_tables(session, models.ScDatabaseModel.metadata)
 
         # Download repository by mode
         match mode:
@@ -98,11 +115,11 @@ class StalcraftDatabase:
             case SyncMode.INDEX | _:
                 await self._repo.sync_index(session)
 
-    async def _get_local_commit(self) -> str:
+    async def _get_metadata(self, key: MetadataKey) -> str:
         async with self._sessionmaker() as session:
-            query = select(Metadata.value).where(Metadata.key == MetadataKey.COMMIT)
-            local_commit = (await session.exec(query)).first()
-        return local_commit or ""
+            query = select(Metadata.value).where(Metadata.key == key)
+            value = (await session.exec(query)).first()
+        return value or ""
 
     async def _set_metadata_completed(self, session: AsyncSession, mode: SyncMode, commit: str):
         now = datetime.now().isoformat()

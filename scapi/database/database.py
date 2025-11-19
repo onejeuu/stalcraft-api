@@ -96,7 +96,7 @@ class StalcraftDatabase:
         await self._validate_database()
 
         async with self._sessionmaker.begin() as session:
-            await self._clear_tables(session, models.ScDatabaseParsed.metadata)
+            await self._clear_tables(session, models.BaseParsed.metadata)
 
             rows = await parsing.normalize(session)
             session.add_all(rows.values())
@@ -105,13 +105,13 @@ class StalcraftDatabase:
         self._path.parent.mkdir(parents=True, exist_ok=True)
 
         async with self._engine.begin() as conn:
-            await conn.run_sync(models.ScDatabaseModel.metadata.create_all)
-            await conn.run_sync(models.ScDatabaseParsed.metadata.create_all)
+            await conn.run_sync(models.BaseModel.metadata.create_all)
+            await conn.run_sync(models.BaseParsed.metadata.create_all)
 
     async def _drop_tables(self):
         async with self._engine.begin() as conn:
-            await conn.run_sync(models.ScDatabaseModel.metadata.drop_all)
-            await conn.run_sync(models.ScDatabaseParsed.metadata.drop_all)
+            await conn.run_sync(models.BaseModel.metadata.drop_all)
+            await conn.run_sync(models.BaseParsed.metadata.drop_all)
 
     async def _clear_tables(self, session: AsyncSession, metadata: MetaData):
         for table in reversed(metadata.sorted_tables):
@@ -131,7 +131,7 @@ class StalcraftDatabase:
 
     async def _rebuild_database(self, session: AsyncSession, mode: SyncMode):
         # Drop tables
-        await self._clear_tables(session, models.ScDatabaseModel.metadata)
+        await self._clear_tables(session, models.BaseModel.metadata)
 
         # Download repository by mode
         match mode:

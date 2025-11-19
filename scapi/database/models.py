@@ -1,33 +1,33 @@
 from sqlmodel import Field, MetaData, SQLModel
 
 
-class ScDatabaseModel(SQLModel):
+class BaseModel(SQLModel):
     metadata = MetaData()
 
 
-class ScDatabaseParsed(ScDatabaseModel):
+class BaseParsed(BaseModel):
     metadata = MetaData()
 
 
-class BaseItem(ScDatabaseParsed):
+class BaseItem(BaseParsed):
     realm: str = Field(primary_key=True)
     id: str = Field(primary_key=True)
 
 
-class BaseBarter(ScDatabaseParsed):
+class BaseBarter(BaseParsed):
     realm: str = Field(primary_key=True)
     item_id: str = Field(primary_key=True)
     settlement_id: str = Field(primary_key=True)
 
 
-class Metadata(ScDatabaseModel, table=True):
+class Metadata(BaseModel, table=True):
     __tablename__: str = "metadata"
 
     key: str = Field(primary_key=True)
     value: str
 
 
-class FileBlob(ScDatabaseModel, table=True):
+class FileBlob(BaseModel, table=True):
     __tablename__: str = "repository"
 
     path: str = Field(primary_key=True)
@@ -35,7 +35,7 @@ class FileBlob(ScDatabaseModel, table=True):
     size: int
 
 
-class Translation(ScDatabaseParsed, table=True):
+class Translation(BaseParsed, table=True):
     __tablename__: str = "translation"
 
     entity_type: str = Field(primary_key=True)

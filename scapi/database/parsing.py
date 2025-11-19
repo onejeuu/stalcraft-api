@@ -10,7 +10,7 @@ from scapi.enums import Realm
 from . import models
 
 
-BaseModel = models.ScDatabaseModel
+BaseModel = models.BaseModel
 Rows: TypeAlias = dict[tuple, BaseModel]
 
 

@@ -9,3 +9,14 @@ class MetadataKey(StrEnum):
     UPDATED = auto()
     CHEKED = auto()
     STATUS = auto()
+
+
+class SyncMode(StrEnum):
+    INDEX = DEFAULT = auto()
+    ARCHIVE = FULL = auto()
+
+
+class ParseMode(StrEnum):
+    INDEX = DEFAULT = auto()
+    ITEMS = auto()
+    FULL = auto()

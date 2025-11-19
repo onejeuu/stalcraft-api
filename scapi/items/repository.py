@@ -7,9 +7,9 @@ from typing import Optional
 from sqlmodel import col, delete
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-from scapi.enums import RepoSyncMode
 from scapi.items.github import GitHubClient
 
+from .enums import SyncMode
 from .models import FileBlob
 
 
@@ -19,7 +19,7 @@ CONCURRENT_DOWNLOAD_LIMIT = 20
 BUFFER_FLUSH_LIMIT = 1024 * 1024 * 4  # 4 MB
 
 
-class RepoSyncer:
+class Repository:
     def __init__(
         self,
         github: GitHubClient,
@@ -27,7 +27,7 @@ class RepoSyncer:
         self._github = github
         self._semaphore = asyncio.Semaphore(CONCURRENT_DOWNLOAD_LIMIT)
 
-    async def archive(self, session: AsyncSession):
+    async def sync_archive(self, session: AsyncSession):
         # Create temp archive file
         with tempfile.NamedTemporaryFile(prefix=TEMP_PREFIX, suffix=".zip", delete=False) as tmp:
             filename = tmp.name
@@ -58,7 +58,7 @@ class RepoSyncer:
         finally:
             os.unlink(filename)
 
-    async def files(self, session: AsyncSession):
+    async def sync_index(self, session: AsyncSession):
         # Get repository root files
         contents = await self._github.contents()
 
@@ -74,7 +74,7 @@ class RepoSyncer:
         blobs = await asyncio.gather(*[self._download_file(item["path"]) for item in files])
         session.add_all(blobs)
 
-    async def diff(self, session: AsyncSession, mode: RepoSyncMode, base: str, head: str):
+    async def sync_diff(self, session: AsyncSession, mode: SyncMode, base: str, head: str):
         # Get repository diff from base commit to head commit
         diff = await self._github.diff(base=base, head=head)
 
@@ -83,7 +83,7 @@ class RepoSyncer:
         to_delete: list[str] = [file["filename"] for file in diff["files"] if file["status"] in ("deleted",)]
 
         # Filter targets files by mode
-        if mode == RepoSyncMode.DEFAULT:
+        if mode == SyncMode.INDEX:
             to_download = [filename for filename in to_download if filename.count("/") <= 1]
             to_delete = [filename for filename in to_delete if filename.count("/") <= 1]
 

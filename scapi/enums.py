@@ -50,8 +50,3 @@ class Rank(UpStrEnum):
     OFFICER = auto()
     COLONEL = auto()
     LEADER = auto()
-
-
-class RepoSyncMode(StrEnum):
-    FILES = DEFAULT = auto()
-    ARCHIVE = FULL = auto()

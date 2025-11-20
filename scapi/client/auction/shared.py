@@ -28,7 +28,7 @@ class Auction:
             params=Params(
                 limit=limit,
                 offset=offset,
-                additional=str(additional),
+                additional=additional,
             ),
         )
 
@@ -49,7 +49,7 @@ class Auction:
                 offset=offset,
                 sort=sort,
                 order=order,
-                additional=str(additional),
+                additional=additional,
             ),
         )
 

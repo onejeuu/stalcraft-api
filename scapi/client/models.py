@@ -28,7 +28,7 @@ class ClanInfo(BaseModel):
     level: int
     level_points: int = Field(..., alias="levelPoints")
     registration_time: datetime = Field(..., alias="registrationTime")
-    alliance: Optional[Alliance]
+    alliance: Optional[Alliance] = Field(None)
     description: str
     leader: str
     member_count: int = Field(..., alias="memberCount")

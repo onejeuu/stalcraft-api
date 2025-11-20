@@ -16,6 +16,13 @@ class Realm(StrEnum):
     GLOBAL = EU = NA = SEA = auto()
 
 
+class Language(StrEnum):
+    RU = RUSSIAN = auto()
+    EN = ENGLISH = auto()
+    ES = SPANISH = auto()
+    FR = FRENCH = auto()
+
+
 class Order(StrEnum):
     ASC = ASCENDING = auto()
     DESC = DESCENDING = auto()
@@ -50,3 +57,10 @@ class Rank(UpStrEnum):
     OFFICER = auto()
     COLONEL = auto()
     LEADER = auto()
+
+
+class EntityType(StrEnum):
+    LISTING = auto()
+    STATS = auto()
+    ACHIEVEMENTS = auto()
+    SETTLEMENTS = auto()

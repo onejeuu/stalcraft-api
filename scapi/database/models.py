@@ -9,7 +9,7 @@ class BaseParsed(BaseModel):
     metadata = MetaData()
 
 
-class BaseItem(BaseParsed):
+class BaseEntity(BaseParsed):
     realm: str = Field(primary_key=True)
     id: str = Field(primary_key=True)
 
@@ -45,27 +45,27 @@ class Translation(BaseParsed, table=True):
     text: str = Field(index=True)
 
 
-class ItemListing(BaseItem, table=True):
+class ItemListing(BaseEntity, table=True):
     __tablename__: str = "listing"
 
     color: str = Field(default="")
     state: str = Field(default="")
 
 
-class ItemStatistic(BaseItem, table=True):
+class ItemStatistic(BaseEntity, table=True):
     __tablename__: str = "stats"
 
     category: str = Field(default="")
     type: str = Field(default="")
 
 
-class ItemAchievement(BaseItem, table=True):
+class ItemAchievement(BaseEntity, table=True):
     __tablename__: str = "achievements"
 
     points: int = Field(default=0)
 
 
-class Settlement(BaseItem, table=True):
+class Settlement(BaseEntity, table=True):
     __tablename__: str = "settlements"
 
     pass

@@ -6,7 +6,7 @@ from . import models
 def generate() -> str:
     tables: list[str] = []
 
-    for base in [models.BaseModel, models.ScDatabaseParsed]:
+    for base in [models.BaseModel, models.BaseParsed]:
         for table in base.metadata.sorted_tables:
             cols = [f"{col.name}:{col.type}" for col in table.columns]
             tables.append(f"{table.name}({','.join(sorted(cols))})")

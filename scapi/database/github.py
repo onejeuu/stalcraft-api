@@ -2,7 +2,7 @@ from typing import Any, Optional
 
 from scapi.consts import ItemsRepository
 from scapi.http.auth.token import TokenHTTPClient
-from scapi.http.base import Headers
+from scapi.http.client import Headers
 
 
 HEADERS = {
@@ -21,7 +21,7 @@ class GitHubClient:
         repository: str = ItemsRepository.REPOSITORY,
         branch: str = ItemsRepository.BRANCH,
         timeout: int = ItemsRepository.TIMEOUT,
-        headers: Optional[Headers] = None
+        headers: Optional[Headers] = None,
     ):
         self._token = token
         self._owner = owner

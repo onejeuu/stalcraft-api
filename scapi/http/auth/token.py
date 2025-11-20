@@ -1,8 +1,7 @@
 from typing import Any, Dict, Optional, TypeAlias
 
 from scapi.defaults import Default
-from scapi.http.base import Headers
-from scapi.http.client import HTTPClient
+from scapi.http.client import Headers, HTTPClient
 
 
 TokenPayload: TypeAlias = Dict[str, Any]

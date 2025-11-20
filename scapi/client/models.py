@@ -77,7 +77,7 @@ class Price(BaseModel):
     amount: int
     price: int
     time: datetime
-    additional: Optional[Additional]
+    additional: Optional[Additional] = Field(None)
 
 
 class Lot(BaseModel):
@@ -88,7 +88,7 @@ class Lot(BaseModel):
     buyout_price: int = Field(..., alias="buyoutPrice")
     start_time: datetime = Field(..., alias="startTime")
     end_time: datetime = Field(..., alias="endTime")
-    additional: Optional[Additional]
+    additional: Optional[Additional] = Field(None)
 
 
 class OperationParticipant(BaseModel):

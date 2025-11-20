@@ -1,18 +1,19 @@
 from datetime import datetime
 from os import PathLike
 from pathlib import Path
-from typing import Any, NamedTuple, Optional
+from typing import Any, NamedTuple, Optional, Sequence
 
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 from sqlmodel import MetaData, col, select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from scapi.defaults import Default
+from scapi.enums import EntityType
 
 from . import models, parsing, version
 from .enums import MetadataKey, SyncMode
 from .github import GitHubClient
-from .models import Metadata
+from .models import Metadata, Translation
 from .repository import Repository
 
 
@@ -106,18 +107,32 @@ class StalcraftDatabase:
         text: str,
         language: Optional[str] = None,
         entity_type: Optional[str] = None,
-    ):
+    ) -> Sequence[Translation]:
         async with self._sessionmaker.begin() as session:
             conds: list[Any] = [col(models.Translation.text).ilike(f"%{text}%")]
 
             if language is not None:
-                conds.append(col(models.Translation.language) == language)
+                conds.append(col(models.Translation.language) == language.lower())
 
             if entity_type is not None:
-                conds.append(col(models.Translation.entity_type) == entity_type)
+                conds.append(col(models.Translation.entity_type) == entity_type.lower())
 
             query = select(models.Translation).where(*conds)
             return (await session.exec(query)).all()
+
+    async def listing(
+        self,
+        text: str,
+        language: Optional[str] = None,
+    ) -> str | None:
+        results = await self.search(
+            text=text,
+            language=language,
+            entity_type=EntityType.LISTING,
+        )
+
+        if results and len(results) > 0:
+            return results[0].entity_id
 
     async def _create_tables(self):
         self._path.parent.mkdir(parents=True, exist_ok=True)

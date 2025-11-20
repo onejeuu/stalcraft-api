@@ -2,12 +2,12 @@ from abc import ABC, abstractmethod
 from datetime import datetime
 from typing import Optional
 
-from scapi import models
+from scapi.client import models
+from scapi.client.types import Listing
 from scapi.defaults import Default
 from scapi.enums import Order, Region, SortOperation
 from scapi.http.client import HTTPClient
 from scapi.http.params import Params
-from scapi.models.listing import Listing
 
 from .auction.shared import Auction
 
@@ -27,46 +27,46 @@ class BaseClient(ABC):
 
     async def regions(
         self,
-    ) -> list[models.api.RegionInfo]:
+    ) -> list[models.RegionInfo]:
         response = await self._http.GET(
             url="regions",
         )
 
-        return [models.api.RegionInfo.model_validate(region) for region in response]
+        return [models.RegionInfo.model_validate(region) for region in response]
 
     async def emission(
         self,
         region: Region = Default.REGION,
-    ) -> models.api.Emission:
+    ) -> models.Emission:
         response = await self._http.GET(
             url=f"{region}/emission",
         )
 
-        return models.api.Emission.model_validate(response)
+        return models.Emission.model_validate(response)
 
     async def character_profile(
         self,
         username: str,
         region: Region = Default.REGION,
-    ) -> models.api.CharacterProfile:
+    ) -> models.CharacterProfile:
         response = await self._http.GET(
             url=f"{region}/character/by-name/{username}/profile",
         )
 
-        return models.api.CharacterProfile.model_validate(response)
+        return models.CharacterProfile.model_validate(response)
 
     async def clans(
         self,
         limit: int = Default.LIMIT,
         offset: int = Default.OFFSET,
         region: Region = Default.REGION,
-    ) -> Listing[models.api.ClanInfo]:
+    ) -> Listing[models.ClanInfo]:
         response = await self._http.GET(
             url=f"{region}/clans",
             params=Params(limit=limit, offset=offset),
         )
 
-        return Listing(response, models.api.ClanInfo, "data", "totalClans")
+        return Listing(response, models.ClanInfo, "data", "totalClans")
 
     async def operations(
         self,
@@ -79,7 +79,7 @@ class BaseClient(ABC):
         before: Optional[datetime] = None,
         after: Optional[datetime] = None,
         region: Region = Default.REGION,
-    ) -> Listing[models.api.OperationSession]:
+    ) -> Listing[models.OperationSession]:
         response = await self._http.GET(
             url=f"{region}/operations/sessions",
             params=Params(
@@ -94,7 +94,7 @@ class BaseClient(ABC):
             ),
         )
 
-        return Listing(response, models.api.OperationSession, "sessions", "total")
+        return Listing(response, models.OperationSession, "sessions", "total")
 
     def auction(
         self,

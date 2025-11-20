@@ -1,6 +1,6 @@
 from typing import List, Optional
 
-from scapi import models
+from scapi.client import models
 from scapi.defaults import Default
 from scapi.enums import Region
 from scapi.http.auth.token import TokenHTTPClient
@@ -34,12 +34,12 @@ class UserClient(BaseClient):
     async def characters(
         self,
         region: Region = Default.REGION,
-    ) -> List[models.api.Character]:
+    ) -> List[models.Character]:
         response = await self._http.GET(
             url=f"{region}/characters",
         )
 
-        return [models.api.Character.model_validate(character) for character in response]
+        return [models.Character.model_validate(character) for character in response]
 
     async def friends(
         self,

@@ -9,7 +9,7 @@ from scapi.http.client import HTTPClient
 from scapi.http.params import Params
 from scapi.models.listing import Listing
 
-from .auction.base import Auction
+from .auction.shared import Auction
 
 
 class BaseClient(ABC):

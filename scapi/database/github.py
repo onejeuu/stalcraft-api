@@ -2,6 +2,7 @@ from typing import Any, Optional
 
 from scapi.consts import ItemsRepository
 from scapi.http.auth.token import TokenHTTPClient
+from scapi.http.base import Headers
 
 
 HEADERS = {
@@ -20,15 +21,15 @@ class GitHubClient:
         repository: str = ItemsRepository.REPOSITORY,
         branch: str = ItemsRepository.BRANCH,
         timeout: int = ItemsRepository.TIMEOUT,
+        headers: Optional[Headers] = None
     ):
         self._token = token
-
         self._owner = owner
         self._repository = repository
         self._branch = branch
         self._slug = f"{owner}/{repository}"
 
-        self._http = TokenHTTPClient(token=token, timeout=timeout)
+        self._http = TokenHTTPClient(token=token, timeout=timeout, headers=headers or HEADERS.copy())
 
     async def latest_commit(self) -> str:
         data = await self._http.GET(f"https://api.github.com/repos/{self._slug}/commits/{self._branch}")

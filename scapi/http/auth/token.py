@@ -1,6 +1,7 @@
 from typing import Any, Dict, Optional, TypeAlias
 
 from scapi.defaults import Default
+from scapi.http.base import Headers
 from scapi.http.client import HTTPClient
 
 
@@ -13,6 +14,7 @@ class TokenHTTPClient(HTTPClient):
         token: Optional[str] = None,
         base_url: str = "",
         timeout: int = Default.TIMEOUT,
+        headers: Optional[Headers] = None,
     ):
         super().__init__(base_url, timeout)
 
@@ -20,6 +22,9 @@ class TokenHTTPClient(HTTPClient):
         self._payload: TokenPayload = {}
 
         self._headers.update({"Content-Type": "application/json"})
+
+        if headers:
+            self._headers.update(headers)
 
         if token:
             self._payload = self._validate_token(token)

@@ -12,9 +12,8 @@ from .ratelimit import RateLimit
 
 
 Headers: TypeAlias = Dict[str, str]
-
-JsonData: TypeAlias = Dict[str, Any]
-Data: TypeAlias = JsonData | str | bytes
+Json: TypeAlias = Dict[str, Any]
+Data: TypeAlias = Json | str | bytes
 
 
 CHUNK_SIZE = 1024 * 8

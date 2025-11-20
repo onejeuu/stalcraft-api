@@ -18,7 +18,6 @@ class BaseClient(ABC):
         base_url: str = Default.BASE_URL,
     ):
         self._base_url = base_url
-
         self._http = self._create_http_client()
 
     @abstractmethod

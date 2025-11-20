@@ -20,9 +20,8 @@ class OAuthClient:
         self._client_id = client_id
         self._client_secret = client_secret
         self._base_url = base_url
-
-        self.scope = scope
-        self.redirect_uri = redirect_uri
+        self._scope = scope
+        self._redirect_uri = redirect_uri
 
         self._http = HTTPClient(base_url=base_url)
 
@@ -34,8 +33,8 @@ class OAuthClient:
     ) -> str:
         params = Params(
             client_id=self._client_id,
-            redirect_uri=redirect_uri or self.redirect_uri,
-            scope=scope or self.scope,
+            redirect_uri=redirect_uri or self._redirect_uri,
+            scope=scope or self._scope,
             state=state,
             response_type="code",
         )
@@ -51,7 +50,7 @@ class OAuthClient:
             data={
                 "client_id": self._client_id,
                 "client_secret": self._client_secret,
-                "scope": scope or self.scope,
+                "scope": scope or self._scope,
                 "grant_type": "client_credentials",
             },
         )
@@ -68,7 +67,7 @@ class OAuthClient:
                 "client_id": self._client_id,
                 "client_secret": self._client_secret,
                 "code": code,
-                "redirect_uri": self.redirect_uri,
+                "redirect_uri": self._redirect_uri,
                 "grant_type": "authorization_code",
             },
         )
@@ -86,7 +85,7 @@ class OAuthClient:
                 "client_id": self._client_id,
                 "client_secret": self._client_secret,
                 "refresh_token": refresh_token,
-                "scope": scope or self.scope,
+                "scope": scope or self._scope,
                 "grant_type": "refresh_token",
             },
         )

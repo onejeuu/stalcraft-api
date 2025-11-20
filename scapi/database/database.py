@@ -77,8 +77,8 @@ class StalcraftDatabase:
                 await self._rebuild_database(session, mode)
                 await self._set_metadata_completed(session, mode, commits.remote)
 
-                if normalize:
-                    await self.normalize()
+            if normalize:
+                await self.normalize()
             return True
 
         # Update database by diff
@@ -86,8 +86,8 @@ class StalcraftDatabase:
             await self._repo.sync_diff(session, mode, commits.local, commits.remote)
             await self._set_metadata_completed(session, mode, commits.remote)
 
-            if normalize:
-                await self.normalize()
+        if normalize:
+            await self.normalize()
         return True
 
     async def normalize(
@@ -105,13 +105,13 @@ class StalcraftDatabase:
         self._path.parent.mkdir(parents=True, exist_ok=True)
 
         async with self._engine.begin() as conn:
-            await conn.run_sync(models.BaseModel.metadata.create_all)
-            await conn.run_sync(models.BaseParsed.metadata.create_all)
+            for base in models.BASES:
+                await conn.run_sync(base.metadata.create_all)
 
     async def _drop_tables(self):
         async with self._engine.begin() as conn:
-            await conn.run_sync(models.BaseModel.metadata.drop_all)
-            await conn.run_sync(models.BaseParsed.metadata.drop_all)
+            for base in models.BASES:
+                await conn.run_sync(base.metadata.drop_all)
 
     async def _clear_tables(self, session: AsyncSession, metadata: MetaData):
         for table in reversed(metadata.sorted_tables):

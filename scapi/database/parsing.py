@@ -2,7 +2,7 @@ import asyncio
 import json
 from typing import Any, AsyncIterator, TypeAlias
 
-from sqlmodel import col, select
+from sqlmodel import SQLModel, col, select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from scapi.enums import Realm
@@ -10,8 +10,7 @@ from scapi.enums import Realm
 from . import models
 
 
-BaseModel = models.BaseModel
-Rows: TypeAlias = dict[tuple, BaseModel]
+Rows: TypeAlias = dict[tuple, SQLModel]
 
 
 async def normalize(session: AsyncSession) -> Rows:
@@ -27,7 +26,7 @@ async def normalize(session: AsyncSession) -> Rows:
     return rows
 
 
-def _tablename(model: type[BaseModel]) -> str:
+def _tablename(model: type[SQLModel]) -> str:
     return str(model.__tablename__)
 
 
@@ -185,4 +184,5 @@ async def _parse_translation(rows: Rows, entity_type: str, entity_id: str, data:
             field=field_name,
             language=lang,
             text=text,
+            args=translation.get("args"),
         )

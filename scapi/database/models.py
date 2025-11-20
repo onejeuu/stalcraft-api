@@ -1,3 +1,6 @@
+from typing import Any, Dict
+
+from sqlalchemy import JSON, Column
 from sqlmodel import Field, MetaData, SQLModel
 
 
@@ -5,8 +8,11 @@ class BaseModel(SQLModel):
     metadata = MetaData()
 
 
-class BaseParsed(BaseModel):
+class BaseParsed(SQLModel):
     metadata = MetaData()
+
+
+BASES = [BaseModel, BaseParsed]
 
 
 class BaseEntity(BaseParsed):
@@ -43,6 +49,7 @@ class Translation(BaseParsed, table=True):
     field: str = Field(primary_key=True)
     language: str = Field(primary_key=True)
     text: str = Field(index=True)
+    args: Dict[str, Any] = Field(sa_column=Column(JSON))
 
 
 class ItemListing(BaseEntity, table=True):

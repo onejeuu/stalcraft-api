@@ -1,10 +1,10 @@
 from datetime import datetime
 from os import PathLike
 from pathlib import Path
-from typing import NamedTuple, Optional
+from typing import Any, NamedTuple, Optional
 
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
-from sqlmodel import MetaData, select
+from sqlmodel import MetaData, col, select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from scapi.defaults import Default
@@ -100,6 +100,24 @@ class StalcraftDatabase:
 
             rows = await parsing.normalize(session)
             session.add_all(rows.values())
+
+    async def search(
+        self,
+        text: str,
+        language: Optional[str] = None,
+        entity_type: Optional[str] = None,
+    ):
+        async with self._sessionmaker.begin() as session:
+            conds: list[Any] = [col(models.Translation.text).ilike(f"%{text}%")]
+
+            if language is not None:
+                conds.append(col(models.Translation.language) == language)
+
+            if entity_type is not None:
+                conds.append(col(models.Translation.entity_type) == entity_type)
+
+            query = select(models.Translation).where(*conds)
+            return (await session.exec(query)).all()
 
     async def _create_tables(self):
         self._path.parent.mkdir(parents=True, exist_ok=True)

@@ -13,16 +13,16 @@ class BaseListing(List[M]):
 
 
 class Listing(BaseListing[M]):
-    DATA_NAME = "data"
-    TOTAL_NAME = "total"
+    _KEY_DATA = "data"
+    _KEY_TOTAL = "total"
 
     def __init__(
         self,
         response: Any,
         model: type[M],
-        data_name: str = DATA_NAME,
-        total_name: str = TOTAL_NAME,
+        key_data: str = _KEY_DATA,
+        key_total: str = _KEY_TOTAL,
     ):
-        items = [model.model_validate(entry) for entry in response[data_name]]
-        total = response.get(total_name, len(items))
+        items = [model.model_validate(entry) for entry in response[key_data]]
+        total = response.get(key_total, len(items))
         super().__init__(items, total)

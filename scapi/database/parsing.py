@@ -184,5 +184,5 @@ async def _parse_translation(rows: Rows, entity_type: str, entity_id: str, data:
             field=field_name,
             language=lang,
             text=text,
-            args=translation.get("args"),
+            args=translation.get("args", {}),
         )

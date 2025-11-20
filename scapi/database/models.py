@@ -12,7 +12,7 @@ class BaseParsed(SQLModel):
     metadata = MetaData()
 
 
-BASES = [BaseModel, BaseParsed]
+BASES: list[type[SQLModel]] = [BaseModel, BaseParsed]
 
 
 class BaseEntity(BaseParsed):
@@ -49,7 +49,7 @@ class Translation(BaseParsed, table=True):
     field: str = Field(primary_key=True)
     language: str = Field(primary_key=True)
     text: str = Field(index=True)
-    args: Dict[str, Any] = Field(sa_column=Column(JSON))
+    args: Dict[str, Any] = Field(sa_column=Column(JSON), default_factory=dict)
 
 
 class ItemListing(BaseEntity, table=True):

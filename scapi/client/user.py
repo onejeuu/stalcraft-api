@@ -6,11 +6,11 @@ from scapi.defaults import Default
 from scapi.enums import Region
 from scapi.http.auth.token import TokenHTTPClient
 
-from .base import BaseClient
 from .clan.user import UserClanEndpoint
+from .shared import SharedClient
 
 
-class UserClient(BaseClient):
+class UserClient(SharedClient):
     def __init__(
         self,
         token: str,

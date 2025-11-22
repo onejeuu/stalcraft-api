@@ -5,7 +5,7 @@ from typing import Optional
 from scapi.client import models
 from scapi.client.types import Listing
 from scapi.defaults import Default
-from scapi.enums import Order, Region, SortOperation
+from scapi.enums import Order, Region, SortOperations
 from scapi.http.api import APIClient
 from scapi.http.client import HTTPClient
 from scapi.http.params import Params
@@ -13,7 +13,7 @@ from scapi.http.params import Params
 from .auction.shared import AuctionEndpoint
 
 
-class BaseClient(ABC, APIClient):
+class SharedClient(ABC, APIClient):
     def __init__(
         self,
         base_url: str = Default.BASE_URL,
@@ -72,7 +72,7 @@ class BaseClient(ABC, APIClient):
         self,
         limit: int = Default.LIMIT,
         offset: int = Default.OFFSET,
-        sort: SortOperation = Default.SORT_OPERATION,
+        sort: SortOperations = Default.SORT_OPERATION,
         order: Order = Default.ORDER,
         map: Optional[str] = None,
         username: Optional[str] = None,

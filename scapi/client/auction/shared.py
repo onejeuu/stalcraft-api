@@ -15,8 +15,8 @@ class AuctionEndpoint(APIClient):
         region: Region = Default.REGION,
     ):
         self._http = http
-        self.item_id = item_id
-        self.region = region
+        self._item_id = item_id
+        self._region = region
 
     async def price_history(
         self,
@@ -25,7 +25,7 @@ class AuctionEndpoint(APIClient):
         additional: bool = Default.ADDITIONAL,
     ) -> Listing[models.Price]:
         response = await self._http.GET(
-            url=f"{self.region}/auction/{self.item_id}/history",
+            url=f"{self._region}/auction/{self._item_id}/history",
             params=Params(
                 limit=limit,
                 offset=offset,
@@ -44,7 +44,7 @@ class AuctionEndpoint(APIClient):
         additional: bool = Default.ADDITIONAL,
     ) -> Listing[models.Lot]:
         response = await self._http.GET(
-            url=f"{self.region}/auction/{self.item_id}/lots",
+            url=f"{self._region}/auction/{self._item_id}/lots",
             params=Params(
                 limit=limit,
                 offset=offset,
@@ -57,4 +57,4 @@ class AuctionEndpoint(APIClient):
         return Listing(response, models.Lot, "lots", "total")
 
     def __str__(self):
-        return f"<{self.__class__.__name__} item_id='{self.item_id}' region='{self.region}' http={self._http}>"
+        return f"<{self.__class__.__name__} item_id='{self._item_id}' region='{self._region}' http={self._http}>"

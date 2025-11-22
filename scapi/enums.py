@@ -12,7 +12,7 @@ class Region(StrEnum):
 
 
 class Realm(StrEnum):
-    RU = auto()
+    RU = RUSSIA = auto()
     GLOBAL = auto()
 
 
@@ -36,7 +36,7 @@ class SortAuction(StrEnum):
     BUYOUT_PRICE = auto()
 
 
-class SortOperation(StrEnum):
+class SortOperations(StrEnum):
     DATE_FINISH = auto()
     DIFFICULTY = auto()
 

@@ -1,16 +1,18 @@
 from pathlib import Path
 
 from .consts import BaseUrl
-from .enums import Order, Realm, Region, SortAuction, SortOperation
+from .enums import Language, Order, Realm, Region, SortAuction, SortOperations
 
 
 class Default:
+    # Client
     BASE_URL = BaseUrl.PRODUCTION
-    TIMEOUT = 30
+    TIMEOUT = 60
 
     # Region
     REGION = Region.RU
     REALM = Realm.RU
+    LANGUAGE = Language.RU
 
     # Api
     LIMIT = 20
@@ -18,7 +20,7 @@ class Default:
 
     ORDER = Order.ASCENDING
     SORT_AUCTION = SortAuction.TIME_CREATED
-    SORT_OPERATION = SortOperation.DATE_FINISH
+    SORT_OPERATION = SortOperations.DATE_FINISH
 
     ADDITIONAL = False
 

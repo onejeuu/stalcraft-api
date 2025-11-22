@@ -7,11 +7,11 @@ from scapi.enums import Region
 from scapi.http.auth.creds import CredentialsHTTPClient
 from scapi.http.auth.token import TokenHTTPClient
 
-from .base import BaseClient
 from .clan.shared import ClanEndpoint
+from .shared import SharedClient
 
 
-class AppClient(BaseClient):
+class AppClient(SharedClient):
     def __init__(
         self,
         token: Optional[str] = None,

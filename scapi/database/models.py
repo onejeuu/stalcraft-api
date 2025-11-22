@@ -8,22 +8,11 @@ class BaseModel(SQLModel):
     metadata = MetaData()
 
 
-class BaseParsed(SQLModel):
+class BaseParsed(BaseModel):
     metadata = MetaData()
 
 
-BASES: list[type[SQLModel]] = [BaseModel, BaseParsed]
-
-
-class BaseEntity(BaseParsed):
-    realm: str = Field(primary_key=True)
-    id: str = Field(primary_key=True)
-
-
-class BaseBarter(BaseParsed):
-    realm: str = Field(primary_key=True)
-    item_id: str = Field(primary_key=True)
-    settlement_id: str = Field(primary_key=True)
+BASES: list[type[SQLModel]] = list(sorted([BaseModel, BaseParsed], key=lambda x: x.__name__))
 
 
 class Metadata(BaseModel, table=True):
@@ -41,6 +30,17 @@ class FileBlob(BaseModel, table=True):
     size: int
 
 
+class BaseEntity(BaseParsed):
+    realm: str = Field(primary_key=True)
+    id: str = Field(primary_key=True)
+
+
+class BaseBarter(BaseParsed):
+    realm: str = Field(primary_key=True)
+    item_id: str = Field(primary_key=True)
+    settlement_id: str = Field(primary_key=True)
+
+
 class Translation(BaseParsed, table=True):
     __tablename__: str = "translation"
 
@@ -49,6 +49,7 @@ class Translation(BaseParsed, table=True):
     field: str = Field(primary_key=True)
     language: str = Field(primary_key=True)
     text: str = Field(index=True)
+    search: str = Field(index=True)
     args: Dict[str, Any] = Field(sa_column=Column(JSON), default_factory=dict)
 
 

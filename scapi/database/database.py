@@ -2,6 +2,7 @@ from os import PathLike
 from pathlib import Path
 from typing import Any, NamedTuple, Optional, Sequence
 
+from sqlalchemy.exc import DatabaseError
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 from sqlmodel import MetaData, col, delete, select
 from sqlmodel.ext.asyncio.session import AsyncSession
@@ -40,6 +41,8 @@ class StalcraftDatabase:
     async def get_commits(
         self,
     ) -> CommitsPair:
+        await self._validate_database()
+
         async with self._sessionmaker.begin() as session:
             local = await metadata.get(session, MetaKey.CURRENT_COMMIT)
         remote = await self._github.latest_commit()
@@ -54,6 +57,8 @@ class StalcraftDatabase:
     async def is_ready(
         self,
     ) -> bool:
+        await self._validate_database()
+
         async with self._sessionmaker.begin() as session:
             status = await metadata.get(session, MetaKey.NORMALIZE_STATUS)
         return status == StatusNormalize.READY
@@ -114,8 +119,14 @@ class StalcraftDatabase:
         language: Optional[str] = None,
         entity_type: Optional[str] = None,
     ) -> Sequence[Translation]:
+        await self._validate_database()
+
+        if not await self.is_ready():
+            await self.sync(normalize=True)
+
         async with self._sessionmaker.begin() as session:
-            conds: list[Any] = [col(models.Translation.text).ilike(f"%{text}%")]
+            query = parsing.query(text)
+            conds: list[Any] = [col(models.Translation.search).ilike(f"%{query}%")]
 
             if language is not None:
                 conds.append(col(models.Translation.language) == language.lower())
@@ -126,19 +137,19 @@ class StalcraftDatabase:
             query = select(models.Translation).where(*conds)
             return (await session.exec(query)).all()
 
-    async def listing(
+    async def get_id(
         self,
         text: str,
         language: Optional[str] = None,
+        entity_type: Optional[str] = EntityType.LISTING,
     ) -> str | None:
         results = await self.search(
             text=text,
             language=language,
-            entity_type=EntityType.LISTING,
+            entity_type=entity_type,
         )
 
-        if results and len(results) > 0:
-            return results[0].entity_id
+        return results[0].entity_id if results else None
 
     async def _rebuild_database(self, session: AsyncSession, mode: SyncMode):
         # Drop repository table
@@ -153,14 +164,19 @@ class StalcraftDatabase:
                 await self._repo.sync_index(session)
 
     async def _validate_database(self):
+        try:
+            async with self._sessionmaker.begin() as session:
+                incompatible = await metadata.incompatible(session)
+
+            if incompatible:
+                await self._drop_tables()
+                await self._create_database()
+
+        except DatabaseError:
+            await self._create_database()
+
+    async def _create_database(self):
         await self._create_tables()
-
-        async with self._sessionmaker.begin() as session:
-            incompatible = await metadata.incompatible(session)
-
-        if incompatible:
-            await self._drop_tables()
-            await self._create_tables()
 
         async with self._sessionmaker.begin() as session:
             await metadata.set_versions(session)

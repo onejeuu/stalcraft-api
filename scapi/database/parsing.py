@@ -1,5 +1,6 @@
 import asyncio
 import json
+import re
 from typing import Any, AsyncIterator, TypeAlias
 
 from sqlmodel import SQLModel, col, select
@@ -24,6 +25,13 @@ async def normalize(session: AsyncSession) -> Rows:
     )
 
     return rows
+
+
+def query(text: str) -> str:
+    text = text.lower()
+    text = re.sub(r"[^\w\u0400-\u04FF]", " ", text)
+    text = re.sub(r"\s+", " ", text).strip()
+    return text
 
 
 def _tablename(model: type[SQLModel]) -> str:
@@ -184,5 +192,6 @@ async def _parse_translation(rows: Rows, entity_type: str, entity_id: str, data:
             field=field_name,
             language=lang,
             text=text,
+            search=query(text),
             args=translation.get("args", {}),
         )

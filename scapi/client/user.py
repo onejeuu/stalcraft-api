@@ -1,5 +1,6 @@
-from typing import List, Optional
+from typing import List
 
+from scapi import exceptions
 from scapi.client import models
 from scapi.defaults import Default
 from scapi.enums import Region
@@ -12,7 +13,7 @@ from .clan.user import UserClanEndpoint
 class UserClient(BaseClient):
     def __init__(
         self,
-        token: Optional[str] = None,
+        token: str,
         base_url: str = Default.BASE_URL,
         timeout: int = Default.TIMEOUT,
     ):
@@ -29,7 +30,7 @@ class UserClient(BaseClient):
                 timeout=self._timeout,
             )
 
-        raise Exception("No token provided.")
+        raise exceptions.CredentialsError("No token provided.")
 
     async def characters(
         self,

@@ -101,3 +101,6 @@ class DatabaseRepository:
         async with self._semaphore:
             content = await self._github.rawfile(path=path, ref=ref)
             return FileBlob(path=path, content=content, size=len(content))
+
+    def __str__(self):
+        return f"<{self.__class__.__name__} github={self._github} semaphore={self._semaphore._value}>"

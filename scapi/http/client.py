@@ -8,6 +8,7 @@ import aiofiles
 from aiohttp import ClientResponse, ClientSession, ClientTimeout, TCPConnector
 from pydantic import ValidationError
 
+from scapi import exceptions
 from scapi.defaults import Default
 
 from .params import Params
@@ -22,6 +23,7 @@ Data: TypeAlias = Json | str | bytes
 class HTTPClient:
     TTL_DNS_CACHE = 60
     STREAM_CHUNK_SIZE = 1024 * 8
+    ERROR_KEY = "details"
 
     def __init__(
         self,
@@ -42,6 +44,7 @@ class HTTPClient:
         )
 
         self._ratelimit: Optional[RateLimit] = None
+        self._error_key = self.ERROR_KEY
 
         atexit.register(self._cleanup)
 
@@ -111,17 +114,17 @@ class HTTPClient:
             pass
 
     async def _on_error(self, response: ClientResponse) -> None:
+        default = "Unknown Error"
+
         try:
             data = await response.json()
-            msg = data.get("error", data.get("message"))
+            error = {"error": data.get(self._error_key, default)}
 
         except Exception:
-            msg = await response.text()
+            text = await response.text() or default
+            error = {"error": text}
 
-        msg = msg or f"HTTP {response.status}"
-
-        # TODO: CUSTOM EXCEPTION
-        raise Exception(msg)
+        raise exceptions.RequestError(error, response.status, response.method, response.url)
 
     async def GET(
         self,
@@ -225,3 +228,6 @@ class HTTPClient:
     async def __aexit__(self, exc_type, exc_val, exc_tb):
         await self.close()
         return False
+
+    def __str__(self):
+        return f"<{self.__class__.__name__} base_url='{self._base_url}' timeout='{self._session._timeout.total}s' ratelimit={repr(self._ratelimit)}>"

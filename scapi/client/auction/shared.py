@@ -2,11 +2,12 @@ from scapi.client import models
 from scapi.client.types import Listing
 from scapi.defaults import Default
 from scapi.enums import Order, Region, SortAuction
+from scapi.http.api import APIClient
 from scapi.http.client import HTTPClient
 from scapi.http.params import Params
 
 
-class AuctionEndpoint:
+class AuctionEndpoint(APIClient):
     def __init__(
         self,
         http: HTTPClient,
@@ -54,3 +55,6 @@ class AuctionEndpoint:
         )
 
         return Listing(response, models.Lot, "lots", "total")
+
+    def __str__(self):
+        return f"<{self.__class__.__name__} item_id='{self.item_id}' region='{self.region}' http={self._http}>"

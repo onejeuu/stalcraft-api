@@ -31,6 +31,7 @@ class GitHubClient(APIClient):
         self._slug = f"{owner}/{repository}"
 
         self._http = TokenHTTPClient(token=token, timeout=timeout, headers=headers or HEADERS.copy())
+        self._http._error_key = "message"
 
     async def latest_commit(self) -> str:
         data = await self._http.GET(f"https://api.github.com/repos/{self._slug}/commits/{self._branch}")
@@ -55,3 +56,6 @@ class GitHubClient(APIClient):
             f"https://github.com/{self._slug}/archive/refs/heads/{self._branch}.zip",
             filename=output,
         )
+
+    def __str__(self):
+        return f"<{self.__class__.__name__} token={bool(self._token)} repo='{self._slug}' branch='{self._branch}' http={self._http}>"

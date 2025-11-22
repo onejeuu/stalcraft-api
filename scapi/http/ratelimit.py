@@ -15,7 +15,7 @@ class RateLimit(BaseModel):
         try:
             ms = int(reset)
             timestamp = ms / 1000.0
-            return datetime.fromtimestamp(timestamp)
+            return datetime.fromtimestamp(int(timestamp))
 
         except Exception:
             return None

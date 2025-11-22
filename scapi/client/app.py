@@ -1,6 +1,7 @@
 import warnings
 from typing import Optional
 
+from scapi import exceptions
 from scapi.defaults import Default
 from scapi.enums import Region
 from scapi.http.auth.creds import CredentialsHTTPClient
@@ -27,7 +28,7 @@ class AppClient(BaseClient):
         super().__init__(base_url)
 
         if token and (client_id or client_secret):
-            warnings.warn("TODO")
+            warnings.warn("Redundant auth parameters. Provide EITHER 'token' OR both 'client_id' and 'client_secret'.")
 
     def _create_http_client(self):
         if self._client_id and self._client_secret:
@@ -45,7 +46,10 @@ class AppClient(BaseClient):
                 timeout=self._timeout,
             )
 
-        raise Exception("No token or client_id with client_secret provided.")
+        raise exceptions.CredentialsError(
+            f"Missing required credentials for {self.__class__.__name__}. "
+            "Provide EITHER 'token' OR both 'client_id' and 'client_secret'."
+        )
 
     def clan(
         self,

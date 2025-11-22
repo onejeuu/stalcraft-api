@@ -14,3 +14,6 @@ class APIClient:
 
     async def __aexit__(self, exc_type, exc_val, exc_tb):
         await self.close()
+
+    def __str__(self):
+        return f"<{self.__class__.__name__} http={self._http}>"

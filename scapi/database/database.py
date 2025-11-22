@@ -201,3 +201,6 @@ class StalcraftDatabase:
     async def _clear_tables(self, session: AsyncSession, metadata: MetaData):
         for table in reversed(metadata.sorted_tables):
             await session.exec(table.delete())
+
+    def __str__(self):
+        return f"<{self.__class__.__name__} mode='{self._mode}' path='{self._path.as_posix()}'>"

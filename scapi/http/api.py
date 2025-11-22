@@ -3,7 +3,7 @@ from typing import Self
 from .client import HTTPClient
 
 
-class BaseAPIClient:
+class APIClient:
     _http: HTTPClient
 
     async def close(self) -> None:

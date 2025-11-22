@@ -1,7 +1,7 @@
 from typing import Any, Optional
 
 from scapi.consts import ItemsRepository
-from scapi.http.api import BaseAPIClient
+from scapi.http.api import APIClient
 from scapi.http.auth.token import TokenHTTPClient
 from scapi.http.client import Headers
 
@@ -14,7 +14,7 @@ HEADERS = {
 }
 
 
-class GitHubClient(BaseAPIClient):
+class GitHubClient(APIClient):
     def __init__(
         self,
         token: Optional[str] = None,

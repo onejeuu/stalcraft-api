@@ -62,6 +62,7 @@ class StalcraftDatabase:
 
         async with self._sessionmaker.begin() as session:
             status = await metadata.get(session, MetaKey.NORMALIZE_STATUS)
+
         return status == StatusNormalize.READY
 
     async def sync(
@@ -83,7 +84,7 @@ class StalcraftDatabase:
                 await metadata.set_unchanged(session, mode)
             return False
 
-        # Create clear database
+        # Create clean database
         if not commits.local or force:
             async with self._sessionmaker.begin() as session:
                 await self._rebuild_database(session, mode)

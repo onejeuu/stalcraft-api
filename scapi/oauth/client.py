@@ -2,14 +2,14 @@ from typing import Optional
 
 from scapi.consts import BaseUrl
 from scapi.defaults import Default
-from scapi.http.api import BaseAPIClient
+from scapi.http.api import APIClient
 from scapi.http.client import HTTPClient
 from scapi.http.params import Params
 
 from . import models
 
 
-class OAuthClient(BaseAPIClient):
+class OAuthClient(APIClient):
     def __init__(
         self,
         client_id: str,

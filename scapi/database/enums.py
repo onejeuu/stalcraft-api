@@ -7,19 +7,24 @@ class MetaKey(StrEnum):
     _VERSION = auto()
     _SCHEMA = auto()
     CURRENT_COMMIT = auto()
-    LAST_SYNC_MODE = auto()
+    NORMALIZE_STATUS = auto()
     LAST_SYNC_STATUS = auto()
+    LAST_SYNC_MODE = auto()
     LAST_TIME_CHECK = auto()
     LAST_TIME_SYNC = auto()
     LAST_TIME_NORMALIZE = auto()
 
 
-class MetaStatus(StrEnum):
-    SYNCED = auto()
-    NORMALIZED = auto()
-    UNCHANGED = auto()
-
-
 class SyncMode(StrEnum):
     INDEX = DEFAULT = auto()
     ARCHIVE = FULL = auto()
+
+
+class StatusSync(StrEnum):
+    SYNCED = auto()
+    UNCHANGED = auto()
+
+
+class StatusNormalize(StrEnum):
+    READY = auto()
+    OUTDATED = auto()

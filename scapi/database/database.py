@@ -3,14 +3,14 @@ from pathlib import Path
 from typing import Any, NamedTuple, Optional, Sequence
 
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
-from sqlmodel import MetaData, col, select
+from sqlmodel import MetaData, col, delete, select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from scapi.defaults import Default
 from scapi.enums import EntityType
 
 from . import metadata, models, parsing
-from .enums import MetaKey, SyncMode
+from .enums import MetaKey, StatusNormalize, SyncMode
 from .github import GitHubClient
 from .models import Translation
 from .repository import DatabaseRepository
@@ -31,11 +31,11 @@ class StalcraftDatabase:
         self._path = Path(path)
         self._mode = mode
 
-        self._engine = create_async_engine(f"sqlite+aiosqlite:///{self._path}")
-        self._sessionmaker = async_sessionmaker(self._engine, class_=AsyncSession, expire_on_commit=False)
-
         self._github = github or GitHubClient()
         self._repo = DatabaseRepository(self._github)
+
+        self._engine = create_async_engine(f"sqlite+aiosqlite:///{self._path}")
+        self._sessionmaker = async_sessionmaker(self._engine, class_=AsyncSession, expire_on_commit=False)
 
     async def get_commits(
         self,
@@ -50,6 +50,13 @@ class StalcraftDatabase:
     ) -> bool:
         commits = await self.get_commits()
         return commits.local == commits.remote
+
+    async def is_ready(
+        self,
+    ) -> bool:
+        async with self._sessionmaker.begin() as session:
+            status = await metadata.get(session, MetaKey.NORMALIZE_STATUS)
+        return status == StatusNormalize.READY
 
     async def sync(
         self,
@@ -134,8 +141,8 @@ class StalcraftDatabase:
             return results[0].entity_id
 
     async def _rebuild_database(self, session: AsyncSession, mode: SyncMode):
-        # Drop tables
-        await self._clear_tables(session, models.BaseModel.metadata)
+        # Drop repository table
+        await session.exec(delete(models.FileBlob))
 
         # Download repository by mode
         match mode:

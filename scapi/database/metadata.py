@@ -4,7 +4,7 @@ from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from . import schema
-from .enums import MetaKey, MetaStatus, SyncMode
+from .enums import MetaKey, StatusNormalize, StatusSync, SyncMode
 from .models import Metadata
 
 
@@ -40,8 +40,9 @@ async def set_synced(session: AsyncSession, mode: SyncMode, commit: str):
     now = datetime.now().isoformat()
     updates: Updates = [
         (MetaKey.CURRENT_COMMIT, commit),
+        (MetaKey.NORMALIZE_STATUS, StatusNormalize.OUTDATED),
+        (MetaKey.LAST_SYNC_STATUS, StatusSync.SYNCED),
         (MetaKey.LAST_SYNC_MODE, mode),
-        (MetaKey.LAST_SYNC_STATUS, MetaStatus.SYNCED),
         (MetaKey.LAST_TIME_CHECK, now),
         (MetaKey.LAST_TIME_SYNC, now),
     ]
@@ -51,8 +52,8 @@ async def set_synced(session: AsyncSession, mode: SyncMode, commit: str):
 async def set_unchanged(session: AsyncSession, mode: SyncMode):
     now = datetime.now().isoformat()
     updates: Updates = [
+        (MetaKey.LAST_SYNC_STATUS, StatusSync.UNCHANGED),
         (MetaKey.LAST_SYNC_MODE, mode),
-        (MetaKey.LAST_SYNC_STATUS, MetaStatus.UNCHANGED),
         (MetaKey.LAST_TIME_CHECK, now),
     ]
     await bulkset(session, updates)
@@ -61,7 +62,7 @@ async def set_unchanged(session: AsyncSession, mode: SyncMode):
 async def set_normalized(session: AsyncSession):
     now = datetime.now().isoformat()
     updates: Updates = [
-        (MetaKey.LAST_SYNC_STATUS, MetaStatus.NORMALIZED),
+        (MetaKey.NORMALIZE_STATUS, StatusNormalize.READY),
         (MetaKey.LAST_TIME_NORMALIZE, now),
     ]
     await bulkset(session, updates)

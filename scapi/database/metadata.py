@@ -43,7 +43,7 @@ async def set_synced(session: AsyncSession, mode: SyncMode, commit: str):
         (MetaKey.LAST_SYNC_MODE, mode),
         (MetaKey.LAST_SYNC_STATUS, MetaStatus.SYNCED),
         (MetaKey.LAST_TIME_CHECK, now),
-        (MetaKey.LAST_TIME_UPDATE, now),
+        (MetaKey.LAST_TIME_SYNC, now),
     ]
     await bulkset(session, updates)
 

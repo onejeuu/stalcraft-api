@@ -1,8 +1,11 @@
+import asyncio
+import atexit
+import socket
 from typing import Any, Dict, Optional, TypeAlias
 from urllib.parse import urljoin
 
 import aiofiles
-from aiohttp import ClientResponse, ClientSession, ClientTimeout
+from aiohttp import ClientResponse, ClientSession, ClientTimeout, TCPConnector
 from pydantic import ValidationError
 
 from scapi.defaults import Default
@@ -16,10 +19,10 @@ Json: TypeAlias = Dict[str, Any]
 Data: TypeAlias = Json | str | bytes
 
 
-CHUNK_SIZE = 1024 * 8
-
-
 class HTTPClient:
+    TTL_DNS_CACHE = 60
+    STREAM_CHUNK_SIZE = 1024 * 8
+
     def __init__(
         self,
         base_url: str = "",
@@ -28,8 +31,19 @@ class HTTPClient:
     ):
         self._base_url = base_url.rstrip("/")
         self._headers = headers or {}
-        self._timeout = ClientTimeout(timeout)
+
+        self._session = ClientSession(
+            timeout=ClientTimeout(total=timeout),
+            connector=TCPConnector(
+                family=socket.AF_INET,
+                ttl_dns_cache=self.TTL_DNS_CACHE,
+                force_close=True,
+            ),
+        )
+
         self._ratelimit: Optional[RateLimit] = None
+
+        atexit.register(self._cleanup)
 
     async def _request(
         self,
@@ -38,39 +52,38 @@ class HTTPClient:
         params: Optional[Params] = None,
         headers: Optional[Headers] = None,
         data: Optional[Data] = None,
-        timeout: Optional[int] = None,
         filename: Optional[str] = None,
         raw: bool = False,
     ) -> Any:
         url = urljoin(self._base_url + "/", url.lstrip("/"))
 
         # Prepare request options
-        rtimeout = ClientTimeout(timeout) if timeout else self._timeout
         rparams = params.to_dict() if isinstance(params, Params) else {}
         rheaders = {**self._headers, **(headers or {})}
 
-        # Create session and send request
-        async with ClientSession(timeout=rtimeout) as session:
-            async with session.request(method=method, url=url, params=rparams, headers=rheaders, data=data) as response:
-                # Update ratelimit by response headers
-                await self._update_ratelimit(response)
+        # Send http request
+        async with self._session.request(
+            method=method, url=url, params=rparams, headers=rheaders, data=data
+        ) as response:
+            # Update ratelimit by response headers
+            await self._update_ratelimit(response)
 
-                # Validate response status code
-                if not (200 <= response.status < 300):
-                    await self._on_error(response)
+            # Validate response status code
+            if not (200 <= response.status < 300):
+                await self._on_error(response)
 
-                # Stream response data to file path
-                if filename:
-                    return await self._stream_to_file(response, filename)
+            # Stream response data to file path
+            if filename:
+                return await self._stream_to_file(response, filename)
 
-                # Parse response by content type
-                try:
-                    data = await self._parse(response, raw)
+            # Parse response by content type
+            try:
+                data = await self._parse(response, raw)
 
-                finally:
-                    await response.release()
+            finally:
+                await response.release()
 
-                return data
+            return data
 
     async def _parse(self, response: ClientResponse, raw: bool) -> Any:
         if not raw:
@@ -86,7 +99,7 @@ class HTTPClient:
 
     async def _stream_to_file(self, response: ClientResponse, filename: str) -> str:
         async with aiofiles.open(filename, "wb") as fp:
-            async for chunk in response.content.iter_chunked(CHUNK_SIZE):
+            async for chunk in response.content.iter_chunked(self.STREAM_CHUNK_SIZE):
                 await fp.write(chunk)
         return filename
 
@@ -115,7 +128,6 @@ class HTTPClient:
         url: str,
         params: Optional[Params] = None,
         headers: Optional[Headers] = None,
-        timeout: Optional[int] = None,
         filename: Optional[str] = None,
         raw: bool = False,
     ):
@@ -124,7 +136,6 @@ class HTTPClient:
             url=url,
             params=params,
             headers=headers,
-            timeout=timeout,
             filename=filename,
             raw=raw,
         )
@@ -135,7 +146,6 @@ class HTTPClient:
         params: Optional[Params] = None,
         headers: Optional[Headers] = None,
         data: Optional[Data] = None,
-        timeout: Optional[int] = None,
         raw: bool = False,
     ):
         return await self._request(
@@ -144,7 +154,6 @@ class HTTPClient:
             params=params,
             data=data,
             headers=headers,
-            timeout=timeout,
             raw=raw,
         )
 
@@ -154,7 +163,6 @@ class HTTPClient:
         params: Optional[Params] = None,
         headers: Optional[Headers] = None,
         data: Optional[Data] = None,
-        timeout: Optional[int] = None,
         raw: bool = False,
     ):
         return await self._request(
@@ -163,7 +171,6 @@ class HTTPClient:
             params=params,
             data=data,
             headers=headers,
-            timeout=timeout,
             raw=raw,
         )
 
@@ -172,7 +179,6 @@ class HTTPClient:
         url: str,
         params: Optional[Params] = None,
         headers: Optional[Headers] = None,
-        timeout: Optional[int] = None,
         raw: bool = False,
     ):
         return await self._request(
@@ -180,7 +186,6 @@ class HTTPClient:
             url=url,
             params=params,
             headers=headers,
-            timeout=timeout,
             raw=raw,
         )
 
@@ -190,7 +195,6 @@ class HTTPClient:
         params: Optional[Params] = None,
         headers: Optional[Headers] = None,
         data: Optional[Data] = None,
-        timeout: Optional[int] = None,
         raw: bool = False,
     ):
         return await self._request(
@@ -199,6 +203,25 @@ class HTTPClient:
             params=params,
             data=data,
             headers=headers,
-            timeout=timeout,
             raw=raw,
         )
+
+    def _cleanup(self):
+        if not self._session.closed:
+            try:
+                loop = asyncio.new_event_loop()
+                loop.run_until_complete(self._session.close())
+                loop.close()
+            except Exception:
+                pass
+
+    async def close(self):
+        if self._session and not self._session.closed:
+            await self._session.close()
+
+    async def __aenter__(self):
+        return self
+
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        await self.close()
+        return False

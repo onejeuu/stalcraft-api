@@ -6,13 +6,14 @@ from scapi.client import models
 from scapi.client.types import Listing
 from scapi.defaults import Default
 from scapi.enums import Order, Region, SortOperation
+from scapi.http.api import BaseAPIClient
 from scapi.http.client import HTTPClient
 from scapi.http.params import Params
 
 from .auction.shared import Auction
 
 
-class BaseClient(ABC):
+class BaseClient(ABC, BaseAPIClient):
     def __init__(
         self,
         base_url: str = Default.BASE_URL,

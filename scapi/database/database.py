@@ -45,6 +45,7 @@ class StalcraftDatabase:
 
         async with self._sessionmaker.begin() as session:
             local = await metadata.get(session, MetaKey.CURRENT_COMMIT)
+
         remote = await self._github.latest_commit()
         return CommitsPair(local, remote)
 
@@ -69,8 +70,9 @@ class StalcraftDatabase:
         normalize: bool = True,
         force: bool = False,
     ) -> bool:
-        mode = mode or self._mode
         await self._validate_database()
+
+        mode = mode or self._mode
 
         # Get local and remote commit hashes
         commits = await self.get_commits()
@@ -121,20 +123,22 @@ class StalcraftDatabase:
     ) -> Sequence[Translation]:
         await self._validate_database()
 
+        model = models.Translation
+
         if not await self.is_ready():
             await self.sync(normalize=True)
 
         async with self._sessionmaker.begin() as session:
             query = parsing.query(text)
-            conds: list[Any] = [col(models.Translation.search).ilike(f"%{query}%")]
+            conds: list[Any] = [col(model.search).ilike(f"%{query}%")]
 
             if language is not None:
-                conds.append(col(models.Translation.language) == language.lower())
+                conds.append(col(model.language) == language.lower())
 
             if entity_type is not None:
-                conds.append(col(models.Translation.entity_type) == entity_type.lower())
+                conds.append(col(model.entity_type) == entity_type.lower())
 
-            query = select(models.Translation).where(*conds)
+            query = select(model).where(*conds)
             return (await session.exec(query)).all()
 
     async def get_id(
@@ -176,14 +180,14 @@ class StalcraftDatabase:
             await self._create_database()
 
     async def _create_database(self):
+        self._path.parent.mkdir(parents=True, exist_ok=True)
+
         await self._create_tables()
 
         async with self._sessionmaker.begin() as session:
             await metadata.set_versions(session)
 
     async def _create_tables(self):
-        self._path.parent.mkdir(parents=True, exist_ok=True)
-
         async with self._engine.begin() as conn:
             for base in models.BASES:
                 await conn.run_sync(base.metadata.create_all)

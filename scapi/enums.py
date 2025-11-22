@@ -13,7 +13,7 @@ class Region(StrEnum):
 
 class Realm(StrEnum):
     RU = auto()
-    GLOBAL = EU = NA = SEA = auto()
+    GLOBAL = auto()
 
 
 class Language(StrEnum):
@@ -21,6 +21,7 @@ class Language(StrEnum):
     EN = ENGLISH = auto()
     ES = SPANISH = auto()
     FR = FRENCH = auto()
+    KO = KOREAN = auto()
 
 
 class Order(StrEnum):

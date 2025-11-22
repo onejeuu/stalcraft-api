@@ -10,14 +10,15 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from scapi.defaults import Default
 from scapi.enums import EntityType
 
-from . import models, parsing, version
-from .enums import MetadataKey, SyncMode
+from . import models, parsing, schema
+from .enums import MetaKey, MetaStatus, SyncMode
 from .github import GitHubClient
 from .models import Metadata, Translation
 from .repository import Repository
 
 
-VERSION = version.generate()
+VERSION = "1"
+SCHEMA = schema.checksum()
 
 
 class CommitsPair(NamedTuple):
@@ -44,7 +45,7 @@ class StalcraftDatabase:
     async def get_commits_pair(
         self,
     ) -> CommitsPair:
-        local = await self._get_metadata(MetadataKey.COMMIT)
+        local = await self._get_metadata(MetaKey.CURRENT_COMMIT)
         remote = await self._github.latest_commit()
         return CommitsPair(local, remote)
 
@@ -102,6 +103,8 @@ class StalcraftDatabase:
             rows = await parsing.normalize(session)
             session.add_all(rows.values())
 
+            await session.merge(Metadata(key=MetaKey.LAST_STATUS, value=MetaStatus.NORMALIZED))
+
     async def search(
         self,
         text: str,
@@ -150,17 +153,24 @@ class StalcraftDatabase:
         for table in reversed(metadata.sorted_tables):
             await session.exec(table.delete())
 
+    async def _needs_reset(self) -> bool:
+        version = await self._get_metadata(MetaKey._VERSION)
+        schema = await self._get_metadata(MetaKey._SCHEMA)
+        return bool(version and version != VERSION) or bool(schema and schema != SCHEMA)
+
+    async def _update_versions(self):
+        async with self._sessionmaker.begin() as session:
+            await session.merge(Metadata(key=MetaKey._VERSION, value=VERSION))
+            await session.merge(Metadata(key=MetaKey._SCHEMA, value=SCHEMA))
+
     async def _validate_database(self):
         await self._create_tables()
 
-        version = await self._get_metadata(MetadataKey.VERSION)
-
-        if version and version != VERSION:
+        if await self._needs_reset():
             await self._drop_tables()
             await self._create_tables()
 
-        async with self._sessionmaker.begin() as session:
-            await session.merge(Metadata(key=MetadataKey.VERSION, value=str(VERSION)))
+        await self._update_versions()
 
     async def _rebuild_database(self, session: AsyncSession, mode: SyncMode):
         # Drop tables
@@ -174,22 +184,22 @@ class StalcraftDatabase:
             case SyncMode.INDEX | _:
                 await self._repo.sync_index(session)
 
-    async def _get_metadata(self, key: MetadataKey) -> str:
-        async with self._sessionmaker() as session:
+    async def _get_metadata(self, key: MetaKey) -> str:
+        async with self._sessionmaker.begin() as session:
             query = select(Metadata.value).where(Metadata.key == key)
             value = (await session.exec(query)).first()
         return value or ""
 
     async def _set_metadata_completed(self, session: AsyncSession, mode: SyncMode, commit: str):
         now = datetime.now().isoformat()
-        await session.merge(Metadata(key=MetadataKey.MODE, value=mode))
-        await session.merge(Metadata(key=MetadataKey.COMMIT, value=commit))
-        await session.merge(Metadata(key=MetadataKey.CHEKED, value=now))
-        await session.merge(Metadata(key=MetadataKey.UPDATED, value=now))
-        await session.merge(Metadata(key=MetadataKey.STATUS, value="updated"))
+        await session.merge(Metadata(key=MetaKey.CURRENT_COMMIT, value=commit))
+        await session.merge(Metadata(key=MetaKey.LAST_SYNC_MODE, value=mode))
+        await session.merge(Metadata(key=MetaKey.LAST_CHECK, value=now))
+        await session.merge(Metadata(key=MetaKey.LAST_UPDATE, value=now))
+        await session.merge(Metadata(key=MetaKey.LAST_STATUS, value=MetaStatus.SYNCED))
 
     async def _set_metadata_uptodate(self, session: AsyncSession, mode: SyncMode):
         now = datetime.now().isoformat()
-        await session.merge(Metadata(key=MetadataKey.MODE, value=mode))
-        await session.merge(Metadata(key=MetadataKey.CHEKED, value=now))
-        await session.merge(Metadata(key=MetadataKey.STATUS, value="up to date"))
+        await session.merge(Metadata(key=MetaKey.LAST_SYNC_MODE, value=mode))
+        await session.merge(Metadata(key=MetaKey.LAST_CHECK, value=now))
+        await session.merge(Metadata(key=MetaKey.LAST_STATUS, value=MetaStatus.UNCHANGED))

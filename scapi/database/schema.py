@@ -4,7 +4,7 @@ from typing import Any
 from . import models
 
 
-def generate() -> str:
+def checksum() -> str:
     tables: list[str] = []
 
     def toint(value: Any):

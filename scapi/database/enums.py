@@ -3,13 +3,20 @@ from enum import auto
 from strenum import LowercaseStrEnum as StrEnum
 
 
-class MetadataKey(StrEnum):
-    VERSION = auto()
-    MODE = auto()
-    COMMIT = auto()
-    UPDATED = auto()
-    CHEKED = auto()
-    STATUS = auto()
+class MetaKey(StrEnum):
+    _VERSION = auto()
+    _SCHEMA = auto()
+    CURRENT_COMMIT = auto()
+    LAST_SYNC_MODE = auto()
+    LAST_UPDATE = auto()
+    LAST_CHECK = auto()
+    LAST_STATUS = auto()
+
+
+class MetaStatus(StrEnum):
+    SYNCED = auto()
+    NORMALIZED = auto()
+    UNCHANGED = auto()
 
 
 class SyncMode(StrEnum):

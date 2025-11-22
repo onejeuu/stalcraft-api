@@ -10,7 +10,7 @@ from scapi.defaults import Default
 from scapi.enums import EntityType
 
 from . import models, parsing
-from .enums import MetaKey, MetaStatus, SyncMode
+from .enums import MetaKey, SyncMode
 from .github import GitHubClient
 from .metadata import DatabaseMetadata
 from .models import Translation
@@ -100,7 +100,7 @@ class StalcraftDatabase:
             rows = await parsing.normalize(session)
             session.add_all(rows.values())
 
-            await self._meta.set(MetaKey.LAST_STATUS, MetaStatus.NORMALIZED)
+            await self._meta.set_normalized(session)
 
     async def search(
         self,

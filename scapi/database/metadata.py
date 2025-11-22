@@ -62,6 +62,14 @@ class DatabaseMetadata:
         ]
         await self.set_bulk(session, updates)
 
+    async def set_normalized(self, session: AsyncSession):
+        now = datetime.now().isoformat()
+        updates: Updates = [
+            (MetaKey.LAST_NORMALIZE, now),
+            (MetaKey.LAST_STATUS, MetaStatus.NORMALIZED),
+        ]
+        await self.set_bulk(session, updates)
+
     async def set_versions(self, session: AsyncSession):
         updates: Updates = [
             (MetaKey._VERSION, VERSION),

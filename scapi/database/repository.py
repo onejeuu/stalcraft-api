@@ -18,7 +18,7 @@ CONCURRENT_DOWNLOAD_LIMIT = 20
 BUFFER_FLUSH_LIMIT = 1024 * 1024 * 4  # 4 MB
 
 
-class Repository:
+class DatabaseRepository:
     def __init__(
         self,
         github: GitHubClient,

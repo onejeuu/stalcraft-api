@@ -2,17 +2,18 @@ from typing import Any, Optional, Self, TypeVar
 
 from pydantic import BaseModel
 
+from scapi.defaults import Default
+
 from .client import HTTPClient
 from .types import Listing
 
 
 M = TypeVar("M", bound=BaseModel)
-T = TypeVar("T")
 
 
 class APIClient:
     _http: HTTPClient
-    _json: bool = False
+    _json: bool = Default.JSON
 
     def _parse(
         self,

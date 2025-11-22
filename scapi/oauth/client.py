@@ -17,12 +17,14 @@ class OAuthClient(APIClient):
         base_url: str = BaseUrl.OAUTH,
         scope: str = Default.SCOPE,
         redirect_uri: str = Default.REDIRECT_URI,
+        json: bool = Default.JSON,
     ):
         self._client_id = client_id
         self._client_secret = client_secret
         self._base_url = base_url
         self._scope = scope
         self._redirect_uri = redirect_uri
+        self._json = json
 
         self._http = HTTPClient(base_url=base_url)
 
@@ -56,7 +58,7 @@ class OAuthClient(APIClient):
             },
         )
 
-        return models.AppToken.model_validate(response)
+        return self._parse(response, models.AppToken)
 
     async def get_user_token(
         self,
@@ -73,7 +75,7 @@ class OAuthClient(APIClient):
             },
         )
 
-        return models.UserToken.model_validate(response)
+        return self._parse(response, models.UserToken)
 
     async def refresh_user_token(
         self,
@@ -91,7 +93,7 @@ class OAuthClient(APIClient):
             },
         )
 
-        return models.UserToken.model_validate(response)
+        return self._parse(response, models.UserToken)
 
     async def validate_user_token(
         self,
@@ -102,4 +104,4 @@ class OAuthClient(APIClient):
             headers={"Authorization": f"Bearer {token}"},
         )
 
-        return models.UserInfo.model_validate(response)
+        return self._parse(response, models.UserInfo)

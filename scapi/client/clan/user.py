@@ -11,4 +11,4 @@ class UserClanEndpoint(ClanEndpoint):
             url=f"{self._region}/clan/{self._clan_id}/members",
         )
 
-        return [models.ClanMember.model_validate(member) for member in response]
+        return self._parse(response, models.ClanMember)

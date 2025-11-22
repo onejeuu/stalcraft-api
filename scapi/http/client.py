@@ -32,21 +32,27 @@ class HTTPClient:
         headers: Optional[Headers] = None,
     ):
         self._base_url = base_url.rstrip("/")
+        self._timeout = timeout
         self._headers = headers or {}
 
-        self._session = ClientSession(
-            timeout=ClientTimeout(total=timeout),
-            connector=TCPConnector(
-                family=socket.AF_INET,
-                ttl_dns_cache=self.TTL_DNS_CACHE,
-                force_close=True,
-            ),
-        )
-
+        self._session: Optional[ClientSession] = None
         self._ratelimit: Optional[RateLimit] = None
+
         self._error_key = self.ERROR_KEY
 
         atexit.register(self._cleanup)
+
+    async def _create_session(self) -> ClientSession:
+        if self._session is None:
+            self._session = ClientSession(
+                timeout=ClientTimeout(total=self._timeout),
+                connector=TCPConnector(
+                    family=socket.AF_INET,
+                    ttl_dns_cache=self.TTL_DNS_CACHE,
+                    force_close=True,
+                ),
+            )
+        return self._session
 
     async def _request(
         self,
@@ -64,10 +70,11 @@ class HTTPClient:
         rparams = params.to_dict() if isinstance(params, Params) else {}
         rheaders = {**self._headers, **(headers or {})}
 
+        # Create session
+        session = await self._create_session()
+
         # Send http request
-        async with self._session.request(
-            method=method, url=url, params=rparams, headers=rheaders, data=data
-        ) as response:
+        async with session.request(method=method, url=url, params=rparams, headers=rheaders, data=data) as response:
             # Update ratelimit by response headers
             await self._update_ratelimit(response)
 
@@ -210,7 +217,7 @@ class HTTPClient:
         )
 
     def _cleanup(self):
-        if not self._session.closed:
+        if self._session and not self._session.closed:
             try:
                 loop = asyncio.new_event_loop()
                 loop.run_until_complete(self._session.close())
@@ -230,4 +237,4 @@ class HTTPClient:
         return False
 
     def __str__(self):
-        return f"<{self.__class__.__name__} base_url='{self._base_url}' timeout='{self._session._timeout.total}s' ratelimit={repr(self._ratelimit)}>"
+        return f"<{self.__class__.__name__} base_url='{self._base_url}' timeout={self._session and self._session._timeout.total} ratelimit={repr(self._ratelimit)}>"

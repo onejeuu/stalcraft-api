@@ -1,10 +1,10 @@
 from scapi.client import models
-from scapi.client.types import Listing
 from scapi.defaults import Default
 from scapi.enums import Order, Region, SortAuction
 from scapi.http.api import APIClient
 from scapi.http.client import HTTPClient
 from scapi.http.params import Params
+from scapi.http.types import Listing
 
 
 class AuctionEndpoint(APIClient):
@@ -13,10 +13,12 @@ class AuctionEndpoint(APIClient):
         http: HTTPClient,
         item_id: str,
         region: Region = Default.REGION,
+        json: bool = Default.JSON,
     ):
         self._http = http
         self._item_id = item_id
         self._region = region
+        self._json = json
 
     async def price_history(
         self,
@@ -33,7 +35,7 @@ class AuctionEndpoint(APIClient):
             ),
         )
 
-        return Listing(response, models.Price, "prices", "total")
+        return self._parse(response, models.Price, ("prices", "total"))
 
     async def lots(
         self,
@@ -54,7 +56,7 @@ class AuctionEndpoint(APIClient):
             ),
         )
 
-        return Listing(response, models.Lot, "lots", "total")
+        return self._parse(response, models.Lot, ("lots", "total"))
 
     def __str__(self):
         return f"<{self.__class__.__name__} item_id='{self._item_id}' region='{self._region}' http={self._http}>"

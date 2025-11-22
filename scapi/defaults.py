@@ -8,6 +8,7 @@ class Default:
     # Client
     BASE_URL = BaseUrl.PRODUCTION
     TIMEOUT = 60
+    JSON = False
 
     # Region
     REGION = Region.RU

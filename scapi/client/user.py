@@ -16,11 +16,12 @@ class UserClient(SharedClient):
         token: str,
         base_url: str = Default.BASE_URL,
         timeout: int = Default.TIMEOUT,
+        json: bool = Default.JSON,
     ):
         self._token = token
         self._timeout = timeout
 
-        super().__init__(base_url)
+        super().__init__(base_url, json)
 
     def _create_http_client(self):
         if self._token:
@@ -40,7 +41,7 @@ class UserClient(SharedClient):
             url=f"{region}/characters",
         )
 
-        return [models.Character.model_validate(character) for character in response]
+        return self._parse(response, models.Character)
 
     async def friends(
         self,
@@ -51,11 +52,11 @@ class UserClient(SharedClient):
             f"{region}/friends/{character}",
         )
 
-        return response
+        return self._parse(response)
 
     def clan(
         self,
         clan_id: str,
         region: Region = Default.REGION,
     ) -> UserClanEndpoint:
-        return UserClanEndpoint(self._http, clan_id, region)
+        return UserClanEndpoint(self._http, clan_id, region, self._json)

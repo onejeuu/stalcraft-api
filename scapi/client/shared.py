@@ -3,12 +3,12 @@ from datetime import datetime
 from typing import Optional
 
 from scapi.client import models
-from scapi.client.types import Listing
 from scapi.defaults import Default
 from scapi.enums import Order, Region, SortOperations
 from scapi.http.api import APIClient
 from scapi.http.client import HTTPClient
 from scapi.http.params import Params
+from scapi.http.types import Listing
 
 from .auction.shared import AuctionEndpoint
 
@@ -17,8 +17,10 @@ class SharedClient(ABC, APIClient):
     def __init__(
         self,
         base_url: str = Default.BASE_URL,
+        json: bool = Default.JSON,
     ):
         self._base_url = base_url
+        self._json = json
         self._http = self._create_http_client()
 
     @abstractmethod
@@ -32,7 +34,7 @@ class SharedClient(ABC, APIClient):
             url="regions",
         )
 
-        return [models.RegionInfo.model_validate(region) for region in response]
+        return self._parse(response, models.RegionInfo)
 
     async def emission(
         self,
@@ -42,7 +44,7 @@ class SharedClient(ABC, APIClient):
             url=f"{region}/emission",
         )
 
-        return models.Emission.model_validate(response)
+        return self._parse(response, models.Emission)
 
     async def character_profile(
         self,
@@ -53,7 +55,7 @@ class SharedClient(ABC, APIClient):
             url=f"{region}/character/by-name/{username}/profile",
         )
 
-        return models.CharacterProfile.model_validate(response)
+        return self._parse(response, models.CharacterProfile)
 
     async def clans(
         self,
@@ -66,7 +68,7 @@ class SharedClient(ABC, APIClient):
             params=Params(limit=limit, offset=offset),
         )
 
-        return Listing(response, models.ClanInfo, "data", "totalClans")
+        return self._parse(response, models.ClanInfo, ("data", "totalClans"))
 
     async def operations(
         self,
@@ -94,11 +96,11 @@ class SharedClient(ABC, APIClient):
             ),
         )
 
-        return Listing(response, models.OperationSession, "sessions", "total")
+        return self._parse(response, models.CharacterProfile, ("sessions", "total"))
 
     def auction(
         self,
         item_id: str,
         region: Region = Default.REGION,
     ) -> AuctionEndpoint:
-        return AuctionEndpoint(self._http, item_id, region)
+        return AuctionEndpoint(self._http, item_id, region, self._json)

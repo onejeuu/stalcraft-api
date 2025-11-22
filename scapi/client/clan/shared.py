@@ -11,10 +11,12 @@ class ClanEndpoint(APIClient):
         http: HTTPClient,
         clan_id: str,
         region: Region = Default.REGION,
+        json: bool = Default.JSON,
     ):
         self._http = http
         self._clan_id = clan_id
         self._region = region
+        self._json = json
 
     async def info(
         self,
@@ -23,7 +25,7 @@ class ClanEndpoint(APIClient):
             f"{self._region}/clan/{self._clan_id}/info",
         )
 
-        return models.ClanInfo.model_validate(response)
+        return self._parse(response, models.ClanInfo)
 
     def __str__(self):
         return f"<{self.__class__.__name__} clan_id='{self._clan_id}' region='{self._region}' http={self._http}>"

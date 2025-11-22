@@ -35,7 +35,7 @@ class UserClient(SharedClient):
 
     async def characters(
         self,
-        region: Region = Default.REGION,
+        region: str | Region = Default.REGION,
     ) -> List[models.Character]:
         response = await self._http.GET(
             url=f"{region}/characters",
@@ -46,7 +46,7 @@ class UserClient(SharedClient):
     async def friends(
         self,
         character: str,
-        region: Region = Default.REGION,
+        region: str | Region = Default.REGION,
     ) -> List[str]:
         response = await self._http.GET(
             f"{region}/friends/{character}",
@@ -57,6 +57,6 @@ class UserClient(SharedClient):
     def clan(
         self,
         clan_id: str,
-        region: Region = Default.REGION,
+        region: str | Region = Default.REGION,
     ) -> UserClanEndpoint:
         return UserClanEndpoint(self._http, clan_id, region, self._json)

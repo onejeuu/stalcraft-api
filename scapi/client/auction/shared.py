@@ -12,7 +12,7 @@ class AuctionEndpoint(APIClient):
         self,
         http: HTTPClient,
         item_id: str,
-        region: Region = Default.REGION,
+        region: str | Region = Default.REGION,
         json: bool = Default.JSON,
     ):
         self._http = http
@@ -41,8 +41,8 @@ class AuctionEndpoint(APIClient):
         self,
         limit: int = Default.LIMIT,
         offset: int = Default.OFFSET,
-        sort: SortAuction = Default.SORT_AUCTION,
-        order: Order = Default.ORDER,
+        sort: str | SortAuction = Default.SORT_AUCTION,
+        order: str | Order = Default.ORDER,
         additional: bool = Default.ADDITIONAL,
     ) -> Listing[models.Lot]:
         response = await self._http.GET(

@@ -65,3 +65,8 @@ class EntityType(StrEnum):
     STATS = auto()
     ACHIEVEMENTS = auto()
     SETTLEMENTS = auto()
+
+
+class OperationsMap(StrEnum):
+    BIG_CLEANUP = auto()
+    SHOCK_THERAPY = auto()

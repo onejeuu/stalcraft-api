@@ -23,7 +23,6 @@ Data: TypeAlias = Json | str | bytes
 class HTTPClient:
     TTL_DNS_CACHE = 60
     STREAM_CHUNK_SIZE = 1024 * 8
-    ERROR_KEY = "details"
 
     def __init__(
         self,
@@ -37,8 +36,6 @@ class HTTPClient:
 
         self._session: Optional[ClientSession] = None
         self._ratelimit: Optional[RateLimit] = None
-
-        self._error_key = self.ERROR_KEY
 
         atexit.register(self._cleanup)
 
@@ -121,15 +118,15 @@ class HTTPClient:
             pass
 
     async def _on_error(self, response: ClientResponse) -> None:
-        default = "Unknown Error"
+        # TODO: status code exceptions mapping & error trim (on large response)
+
+        default = "Unknown error"
 
         try:
-            data = await response.json()
-            error = {"error": data.get(self._error_key, default)}
+            error = await response.json()
 
         except Exception:
-            text = await response.text() or default
-            error = {"error": text}
+            error = {"error": await response.text(errors="replace") or default}
 
         raise exceptions.RequestError(error, response.status, response.method, response.url)
 

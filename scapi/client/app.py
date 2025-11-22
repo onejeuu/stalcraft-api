@@ -55,6 +55,6 @@ class AppClient(SharedClient):
     def clan(
         self,
         clan_id: str,
-        region: Region = Default.REGION,
+        region: str | Region = Default.REGION,
     ) -> ClanEndpoint:
         return ClanEndpoint(self._http, clan_id, region, self._json)

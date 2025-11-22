@@ -10,7 +10,7 @@ class ClanEndpoint(APIClient):
         self,
         http: HTTPClient,
         clan_id: str,
-        region: Region = Default.REGION,
+        region: str | Region = Default.REGION,
         json: bool = Default.JSON,
     ):
         self._http = http

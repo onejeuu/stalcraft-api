@@ -19,7 +19,7 @@ class APIClient:
         response: Any,
         model: Optional[type[M]] = None,
         listing: Optional[tuple[str, str]] = None,
-    ) -> Any:  # awesome typings bro
+    ) -> Any:
         if not model or self._json:
             return response
 

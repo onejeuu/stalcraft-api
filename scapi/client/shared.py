@@ -4,7 +4,7 @@ from typing import Optional
 
 from scapi.client import models
 from scapi.defaults import Default
-from scapi.enums import Order, Region, SortOperations
+from scapi.enums import OperationsMap, Order, Region, SortAuction
 from scapi.http.api import APIClient
 from scapi.http.client import HTTPClient
 from scapi.http.params import Params
@@ -38,7 +38,7 @@ class SharedClient(ABC, APIClient):
 
     async def emission(
         self,
-        region: Region = Default.REGION,
+        region: str | Region = Default.REGION,
     ) -> models.Emission:
         response = await self._http.GET(
             url=f"{region}/emission",
@@ -49,7 +49,7 @@ class SharedClient(ABC, APIClient):
     async def character_profile(
         self,
         username: str,
-        region: Region = Default.REGION,
+        region: str | Region = Default.REGION,
     ) -> models.CharacterProfile:
         response = await self._http.GET(
             url=f"{region}/character/by-name/{username}/profile",
@@ -61,7 +61,7 @@ class SharedClient(ABC, APIClient):
         self,
         limit: int = Default.LIMIT,
         offset: int = Default.OFFSET,
-        region: Region = Default.REGION,
+        region: str | Region = Default.REGION,
     ) -> Listing[models.ClanInfo]:
         response = await self._http.GET(
             url=f"{region}/clans",
@@ -74,13 +74,13 @@ class SharedClient(ABC, APIClient):
         self,
         limit: int = Default.LIMIT,
         offset: int = Default.OFFSET,
-        sort: SortOperations = Default.SORT_OPERATION,
-        order: Order = Default.ORDER,
-        map: Optional[str] = None,
+        sort: str | SortAuction = Default.SORT_OPERATION,
+        order: str | Order = Default.ORDER,
+        map: Optional[str | OperationsMap] = None,
         username: Optional[str] = None,
         before: Optional[datetime] = None,
         after: Optional[datetime] = None,
-        region: Region = Default.REGION,
+        region: str | Region = Default.REGION,
     ) -> Listing[models.OperationSession]:
         response = await self._http.GET(
             url=f"{region}/operations/sessions",
@@ -96,11 +96,11 @@ class SharedClient(ABC, APIClient):
             ),
         )
 
-        return self._parse(response, models.CharacterProfile, ("sessions", "total"))
+        return self._parse(response, models.OperationSession, ("sessions", "total"))
 
     def auction(
         self,
         item_id: str,
-        region: Region = Default.REGION,
+        region: str | Region = Default.REGION,
     ) -> AuctionEndpoint:
         return AuctionEndpoint(self._http, item_id, region, self._json)

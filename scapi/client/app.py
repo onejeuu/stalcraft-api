@@ -1,13 +1,13 @@
 import warnings
 from typing import Optional
 
-from scapi.client.clan.shared import Clan
 from scapi.defaults import Default
 from scapi.enums import Region
 from scapi.http.auth.creds import CredentialsHTTPClient
 from scapi.http.auth.token import TokenHTTPClient
 
 from .base import BaseClient
+from .clan.shared import ClanEndpoint
 
 
 class AppClient(BaseClient):
@@ -51,5 +51,5 @@ class AppClient(BaseClient):
         self,
         clan_id: str,
         region: Region = Default.REGION,
-    ) -> Clan:
-        return Clan(self._http, clan_id, region)
+    ) -> ClanEndpoint:
+        return ClanEndpoint(self._http, clan_id, region)

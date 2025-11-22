@@ -1,9 +1,9 @@
 from scapi.client import models
 
-from .shared import Clan
+from .shared import ClanEndpoint
 
 
-class UserClan(Clan):
+class UserClanEndpoint(ClanEndpoint):
     async def members(
         self,
     ) -> list[models.ClanMember]:

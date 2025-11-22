@@ -4,7 +4,7 @@ from scapi.enums import Region
 from scapi.http.client import HTTPClient
 
 
-class Clan:
+class ClanEndpoint:
     def __init__(
         self,
         http: HTTPClient,

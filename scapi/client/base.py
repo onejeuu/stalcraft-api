@@ -10,7 +10,7 @@ from scapi.http.api import BaseAPIClient
 from scapi.http.client import HTTPClient
 from scapi.http.params import Params
 
-from .auction.shared import Auction
+from .auction.shared import AuctionEndpoint
 
 
 class BaseClient(ABC, BaseAPIClient):
@@ -100,5 +100,5 @@ class BaseClient(ABC, BaseAPIClient):
         self,
         item_id: str,
         region: Region = Default.REGION,
-    ) -> Auction:
-        return Auction(self._http, item_id, region)
+    ) -> AuctionEndpoint:
+        return AuctionEndpoint(self._http, item_id, region)

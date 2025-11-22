@@ -6,7 +6,7 @@ from scapi.enums import Region
 from scapi.http.auth.token import TokenHTTPClient
 
 from .base import BaseClient
-from .clan.user import UserClan
+from .clan.user import UserClanEndpoint
 
 
 class UserClient(BaseClient):
@@ -56,5 +56,5 @@ class UserClient(BaseClient):
         self,
         clan_id: str,
         region: Region = Default.REGION,
-    ) -> UserClan:
-        return UserClan(self._http, clan_id, region)
+    ) -> UserClanEndpoint:
+        return UserClanEndpoint(self._http, clan_id, region)

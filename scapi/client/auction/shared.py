@@ -6,7 +6,7 @@ from scapi.http.client import HTTPClient
 from scapi.http.params import Params
 
 
-class Auction:
+class AuctionEndpoint:
     def __init__(
         self,
         http: HTTPClient,

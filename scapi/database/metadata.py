@@ -13,6 +13,9 @@ VERSION = "1"
 SCHEMA = schema.checksum()
 
 
+Updates = list[tuple[str, str]]
+
+
 class DatabaseMetadata:
     def __init__(
         self,
@@ -30,6 +33,10 @@ class DatabaseMetadata:
         async with self._sessionmaker.begin() as session:
             await session.merge(Metadata(key=key, value=value))
 
+    async def set_bulk(self, session: AsyncSession, updates: Updates):
+        for key, value in updates:
+            await session.merge(Metadata(key=key, value=value))
+
     async def needs_reset(self) -> bool:
         version = await self.get(MetaKey._VERSION)
         schema = await self.get(MetaKey._SCHEMA)
@@ -37,18 +44,27 @@ class DatabaseMetadata:
 
     async def set_synced(self, session: AsyncSession, mode: SyncMode, commit: str):
         now = datetime.now().isoformat()
-        await session.merge(Metadata(key=MetaKey.CURRENT_COMMIT, value=commit))
-        await session.merge(Metadata(key=MetaKey.LAST_SYNC_MODE, value=mode))
-        await session.merge(Metadata(key=MetaKey.LAST_CHECK, value=now))
-        await session.merge(Metadata(key=MetaKey.LAST_UPDATE, value=now))
-        await session.merge(Metadata(key=MetaKey.LAST_STATUS, value=MetaStatus.SYNCED))
+        updates: Updates = [
+            (MetaKey.CURRENT_COMMIT, commit),
+            (MetaKey.LAST_SYNC_MODE, mode),
+            (MetaKey.LAST_CHECK, now),
+            (MetaKey.LAST_UPDATE, now),
+            (MetaKey.LAST_STATUS, MetaStatus.SYNCED),
+        ]
+        await self.set_bulk(session, updates)
 
     async def set_unchanged(self, session: AsyncSession, mode: SyncMode):
         now = datetime.now().isoformat()
-        await session.merge(Metadata(key=MetaKey.LAST_SYNC_MODE, value=mode))
-        await session.merge(Metadata(key=MetaKey.LAST_CHECK, value=now))
-        await session.merge(Metadata(key=MetaKey.LAST_STATUS, value=MetaStatus.UNCHANGED))
+        updates: Updates = [
+            (MetaKey.LAST_SYNC_MODE, mode),
+            (MetaKey.LAST_CHECK, now),
+            (MetaKey.LAST_STATUS, MetaStatus.UNCHANGED),
+        ]
+        await self.set_bulk(session, updates)
 
     async def set_versions(self, session: AsyncSession):
-        await session.merge(Metadata(key=MetaKey._VERSION, value=VERSION))
-        await session.merge(Metadata(key=MetaKey._SCHEMA, value=SCHEMA))
+        updates: Updates = [
+            (MetaKey._VERSION, VERSION),
+            (MetaKey._SCHEMA, SCHEMA),
+        ]
+        await self.set_bulk(session, updates)

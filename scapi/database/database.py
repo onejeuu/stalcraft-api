@@ -13,7 +13,7 @@ from . import models, parsing
 from .enums import MetaKey, MetaStatus, SyncMode
 from .github import GitHubClient
 from .metadata import DatabaseMetadata
-from .models import Metadata, Translation
+from .models import Translation
 from .repository import DatabaseRepository
 
 
@@ -100,7 +100,7 @@ class StalcraftDatabase:
             rows = await parsing.normalize(session)
             session.add_all(rows.values())
 
-            await session.merge(Metadata(key=MetaKey.LAST_STATUS, value=MetaStatus.NORMALIZED))
+            await self._meta.set(MetaKey.LAST_STATUS, MetaStatus.NORMALIZED)
 
     async def search(
         self,

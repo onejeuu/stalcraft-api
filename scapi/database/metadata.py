@@ -41,9 +41,9 @@ async def set_synced(session: AsyncSession, mode: SyncMode, commit: str):
     updates: Updates = [
         (MetaKey.CURRENT_COMMIT, commit),
         (MetaKey.LAST_SYNC_MODE, mode),
-        (MetaKey.LAST_CHECK, now),
-        (MetaKey.LAST_UPDATE, now),
-        (MetaKey.LAST_STATUS, MetaStatus.SYNCED),
+        (MetaKey.LAST_SYNC_STATUS, MetaStatus.SYNCED),
+        (MetaKey.LAST_TIME_CHECK, now),
+        (MetaKey.LAST_TIME_UPDATE, now),
     ]
     await bulkset(session, updates)
 
@@ -52,8 +52,8 @@ async def set_unchanged(session: AsyncSession, mode: SyncMode):
     now = datetime.now().isoformat()
     updates: Updates = [
         (MetaKey.LAST_SYNC_MODE, mode),
-        (MetaKey.LAST_CHECK, now),
-        (MetaKey.LAST_STATUS, MetaStatus.UNCHANGED),
+        (MetaKey.LAST_SYNC_STATUS, MetaStatus.UNCHANGED),
+        (MetaKey.LAST_TIME_CHECK, now),
     ]
     await bulkset(session, updates)
 
@@ -61,8 +61,8 @@ async def set_unchanged(session: AsyncSession, mode: SyncMode):
 async def set_normalized(session: AsyncSession):
     now = datetime.now().isoformat()
     updates: Updates = [
-        (MetaKey.LAST_NORMALIZE, now),
-        (MetaKey.LAST_STATUS, MetaStatus.NORMALIZED),
+        (MetaKey.LAST_SYNC_STATUS, MetaStatus.NORMALIZED),
+        (MetaKey.LAST_TIME_NORMALIZE, now),
     ]
     await bulkset(session, updates)
 

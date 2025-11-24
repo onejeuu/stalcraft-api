@@ -4,8 +4,8 @@ from strenum import LowercaseStrEnum as StrEnum
 
 
 class MetaKey(StrEnum):
-    _VERSION = auto()
-    _SCHEMA = auto()
+    VERSION = "_version"
+    SCHEMA = "_schema"
     CURRENT_COMMIT = auto()
     NORMALIZE_STATUS = auto()
     LAST_SYNC_STATUS = auto()

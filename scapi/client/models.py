@@ -4,7 +4,7 @@ from uuid import UUID
 
 from pydantic import BaseModel, Field
 
-from scapi.enums import Alliance, Rank
+from scapi import enums
 
 
 Additional: TypeAlias = Dict[str, Any]
@@ -28,7 +28,7 @@ class ClanInfo(BaseModel):
     level: int
     level_points: int = Field(..., alias="levelPoints")
     registration_time: datetime = Field(..., alias="registrationTime")
-    alliance: Optional[Alliance] = Field(None)
+    alliance: Optional[enums.Alliance] = Field(None)
     description: str
     leader: str
     member_count: int = Field(..., alias="memberCount")
@@ -36,7 +36,7 @@ class ClanInfo(BaseModel):
 
 class ClanMember(BaseModel):
     name: str
-    rank: Rank
+    rank: enums.ClanRank
     join_time: datetime = Field(..., alias="joinTime")
 
 
@@ -58,7 +58,7 @@ class Character(BaseModel):
 
 class CharacterStatistic(BaseModel):
     id: str
-    type: str
+    type: enums.StatType
     value: Any
 
 
@@ -66,7 +66,7 @@ class CharacterProfile(BaseModel):
     username: str
     uuid: UUID
     status: str
-    alliance: Alliance
+    alliance: Optional[enums.Alliance] = Field(None)
     last_login: Optional[datetime] = Field(None, alias="lastLogin")
     displayed_achievements: list[str] = Field(..., alias="displayedAchievements")
     clan: Optional[CharacterClan] = Field(None)
@@ -113,5 +113,5 @@ class OperationSession(BaseModel):
     end_time: datetime = Field(..., alias="endTime")
     difficulty: int
     duration_seconds: float = Field(..., alias="sessionDurationSeconds")
-    reward: float = Field(..., alias="difficultyReward")
+    reward: int = Field(..., alias="difficultyReward")
     participants: list[OperationParticipant]

@@ -24,6 +24,15 @@ class Language(StrEnum):
     KO = KOREAN = auto()
 
 
+class Alliance(StrEnum):
+    STALKERS = auto()
+    BANDITS = auto()
+    DUTY = auto()
+    FREEDOM = auto()
+    MERC = auto()
+    COVENANT = auto()
+
+
 class Order(StrEnum):
     ASC = ASCENDING = auto()
     DESC = DESCENDING = auto()
@@ -41,16 +50,7 @@ class SortOperations(StrEnum):
     DIFFICULTY = auto()
 
 
-class Alliance(StrEnum):
-    STALKERS = auto()
-    BANDITS = auto()
-    DUTY = auto()
-    FREEDOM = auto()
-    MERC = auto()
-    COVENANT = auto()
-
-
-class Rank(UpStrEnum):
+class ClanRank(UpStrEnum):
     RECRUIT = auto()
     COMMONER = auto()
     SOLDIER = auto()
@@ -58,6 +58,13 @@ class Rank(UpStrEnum):
     OFFICER = auto()
     COLONEL = auto()
     LEADER = auto()
+
+
+class StatType(UpStrEnum):
+    INTEGER = auto()
+    DECIMAL = auto()
+    DATE = auto()
+    DURATION = auto()
 
 
 class EntityType(StrEnum):

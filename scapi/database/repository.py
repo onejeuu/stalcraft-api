@@ -26,37 +26,6 @@ class DatabaseRepository:
         self._github = github
         self._semaphore = asyncio.Semaphore(CONCURRENT_DOWNLOAD_LIMIT)
 
-    async def sync_archive(self, session: AsyncSession) -> None:
-        # Create temp archive file
-        with tempfile.NamedTemporaryFile(prefix=TEMP_PREFIX, suffix=".zip", delete=False) as tmp:
-            filename = tmp.name
-
-        try:
-            # Download archive to temp file
-            await self._github.archive(output=filename)
-
-            # Open downloaded repository archive
-            with zipfile.ZipFile(filename) as zip:
-                root = zip.namelist()[0]  # Root directory name
-                counter = 0
-
-                for name in zip.namelist():
-                    if not name.endswith("/"):  # Filter dirs
-                        path = name.replace(root, "", 1)  # Relative path
-                        content = zip.read(name)
-                        size = len(content)
-                        session.add(FileBlob(path=path, content=content, size=size))
-
-                        # Flush every limit to not overflow memory
-                        counter += size
-                        if counter >= BUFFER_FLUSH_LIMIT:
-                            counter = 0
-                            await session.flush()
-
-        # Always delete temp archive file
-        finally:
-            os.unlink(filename)
-
     async def sync_index(self, session: AsyncSession) -> None:
         # Get repository root files
         contents = await self._github.contents()
@@ -96,6 +65,37 @@ class DatabaseRepository:
         # Delete outdated files
         for filename in to_delete:
             await session.exec(delete(FileBlob).where(col(FileBlob.path) == filename))
+
+    async def sync_archive(self, session: AsyncSession) -> None:
+        # Create temp archive file
+        with tempfile.NamedTemporaryFile(prefix=TEMP_PREFIX, suffix=".zip", delete=False) as tmp:
+            filename = tmp.name
+
+        try:
+            # Download archive to temp file
+            await self._github.archive(output=filename)
+
+            # Open downloaded repository archive
+            with zipfile.ZipFile(filename) as zip:
+                root = zip.namelist()[0]  # Root directory name
+                counter = 0
+
+                for name in zip.namelist():
+                    if not name.endswith("/"):  # Filter dirs
+                        path = name.replace(root, "", 1)  # Relative path
+                        content = zip.read(name)
+                        size = len(content)
+                        session.add(FileBlob(path=path, content=content, size=size))
+
+                        # Flush every limit to not overflow memory
+                        counter += size
+                        if counter >= BUFFER_FLUSH_LIMIT:
+                            counter = 0
+                            await session.flush()
+
+        # Always delete temp archive file
+        finally:
+            os.unlink(filename)
 
     async def _download_file(self, path: str, ref: Optional[str] = None) -> FileBlob:
         async with self._semaphore:

@@ -16,14 +16,14 @@ BASES: list[type[SQLModel]] = list(sorted([BaseModel, BaseParsed], key=lambda x:
 
 
 class Metadata(BaseModel, table=True):
-    __tablename__: str = "metadata"
+    __tablename__: Any = "metadata"
 
     key: str = Field(primary_key=True)
     value: str
 
 
 class FileBlob(BaseModel, table=True):
-    __tablename__: str = "repository"
+    __tablename__: Any = "repository"
 
     path: str = Field(primary_key=True)
     content: bytes
@@ -42,7 +42,7 @@ class BaseBarter(BaseParsed):
 
 
 class Translation(BaseParsed, table=True):
-    __tablename__: str = "translation"
+    __tablename__: Any = "translation"
 
     entity_type: str = Field(primary_key=True)
     entity_id: str = Field(primary_key=True)
@@ -54,39 +54,39 @@ class Translation(BaseParsed, table=True):
 
 
 class ItemListing(BaseEntity, table=True):
-    __tablename__: str = "listing"
+    __tablename__: Any = "listing"
 
     color: str = Field(default="")
     state: str = Field(default="")
 
 
 class ItemStatistic(BaseEntity, table=True):
-    __tablename__: str = "stats"
+    __tablename__: Any = "stats"
 
     category: str = Field(default="")
     type: str = Field(default="")
 
 
 class ItemAchievement(BaseEntity, table=True):
-    __tablename__: str = "achievements"
+    __tablename__: Any = "achievements"
 
     points: int = Field(default=0)
 
 
 class Settlement(BaseEntity, table=True):
-    __tablename__: str = "settlements"
+    __tablename__: Any = "settlements"
 
     pass
 
 
 class BarterRecipe(BaseBarter, table=True):
-    __tablename__: str = "barter_recipes"
+    __tablename__: Any = "barter_recipes"
 
     required_level: int = Field(default=1)
 
 
 class BarterOffer(BaseBarter, table=True):
-    __tablename__: str = "barter_recipe_offers"
+    __tablename__: Any = "barter_recipe_offers"
 
     index: int = Field(primary_key=True)
     cost: int = Field(default=0)
@@ -94,7 +94,7 @@ class BarterOffer(BaseBarter, table=True):
 
 
 class BarterRequirement(BaseBarter, table=True):
-    __tablename__: str = "barter_recipe_requirements"
+    __tablename__: Any = "barter_recipe_requirements"
 
     required_item_id: str = Field(primary_key=True)
     amount: int = Field(default=1)

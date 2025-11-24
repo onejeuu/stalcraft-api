@@ -1,6 +1,7 @@
 import asyncio
 import atexit
 import socket
+from types import TracebackType
 from typing import Any, Dict, Optional, TypeAlias
 from urllib.parse import urljoin
 
@@ -213,7 +214,7 @@ class HTTPClient:
             raw=raw,
         )
 
-    def _cleanup(self):
+    def _cleanup(self) -> None:
         if self._session and not self._session.closed:
             try:
                 loop = asyncio.new_event_loop()
@@ -222,16 +223,21 @@ class HTTPClient:
             except Exception:
                 pass
 
-    async def close(self):
+    async def close(self) -> None:
         if self._session and not self._session.closed:
             await self._session.close()
 
     async def __aenter__(self):
         return self
 
-    async def __aexit__(self, exc_type, exc_val, exc_tb):
+    async def __aexit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_value: BaseException | None,
+        traceback: TracebackType | None,
+    ):
         await self.close()
         return False
 
     def __str__(self):
-        return f"<{self.__class__.__name__} base_url='{self._base_url}' timeout={self._session and self._session._timeout.total} ratelimit={repr(self._ratelimit)}>"
+        return f"<{self.__class__.__name__} base_url='{self._base_url}' timeout={self._timeout} ratelimit={repr(self._ratelimit)}>"

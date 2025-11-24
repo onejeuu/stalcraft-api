@@ -1,4 +1,5 @@
-from typing import Any, Optional, Self, TypeVar
+from types import TracebackType
+from typing import Any, Optional, Self, TypeVar, cast
 
 from pydantic import BaseModel
 
@@ -29,6 +30,7 @@ class APIClient:
             return Listing(response, model, key_data, key_total)
 
         if isinstance(response, list):
+            response = cast(list[Any], response)
             return [model.model_validate(item) for item in response]
 
         return model.model_validate(response)
@@ -39,8 +41,14 @@ class APIClient:
     async def __aenter__(self) -> Self:
         return self
 
-    async def __aexit__(self, exc_type, exc_val, exc_tb):
+    async def __aexit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_value: BaseException | None,
+        traceback: TracebackType | None,
+    ) -> bool:
         await self.close()
+        return False
 
     def __str__(self):
         return f"<{self.__class__.__name__} http={self._http}>"

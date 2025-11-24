@@ -31,8 +31,8 @@ async def bulkset(session: AsyncSession, updates: Updates):
 
 
 async def incompatible(session: AsyncSession) -> bool:
-    version = await get(session, MetaKey._VERSION)
-    schema = await get(session, MetaKey._SCHEMA)
+    version = await get(session, MetaKey.VERSION)
+    schema = await get(session, MetaKey.SCHEMA)
     return bool(version and version != VERSION) or bool(schema and schema != SCHEMA)
 
 
@@ -70,7 +70,7 @@ async def set_normalized(session: AsyncSession):
 
 async def set_versions(session: AsyncSession):
     updates: Updates = [
-        (MetaKey._VERSION, VERSION),
-        (MetaKey._SCHEMA, SCHEMA),
+        (MetaKey.VERSION, VERSION),
+        (MetaKey.SCHEMA, SCHEMA),
     ]
     await bulkset(session, updates)

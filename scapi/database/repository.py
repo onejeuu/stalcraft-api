@@ -27,7 +27,7 @@ class DatabaseRepository:
     ):
         self._github = github
 
-        value = SEMAPHORE_TOKEN if self._github._token else SEMAPHORE_DEFAULT
+        value = SEMAPHORE_TOKEN if self._github.has_token else SEMAPHORE_DEFAULT
         self._semaphore = asyncio.Semaphore(value)
 
     async def sync_index(self, session: AsyncSession) -> None:

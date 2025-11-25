@@ -29,10 +29,12 @@ class StalcraftDatabase:
         self,
         path: PathLike[str] = Default.DATABASE_PATH,
         mode: SyncMode = SyncMode.DEFAULT,
+        normalize: bool = True,
         github: Optional[GitHubClient] = None,
     ):
         self._path = Path(path)
         self._mode = mode
+        self._normalize = normalize
 
         self._github = github or GitHubClient()
         self._repo = DatabaseRepository(self._github)
@@ -78,12 +80,13 @@ class StalcraftDatabase:
     async def sync(
         self,
         mode: Optional[SyncMode] = None,
-        normalize: bool = True,
+        normalize: Optional[bool] = None,
         force: bool = False,
     ) -> bool:
         await self._validate_database()
 
         mode = mode or self._mode
+        normalize = normalize if normalize is not None else self._normalize
 
         # Get local and remote commit hashes
         commits = await self.commits()

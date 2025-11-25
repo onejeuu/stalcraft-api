@@ -25,7 +25,7 @@ class AuctionEndpoint(APIClient):
         limit: int = Default.LIMIT,
         offset: int = Default.OFFSET,
         additional: bool = Default.ADDITIONAL,
-    ) -> Listing[models.Price]:
+    ) -> Listing[models.AuctionPrice]:
         response = await self._http.GET(
             url=f"{self._region}/auction/{self._item_id}/history",
             params=Params(
@@ -35,7 +35,7 @@ class AuctionEndpoint(APIClient):
             ),
         )
 
-        return self._parse(response, models.Price, ("prices", "total"))
+        return self._parse(response, models.AuctionPrice, ("prices", "total"))
 
     async def lots(
         self,
@@ -44,7 +44,7 @@ class AuctionEndpoint(APIClient):
         sort: str | SortAuction = Default.SORT_AUCTION,
         order: str | Order = Default.ORDER,
         additional: bool = Default.ADDITIONAL,
-    ) -> Listing[models.Lot]:
+    ) -> Listing[models.AuctionLot]:
         response = await self._http.GET(
             url=f"{self._region}/auction/{self._item_id}/lots",
             params=Params(
@@ -56,7 +56,7 @@ class AuctionEndpoint(APIClient):
             ),
         )
 
-        return self._parse(response, models.Lot, ("lots", "total"))
+        return self._parse(response, models.AuctionLot, ("lots", "total"))
 
     def __str__(self):
         return f"<{self.__class__.__name__} item_id='{self._item_id}' region='{self._region}' http={self._http}>"

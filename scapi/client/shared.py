@@ -39,14 +39,14 @@ class SharedClient(ABC, APIClient):
     async def emission(
         self,
         region: str | Region = Default.REGION,
-    ) -> models.Emission:
+    ) -> models.EmissionState:
         response = await self._http.GET(
             url=f"{region}/emission",
         )
 
-        return self._parse(response, models.Emission)
+        return self._parse(response, models.EmissionState)
 
-    async def character_profile(
+    async def profile(
         self,
         username: str,
         region: str | Region = Default.REGION,
@@ -70,7 +70,7 @@ class SharedClient(ABC, APIClient):
 
         return self._parse(response, models.ClanInfo, ("data", "totalClans"))
 
-    async def operations(
+    async def operation_sessions(
         self,
         limit: int = Default.LIMIT,
         offset: int = Default.OFFSET,

@@ -1,6 +1,6 @@
 from os import PathLike
 from pathlib import Path
-from typing import Any, NamedTuple, Optional, Sequence
+from typing import Any, NamedTuple, Optional, TypeVar
 
 from sqlalchemy.exc import DatabaseError
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
@@ -13,8 +13,10 @@ from scapi.enums import EntityType
 from . import metadata, models, parsing
 from .enums import MetaKey, StatusNormalize, SyncMode
 from .github import GitHubClient
-from .models import Translation
 from .repository import DatabaseRepository
+
+
+M = TypeVar("M", bound=models.BaseModel)
 
 
 class CommitsPair(NamedTuple):
@@ -35,10 +37,18 @@ class StalcraftDatabase:
         self._github = github or GitHubClient()
         self._repo = DatabaseRepository(self._github)
 
-        self._engine = create_async_engine(f"sqlite+aiosqlite:///{self._path}")
+        self._engine = create_async_engine(self.url)
         self._sessionmaker = async_sessionmaker(self._engine, class_=AsyncSession, expire_on_commit=False)
 
-    async def get_commits(
+    @property
+    def path(self) -> Path:
+        return self._path
+
+    @property
+    def url(self) -> str:
+        return f"sqlite+aiosqlite:///{self._path}"
+
+    async def commits(
         self,
     ) -> CommitsPair:
         await self._validate_database()
@@ -52,7 +62,7 @@ class StalcraftDatabase:
     async def is_uptodate(
         self,
     ) -> bool:
-        commits = await self.get_commits()
+        commits = await self.commits()
         return commits.local == commits.remote
 
     async def is_ready(
@@ -76,7 +86,7 @@ class StalcraftDatabase:
         mode = mode or self._mode
 
         # Get local and remote commit hashes
-        commits = await self.get_commits()
+        commits = await self.commits()
 
         # Stop sync if database is up to date
         if commits.local == commits.remote and not force:
@@ -116,40 +126,37 @@ class StalcraftDatabase:
 
             await metadata.set_normalized(session)
 
-    async def search(
+    async def get(
         self,
-        text: str,
-        language: Optional[str] = None,
-        entity_type: Optional[str] = None,
-    ) -> Sequence[Translation]:
+        model: type[M] = models.Translation,
+        **filters: Any,
+    ) -> tuple[M, ...]:
         await self._validate_database()
-
-        model = models.Translation
 
         if not await self.is_ready():
             await self.sync(normalize=True)
 
         async with self._sessionmaker.begin() as session:
-            query = parsing.query(text)
-            conds: list[Any] = [col(model.search).ilike(f"%{query}%")]
+            conds: list[Any] = []
 
-            if language is not None:
-                conds.append(col(model.language) == language.lower())
-
-            if entity_type is not None:
-                conds.append(col(model.entity_type) == entity_type.lower())
+            for field, value in filters.items():
+                if value is not None:
+                    column = col(getattr(model, field))
+                    condition = column.ilike(f"%{parsing.query(value)}%") if field == "search" else column == value
+                    conds.append(condition)
 
             query = select(model).where(*conds)
-            return (await session.exec(query)).all()
+            return tuple((await session.exec(query)).all())
 
     async def get_id(
         self,
-        text: str,
+        query: str,
         language: Optional[str] = None,
         entity_type: Optional[str] = EntityType.LISTING,
     ) -> str | None:
-        results = await self.search(
-            text=text,
+        results = await self.get(
+            model=models.Translation,
+            search=query,
             language=language,
             entity_type=entity_type,
         )

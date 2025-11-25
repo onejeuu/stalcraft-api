@@ -1,6 +1,5 @@
 from datetime import datetime
 from typing import Any, Dict, Optional, TypeAlias
-from uuid import UUID
 
 from pydantic import BaseModel, Field
 
@@ -10,20 +9,24 @@ from scapi import enums
 Additional: TypeAlias = Dict[str, Any]
 
 
-class RegionInfo(BaseModel):
+class ScApiModel(BaseModel):
+    pass
+
+
+class RegionInfo(ScApiModel):
     id: str
     name: str
 
 
-class Emission(BaseModel):
+class EmissionState(ScApiModel):
     current_start: Optional[datetime] = Field(None, alias="currentStart")
     previous_start: Optional[datetime] = Field(None, alias="previousStart")
     previous_end: Optional[datetime] = Field(None, alias="previousEnd")
 
 
-class ClanInfo(BaseModel):
-    id: str
+class ClanInfo(ScApiModel):
     name: str
+    uuid: str = Field(..., alias="id")
     tag: str
     level: int
     level_points: int = Field(..., alias="levelPoints")
@@ -34,53 +37,53 @@ class ClanInfo(BaseModel):
     member_count: int = Field(..., alias="memberCount")
 
 
-class ClanMember(BaseModel):
+class ClanMember(ScApiModel):
     name: str
     rank: enums.ClanRank
     join_time: datetime = Field(..., alias="joinTime")
 
 
-class CharacterClan(BaseModel):
+class ClanAffiliation(ScApiModel):
     info: ClanInfo
     member: ClanMember
 
 
-class CharacterInfo(BaseModel):
-    id: str
+class CharacterInfo(ScApiModel):
     name: str
+    uuid: str = Field(..., alias="id")
     creation_time: datetime = Field(..., alias="creationTime")
 
 
-class Character(BaseModel):
+class Character(ScApiModel):
     info: CharacterInfo = Field(..., alias="information")
-    clan: Optional[CharacterClan] = Field(None)
+    clan: Optional[ClanAffiliation] = Field(None)
 
 
-class CharacterStatistic(BaseModel):
+class Statistic(ScApiModel):
     id: str
     type: enums.StatType
     value: Any
 
 
-class CharacterProfile(BaseModel):
-    username: str
-    uuid: UUID
+class CharacterProfile(ScApiModel):
+    name: str = Field(..., alias="username")
+    uuid: str
     status: str
     alliance: Optional[enums.Alliance] = Field(None)
     last_login: Optional[datetime] = Field(None, alias="lastLogin")
     displayed_achievements: list[str] = Field(..., alias="displayedAchievements")
-    clan: Optional[CharacterClan] = Field(None)
-    stats: list[CharacterStatistic]
+    clan: Optional[ClanAffiliation] = Field(None)
+    stats: list[Statistic]
 
 
-class Price(BaseModel):
+class AuctionPrice(ScApiModel):
     amount: int
     price: int
     time: datetime
     additional: Optional[Additional] = Field(None)
 
 
-class Lot(BaseModel):
+class AuctionLot(ScApiModel):
     item_id: str = Field(..., alias="itemId")
     amount: int
     start_price: int = Field(..., alias="startPrice")
@@ -91,7 +94,7 @@ class Lot(BaseModel):
     additional: Optional[Additional] = Field(None)
 
 
-class OperationParticipant(BaseModel):
+class OperationParticipant(ScApiModel):
     username: str
     death: int
     mob_kills: int = Field(..., alias="mobKills")
@@ -106,7 +109,7 @@ class OperationParticipant(BaseModel):
     secondary_weapon_level: int = Field(..., alias="secondaryWeaponLevel")
 
 
-class OperationSession(BaseModel):
+class OperationSession(ScApiModel):
     id: int
     map: str
     start_time: datetime = Field(..., alias="startTime")

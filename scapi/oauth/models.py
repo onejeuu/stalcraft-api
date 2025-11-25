@@ -9,7 +9,7 @@ class OAuthModel(BaseModel):
     pass
 
 
-class BaseToken(OAuthModel):
+class TokenResponse(OAuthModel):
     token_type: str
     access_token: str
     expires_in: datetime
@@ -25,11 +25,11 @@ class BaseToken(OAuthModel):
             return None
 
 
-class AppToken(BaseToken):
+class AppToken(TokenResponse):
     pass
 
 
-class UserToken(BaseToken):
+class UserToken(TokenResponse):
     refresh_token: str
 
 

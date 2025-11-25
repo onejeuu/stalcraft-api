@@ -9,8 +9,8 @@ import aiofiles
 from aiohttp import ClientResponse, ClientSession, ClientTimeout, TCPConnector
 from pydantic import ValidationError
 
-from scapi import exceptions
 from scapi.defaults import Default
+from scapi.exceptions import RequestError
 
 from .params import Params
 from .ratelimit import RateLimit
@@ -22,8 +22,8 @@ Data: TypeAlias = Json | str | bytes
 
 
 class HTTPClient:
-    TTL_DNS_CACHE = 60
-    STREAM_CHUNK_SIZE = 1024 * 8
+    _TTL_DNS_CACHE = 300
+    _STREAM_CHUNK_SIZE = 1024 * 8
 
     def __init__(
         self,
@@ -40,13 +40,17 @@ class HTTPClient:
 
         atexit.register(self._cleanup)
 
+    @property
+    def ratelimit(self) -> Optional[RateLimit]:
+        return self._ratelimit
+
     async def _create_session(self) -> ClientSession:
         if self._session is None:
             self._session = ClientSession(
                 timeout=ClientTimeout(total=self._timeout),
                 connector=TCPConnector(
                     family=socket.AF_INET,
-                    ttl_dns_cache=self.TTL_DNS_CACHE,
+                    ttl_dns_cache=self._TTL_DNS_CACHE,
                     force_close=True,
                 ),
             )
@@ -107,7 +111,7 @@ class HTTPClient:
 
     async def _stream_to_file(self, response: ClientResponse, filename: str) -> str:
         async with aiofiles.open(filename, "wb") as fp:
-            async for chunk in response.content.iter_chunked(self.STREAM_CHUNK_SIZE):
+            async for chunk in response.content.iter_chunked(self._STREAM_CHUNK_SIZE):
                 await fp.write(chunk)
         return filename
 
@@ -119,17 +123,16 @@ class HTTPClient:
             pass
 
     async def _on_error(self, response: ClientResponse) -> None:
-        # TODO: status code exceptions mapping & error trim (on large response)
-
         default = "Unknown error"
 
         try:
-            error = await response.json()
+            data = await response.json()
 
         except Exception:
-            error = {"error": await response.text(errors="replace") or default}
+            data = await response.text(errors="replace") or default
 
-        raise exceptions.RequestError(error, response.status, response.method, response.url)
+        exception = RequestError._registry.get(response.status, RequestError)
+        raise exception(data=data, status=response.status, method=response.method, url=response.url)
 
     async def GET(
         self,

@@ -31,7 +31,7 @@ class UserClient(SharedClient):
                 timeout=self._timeout,
             )
 
-        raise exceptions.CredentialsError("No token provided.")
+        raise exceptions.CredentialsError(f"No user token provided for {self.__class__.__name__}.")
 
     async def characters(
         self,

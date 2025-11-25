@@ -6,6 +6,7 @@ from pydantic import BaseModel
 from scapi.defaults import Default
 
 from .client import HTTPClient
+from .ratelimit import RateLimit
 from .types import Listing
 
 
@@ -15,6 +16,10 @@ M = TypeVar("M", bound=BaseModel)
 class APIClient:
     _http: HTTPClient
     _json: bool = Default.JSON
+
+    @property
+    def ratelimit(self) -> Optional[RateLimit]:
+        return self._http.ratelimit
 
     def _parse(
         self,

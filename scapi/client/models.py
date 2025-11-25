@@ -9,22 +9,22 @@ from scapi import enums
 Additional: TypeAlias = Dict[str, Any]
 
 
-class ScApiModel(BaseModel):
+class ClientModel(BaseModel):
     pass
 
 
-class RegionInfo(ScApiModel):
+class RegionInfo(ClientModel):
     id: str
     name: str
 
 
-class EmissionState(ScApiModel):
+class EmissionState(ClientModel):
     current_start: Optional[datetime] = Field(None, alias="currentStart")
     previous_start: Optional[datetime] = Field(None, alias="previousStart")
     previous_end: Optional[datetime] = Field(None, alias="previousEnd")
 
 
-class ClanInfo(ScApiModel):
+class ClanInfo(ClientModel):
     name: str
     uuid: str = Field(..., alias="id")
     tag: str
@@ -37,35 +37,35 @@ class ClanInfo(ScApiModel):
     member_count: int = Field(..., alias="memberCount")
 
 
-class ClanMember(ScApiModel):
+class ClanMember(ClientModel):
     name: str
     rank: enums.ClanRank
     join_time: datetime = Field(..., alias="joinTime")
 
 
-class ClanAffiliation(ScApiModel):
+class ClanAffiliation(ClientModel):
     info: ClanInfo
     member: ClanMember
 
 
-class CharacterInfo(ScApiModel):
+class CharacterInfo(ClientModel):
     name: str
     uuid: str = Field(..., alias="id")
     creation_time: datetime = Field(..., alias="creationTime")
 
 
-class Character(ScApiModel):
+class Character(ClientModel):
     info: CharacterInfo = Field(..., alias="information")
     clan: Optional[ClanAffiliation] = Field(None)
 
 
-class Statistic(ScApiModel):
+class Statistic(ClientModel):
     id: str
     type: enums.StatType
     value: Any
 
 
-class CharacterProfile(ScApiModel):
+class CharacterProfile(ClientModel):
     name: str = Field(..., alias="username")
     uuid: str
     status: str
@@ -76,14 +76,14 @@ class CharacterProfile(ScApiModel):
     stats: list[Statistic]
 
 
-class AuctionPrice(ScApiModel):
+class AuctionPrice(ClientModel):
     amount: int
     price: int
     time: datetime
     additional: Optional[Additional] = Field(None)
 
 
-class AuctionLot(ScApiModel):
+class AuctionLot(ClientModel):
     item_id: str = Field(..., alias="itemId")
     amount: int
     start_price: int = Field(..., alias="startPrice")
@@ -94,7 +94,7 @@ class AuctionLot(ScApiModel):
     additional: Optional[Additional] = Field(None)
 
 
-class OperationParticipant(ScApiModel):
+class OperationParticipant(ClientModel):
     username: str
     death: int
     mob_kills: int = Field(..., alias="mobKills")
@@ -109,7 +109,7 @@ class OperationParticipant(ScApiModel):
     secondary_weapon_level: int = Field(..., alias="secondaryWeaponLevel")
 
 
-class OperationSession(ScApiModel):
+class OperationSession(ClientModel):
     id: int
     map: str
     start_time: datetime = Field(..., alias="startTime")

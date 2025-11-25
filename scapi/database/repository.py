@@ -14,8 +14,10 @@ from .models import FileBlob
 
 TEMP_PREFIX = "scapi-db-"
 
-CONCURRENT_DOWNLOAD_LIMIT = 20
 BUFFER_FLUSH_LIMIT = 1024 * 1024 * 4  # 4 MB
+
+SEMAPHORE_DEFAULT = 5
+SEMAPHORE_TOKEN = 20
 
 
 class DatabaseRepository:
@@ -24,7 +26,9 @@ class DatabaseRepository:
         github: GitHubClient,
     ):
         self._github = github
-        self._semaphore = asyncio.Semaphore(CONCURRENT_DOWNLOAD_LIMIT)
+
+        value = SEMAPHORE_TOKEN if self._github._token else SEMAPHORE_DEFAULT
+        self._semaphore = asyncio.Semaphore(value)
 
     async def sync_index(self, session: AsyncSession) -> None:
         # Get repository root files

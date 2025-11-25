@@ -36,13 +36,13 @@ class HTTPClient:
         self._headers = headers or {}
 
         self._session: Optional[ClientSession] = None
-        self._ratelimit: Optional[RateLimit] = None
+        self._ratelimit: RateLimit = RateLimit.model_construct()
 
         atexit.register(self._cleanup)
 
     @property
     def ratelimit(self) -> RateLimit:
-        return self._ratelimit or RateLimit.model_construct()
+        return self._ratelimit
 
     async def _create_session(self) -> ClientSession:
         if self._session is None:
@@ -117,9 +117,13 @@ class HTTPClient:
 
     async def _update_ratelimit(self, response: ClientResponse) -> None:
         try:
-            self._ratelimit = RateLimit.model_validate(response.headers)
+            current = self._ratelimit.model_dump()
+            updated = RateLimit.model_validate(response.headers).model_dump(exclude_none=True)
+            merged = {**current, **updated}
 
-        except ValidationError:
+            self._ratelimit = RateLimit.model_construct(**merged)
+
+        except (Exception, ValidationError):
             pass
 
     async def _on_error(self, response: ClientResponse) -> None:

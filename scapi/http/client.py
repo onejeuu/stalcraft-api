@@ -41,8 +41,8 @@ class HTTPClient:
         atexit.register(self._cleanup)
 
     @property
-    def ratelimit(self) -> Optional[RateLimit]:
-        return self._ratelimit
+    def ratelimit(self) -> RateLimit:
+        return self._ratelimit or RateLimit.model_construct()
 
     async def _create_session(self) -> ClientSession:
         if self._session is None:

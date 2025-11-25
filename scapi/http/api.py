@@ -18,7 +18,7 @@ class APIClient:
     _json: bool = Default.JSON
 
     @property
-    def ratelimit(self) -> Optional[RateLimit]:
+    def ratelimit(self) -> RateLimit:
         return self._http.ratelimit
 
     def _parse(

@@ -1,8 +1,10 @@
+import warnings
 from collections import defaultdict
 from dataclasses import dataclass, field
 from typing import Any, NamedTuple, TypeAlias
 
 from . import parsing, tokenize
+from .enums import IndexFile
 
 
 Index: TypeAlias = dict[str, set[str]]
@@ -24,7 +26,7 @@ class SearchIndex:
     _entities: Entities = field(default_factory=dict)
     """Entity Storage, stores all translations (Entity ID -> {lang: text})."""
 
-    def build(self, path: str, data: dict[str, Any]):
+    def build(self, path: str, data: Any):
         index: Index = defaultdict(set)
         entities: Entities = defaultdict(dict)
 
@@ -34,13 +36,11 @@ class SearchIndex:
             # collect translations for entity id
             entities[entity_id][lang] = text
 
-            # tokenization & indexing, generate N-grams for fuzzy search
-            for word in tokenize.words(text):
-                tokens = tokenize.ngrams(word)
+            # tokenization & indexing, store mapping I[ngram] -> {entity_id}
+            ngrams = {ngram for word in tokenize.words(text) for ngram in tokenize.ngrams(word)}
 
-                # store mapping in inverted index, I[ngram] -> {entity_id}
-                for ngram in tokens:
-                    index[ngram].add(entity_id)
+            for ngram in ngrams:
+                index[ngram].add(entity_id)
 
         self._index = dict(index)
         self._entities = dict(entities)
@@ -84,8 +84,15 @@ class SearchIndex:
         filename = path.split("/")[-1]
 
         match filename:
-            case "listing.json":
+            case IndexFile.LISTING:
                 return parsing.listings
 
+            case IndexFile.STATS:
+                return parsing.stats
+
+            case IndexFile.ACHIEVEMENTS:
+                return parsing.achievements
+
             case _:
-                raise Exception("Unsupported file")
+                warnings.warn(f"Unknown file type: '{path}'")
+                return lambda data: []

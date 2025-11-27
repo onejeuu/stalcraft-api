@@ -13,11 +13,10 @@ dynamic = ["version"]
 
 dependencies = [
     "aiohttp>=3.13.0",
-    "aiosqlite>=0.21.0",
     "aiofiles>=25.1.0",
-    "pydantic>=2.12.0",
-    "sqlmodel>=0.0.27",
+    "pydantic>=2.12.5",
     "strenum>=0.4.15",
+    "cachetools>=6.2.2",
 ]
 
 [dependency-groups]

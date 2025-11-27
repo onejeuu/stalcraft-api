@@ -1,3 +1,4 @@
+import asyncio
 import json
 from typing import Optional
 
@@ -5,15 +6,19 @@ from cachetools import TTLCache
 
 from scapi.enums import Realm
 
+from . import parsing
 from .enums import IndexFile
 from .github import GitHubClient
-from .index import SearchIndex
+from .index import Entity, SearchIndex
+
+
+SYNC_FILES: list[str] = [f"{realm}/{file}" for realm in Realm for file in parsing.SUPPORTED]
 
 
 class CommitsState:
     def __init__(self, ttl: float):
         self.local = ""
-        self._cache = TTLCache(maxsize=128, ttl=ttl)
+        self._cache = TTLCache(maxsize=1, ttl=ttl)
 
     @property
     def remote(self) -> str:
@@ -43,37 +48,59 @@ class DatabaseLookup:
         self._realm = realm
 
         self._commits = CommitsState(ttl=commit_ttl)
-        self._cache = TTLCache(maxsize=256, ttl=cache_ttl)
+        self._cache = TTLCache(maxsize=32, ttl=cache_ttl)
 
     async def get(
         self,
         query: str,
         realm: Optional[str | Realm] = None,
         filename: str | IndexFile = IndexFile.LISTING,
-    ):
+    ) -> list[Entity]:
         realm = realm or self._realm
         path = f"{realm}/{filename}"
 
-        index = await self._download(path)
+        index = await self._index(path)
         return index.search(query)
 
-    async def _download(self, path: str) -> SearchIndex:
-        index = SearchIndex()
+    async def sync(
+        self,
+        force: bool = False,
+    ) -> bool:
+        await self._validate_commit()
 
-        if not self._commits.remote:
-            self._commits.remote = await self._github.latest_commit()
+        if self._commits.uptodate and not force:
+            return False
+
+        await self._update_commit()
+
+        await asyncio.gather(*[self._download(file) for file in SYNC_FILES])
+        return True
+
+    async def _index(self, path: str):
+        await self._validate_commit()
 
         if self._commits.uptodate and path in self._cache:
             return self._cache[path]
 
-        if not self._commits.uptodate:
-            self._commits.local = self._commits.remote
-            self._cache.clear()
+        await self._update_commit()
 
+        return await self._download(path)
+
+    async def _download(self, path: str) -> SearchIndex:
         content: bytes = await self._github.rawfile(path=path)
         data = json.loads(content)
 
+        index = SearchIndex()
         index.build(path, data)
 
         self._cache[path] = index
         return index
+
+    async def _validate_commit(self) -> None:
+        if not self._commits.remote:
+            self._commits.remote = await self._github.latest_commit()
+
+    async def _update_commit(self) -> None:
+        if not self._commits.uptodate:
+            self._commits.local = self._commits.remote
+            self._cache.clear()

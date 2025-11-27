@@ -138,6 +138,21 @@ class HTTPClient:
         exception = RequestError._registry.get(response.status, RequestError)
         raise exception(data=data, status=response.status, method=response.method, url=response.url)
 
+    async def HEAD(
+        self,
+        url: str,
+        params: Optional[Params] = None,
+        headers: Optional[Headers] = None,
+        raw: bool = False,
+    ):
+        return await self._request(
+            method="HEAD",
+            url=url,
+            params=params,
+            headers=headers,
+            raw=raw,
+        )
+
     async def GET(
         self,
         url: str,

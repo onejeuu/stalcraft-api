@@ -1,10 +1,8 @@
-import warnings
 from collections import defaultdict
 from dataclasses import dataclass, field
 from typing import Any, NamedTuple, TypeAlias
 
 from . import parsing, tokenize
-from .enums import IndexFile
 
 
 Index: TypeAlias = dict[str, set[str]]
@@ -12,7 +10,7 @@ Translations = dict[str, str]
 Entities = dict[str, Translations]
 
 
-class Search(NamedTuple):
+class Lookup(NamedTuple):
     id: str
     translations: Translations
     score: float = 0.0
@@ -30,14 +28,14 @@ class SearchIndex:
         index: Index = defaultdict(set)
         entities: Entities = defaultdict(dict)
 
-        parser = self._get_parser(path)
+        parser = parsing.get(path)
 
         for entity_id, lang, text in parser(data):
             # collect translations for entity id
             entities[entity_id][lang] = text
 
-            # tokenization & indexing, store mapping I[ngram] -> {entity_id}
-            ngrams = {ngram for word in tokenize.words(text) for ngram in tokenize.ngrams(word)}
+            # tokenize & indexing, store mapping I[ngram] -> {entity_id}
+            ngrams = tokenize.ngramize(text)
 
             for ngram in ngrams:
                 index[ngram].add(entity_id)
@@ -48,13 +46,12 @@ class SearchIndex:
     def get(self, entity_id: str) -> Translations | None:
         return self._entities.get(entity_id)
 
-    def search(self, query: str, threshold: int = 1) -> list[Search]:
+    def search(self, query: str, threshold: int) -> list[Lookup]:
         if not query:
             return []
 
         # tokenize user search query
-        words = tokenize.words(query)
-        ngrams = {ngram for word in words for ngram in tokenize.ngrams(word)}
+        ngrams = tokenize.ngramize(query)
 
         if not ngrams:
             return []
@@ -68,7 +65,8 @@ class SearchIndex:
             for entity_id in self._index[ngram]:
                 hits[entity_id] += 1
 
-        results: list[Search] = []
+        # create search results
+        results: list[Lookup] = []
         num_ngrams = len(ngrams)
 
         # scoring & filtering hits
@@ -78,24 +76,7 @@ class SearchIndex:
                 score = round(count / num_ngrams, 2)
 
                 translations = self._entities.get(entity_id, {})
-                results.append(Search(id=entity_id, translations=translations, score=score))
+                results.append(Lookup(id=entity_id, translations=translations, score=score))
 
         # sort results by descending score
         return sorted(results, key=lambda r: r.score, reverse=True)
-
-    def _get_parser(self, path: str):
-        filename = path.split("/")[-1]
-
-        match filename:
-            case IndexFile.LISTING:
-                return parsing.listings
-
-            case IndexFile.STATS:
-                return parsing.stats
-
-            case IndexFile.ACHIEVEMENTS:
-                return parsing.achievements
-
-            case _:
-                warnings.warn(f"Unknown file type: '{path}'")
-                return lambda data: []

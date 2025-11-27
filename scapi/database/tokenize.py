@@ -32,3 +32,7 @@ def ngrams(token: str, n: int = 3) -> set[str]:
         ngrams.add(token)
 
     return ngrams
+
+
+def ngramize(text: str) -> set[str]:
+    return {ngram for word in words(text) for ngram in ngrams(word)}

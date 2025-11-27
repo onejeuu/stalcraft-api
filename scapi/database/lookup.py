@@ -40,11 +40,13 @@ class DatabaseLookup:
         self,
         github: Optional[GitHubClient] = None,
         realm: str | Realm = Realm.RU,
+        threshold: float = 0.1,
         commit_ttl: float = 300,
         cache_ttl: float = 86400,
     ):
         self._github = github or GitHubClient()
         self._realm = realm
+        self._threshold = threshold
 
         self._commits = CommitsState(ttl=commit_ttl)
 
@@ -66,12 +68,14 @@ class DatabaseLookup:
     async def search(
         self,
         query: str,
-        realm: Optional[str | Realm] = None,
         filename: str | IndexFile = IndexFile.LISTING,
-        threshold: float = 0.1,
+        realm: Optional[str | Realm] = None,
+        threshold: Optional[float] = None,
     ) -> list[Lookup]:
         realm = realm or self._realm
         path = f"{realm}/{filename}"
+
+        threshold = threshold if threshold is not None else self._threshold
 
         index = await self._index(path)
         return index.search(query, threshold)

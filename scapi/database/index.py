@@ -30,7 +30,7 @@ class SearchIndex:
     def build(self, path: str, data: Any):
         index: Index = defaultdict(set)
         entities: Entities = defaultdict(dict)
-        entity_ngrams: dict[str, set[str]] = defaultdict(set)
+        counts: dict[str, set[str]] = defaultdict(set)
 
         parser = parsing.get(path)
 
@@ -43,11 +43,11 @@ class SearchIndex:
 
             for ngram in ngrams:
                 index[ngram].add(entity_id)
-                entity_ngrams[entity_id].add(ngram)
+                counts[entity_id].add(ngram)
 
         self._index = dict(index)
         self._entities = dict(entities)
-        self._counts = {entity_id: len(ngrams) for entity_id, ngrams in entity_ngrams.items()}
+        self._counts = {entity_id: len(ngrams) for entity_id, ngrams in counts.items()}
 
     def get(self, entity_id: str) -> Translations | None:
         return self._entities.get(entity_id)

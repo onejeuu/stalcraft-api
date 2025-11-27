@@ -68,7 +68,7 @@ class DatabaseLookup:
         query: str,
         realm: Optional[str | Realm] = None,
         filename: str | IndexFile = IndexFile.LISTING,
-        threshold: int = 2,
+        threshold: float = 0.1,
     ) -> list[Lookup]:
         realm = realm or self._realm
         path = f"{realm}/{filename}"

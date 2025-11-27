@@ -24,9 +24,13 @@ class SearchIndex:
     _entities: Entities = field(default_factory=dict)
     """Entity Storage, stores all translations (Entity ID -> {lang: text})."""
 
+    _counts: dict[str, int] = field(default_factory=dict)
+    """N-gram Counts, mapping Entity ID to total unique N-grams."""
+
     def build(self, path: str, data: Any):
         index: Index = defaultdict(set)
         entities: Entities = defaultdict(dict)
+        entity_ngrams: dict[str, set[str]] = defaultdict(set)
 
         parser = parsing.get(path)
 
@@ -39,14 +43,16 @@ class SearchIndex:
 
             for ngram in ngrams:
                 index[ngram].add(entity_id)
+                entity_ngrams[entity_id].add(ngram)
 
         self._index = dict(index)
         self._entities = dict(entities)
+        self._counts = {entity_id: len(ngrams) for entity_id, ngrams in entity_ngrams.items()}
 
     def get(self, entity_id: str) -> Translations | None:
         return self._entities.get(entity_id)
 
-    def search(self, query: str, threshold: int) -> list[Lookup]:
+    def search(self, query: str, threshold: float) -> list[Lookup]:
         if not query:
             return []
 
@@ -67,14 +73,24 @@ class SearchIndex:
 
         # create search results
         results: list[Lookup] = []
-        num_ngrams = len(ngrams)
+
+        # query ngrams count
+        q_num_ngrams = len(ngrams)
 
         # scoring & filtering hits
         for entity_id, count in hits.items():
-            if count >= threshold:
-                # (|Q ∩ I|) / (|Q|)
-                score = round(count / num_ngrams, 2)
+            # entity ngrams count
+            e_num_ngrams = self._counts.get(entity_id, 0)
 
+            if e_num_ngrams <= 0:
+                continue
+
+            # |Q ∩ I| / (|Q| + |I| - |Q ∩ I|)
+            union = q_num_ngrams + e_num_ngrams - count
+            score = round(count / union, 2) if union != 0 else 0.0
+
+            # filter by threshold
+            if score >= threshold:
                 translations = self._entities.get(entity_id, {})
                 results.append(Lookup(id=entity_id, translations=translations, score=score))
 

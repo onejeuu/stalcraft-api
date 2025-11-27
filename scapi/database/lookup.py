@@ -6,13 +6,12 @@ from cachetools import TTLCache
 
 from scapi.enums import Realm
 
-from . import parsing
 from .enums import IndexFile
 from .github import GitHubClient
-from .index import Entity, SearchIndex
+from .index import Search, SearchIndex, Translations
 
 
-SYNC_FILES: list[str] = [f"{realm}/{file}" for realm in Realm for file in parsing.SUPPORTED]
+SYNC_FILES: list[str] = [f"{realm}/{file}" for realm in Realm for file in IndexFile]
 
 
 class CommitsState:
@@ -48,14 +47,28 @@ class DatabaseLookup:
         self._realm = realm
 
         self._commits = CommitsState(ttl=commit_ttl)
+
+        # TODO: single cache for every IndexFile
         self._cache = TTLCache(maxsize=32, ttl=cache_ttl)
 
     async def get(
         self,
+        entity_id: str,
+        realm: Optional[str | Realm] = None,
+        filename: str | IndexFile = IndexFile.LISTING,
+    ) -> Optional[Translations]:
+        realm = realm or self._realm
+        path = f"{realm}/{filename}"
+
+        index = await self._index(path)
+        return index.get(entity_id)
+
+    async def search(
+        self,
         query: str,
         realm: Optional[str | Realm] = None,
         filename: str | IndexFile = IndexFile.LISTING,
-    ) -> list[Entity]:
+    ) -> list[Search]:
         realm = realm or self._realm
         path = f"{realm}/{filename}"
 
@@ -66,7 +79,7 @@ class DatabaseLookup:
         self,
         force: bool = False,
     ) -> bool:
-        await self._validate_commit()
+        await self._validate_remote_commit()
 
         if self._commits.uptodate and not force:
             return False
@@ -77,7 +90,7 @@ class DatabaseLookup:
         return True
 
     async def _index(self, path: str):
-        await self._validate_commit()
+        await self._validate_remote_commit()
 
         if self._commits.uptodate and path in self._cache:
             return self._cache[path]
@@ -96,7 +109,7 @@ class DatabaseLookup:
         self._cache[path] = index
         return index
 
-    async def _validate_commit(self) -> None:
+    async def _validate_remote_commit(self) -> None:
         if not self._commits.remote:
             self._commits.remote = await self._github.latest_commit()
 

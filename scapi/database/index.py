@@ -12,7 +12,7 @@ Translations = dict[str, str]
 Entities = dict[str, Translations]
 
 
-class Entity(NamedTuple):
+class Search(NamedTuple):
     id: str
     translations: Translations
     score: float = 0.0
@@ -45,7 +45,10 @@ class SearchIndex:
         self._index = dict(index)
         self._entities = dict(entities)
 
-    def search(self, query: str, threshold: int = 1) -> list[Entity]:
+    def get(self, entity_id: str) -> Translations | None:
+        return self._entities.get(entity_id)
+
+    def search(self, query: str, threshold: int = 1) -> list[Search]:
         if not query:
             return []
 
@@ -65,7 +68,7 @@ class SearchIndex:
             for entity_id in self._index[ngram]:
                 hits[entity_id] += 1
 
-        results: list[Entity] = []
+        results: list[Search] = []
         num_ngrams = len(ngrams)
 
         # scoring & filtering hits
@@ -75,7 +78,7 @@ class SearchIndex:
                 score = round(count / num_ngrams, 2)
 
                 translations = self._entities.get(entity_id, {})
-                results.append(Entity(id=entity_id, translations=translations, score=score))
+                results.append(Search(id=entity_id, translations=translations, score=score))
 
         # sort results by descending score
         return sorted(results, key=lambda r: r.score, reverse=True)

@@ -1,9 +1,5 @@
 from typing import Any, Iterator
 
-from .enums import IndexFile
-
-
-SUPPORTED = [IndexFile.LISTING, IndexFile.STATS, IndexFile.ACHIEVEMENTS]
 
 Items = list[dict[str, Any]]
 

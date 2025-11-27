@@ -1,5 +1,6 @@
 import asyncio
 import json
+from pathlib import Path
 from typing import Optional
 
 from cachetools import TTLCache
@@ -43,21 +44,20 @@ class DatabaseLookup:
         threshold: float = 0.1,
         commit_ttl: float = 300,
         cache_ttl: float = 86400,
+        cache_size: int = 256,
     ):
         self._github = github or GitHubClient()
         self._realm = realm
         self._threshold = threshold
 
         self._commits = CommitsState(ttl=commit_ttl)
-
-        # TODO: single cache for every IndexFile
-        self._cache = TTLCache(maxsize=32, ttl=cache_ttl)
+        self._cache = TTLCache(maxsize=cache_size, ttl=cache_ttl)
 
     async def get(
         self,
         entity_id: str,
-        realm: Optional[str | Realm] = None,
         filename: str | IndexFile = IndexFile.LISTING,
+        realm: Optional[str | Realm] = None,
     ) -> Optional[Translations]:
         realm = realm or self._realm
         path = f"{realm}/{filename}"
@@ -93,6 +93,31 @@ class DatabaseLookup:
 
         await asyncio.gather(*[self._download(file) for file in SYNC_FILES])
         return True
+
+    async def item_info(
+        self,
+        path: str,
+        realm: Optional[str | Realm] = None,
+        upgrade_level: Optional[int] = None,
+    ):
+        realm = realm or self._realm
+        path = f"{realm}/{path}"
+        lvl = max(0, min(15, upgrade_level or 0))
+
+        if lvl > 0:
+            tmp = Path(path)
+            stem = tmp.stem
+            path = (tmp.parent / f"_variants/{stem}/{lvl}.json").as_posix()
+
+        if path in self._cache:
+            return self._cache[path]
+
+        content: bytes = await self._github.rawfile(path=path)
+        data = json.loads(content)
+
+        self._cache[path] = data
+
+        return data
 
     async def _index(self, path: str):
         await self._validate_remote_commit()

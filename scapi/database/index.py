@@ -6,13 +6,13 @@ from . import parsing, tokenize
 
 
 Index: TypeAlias = dict[str, set[str]]
+Entities = dict[str, dict[str, Any]]
 Translations = dict[str, str]
-Entities = dict[str, Translations]
 
 
 class Lookup(NamedTuple):
     id: str
-    translations: Translations
+    item: dict[str, Any]
     score: float = 0.0
 
 
@@ -29,14 +29,14 @@ class SearchIndex:
 
     def build(self, path: str, data: Any):
         index: Index = defaultdict(set)
-        entities: Entities = defaultdict(dict)
+        entities: Entities = defaultdict(lambda: defaultdict(dict))
         counts: dict[str, set[str]] = defaultdict(set)
 
         parser = parsing.get(path)
 
-        for entity_id, lang, text in parser(data):
+        for item, entity_id, text in parser(data):
             # collect translations for entity id
-            entities[entity_id][lang] = text
+            entities[entity_id] = item
 
             # tokenize & indexing, store mapping I[ngram] -> {entity_id}
             ngrams = tokenize.ngramize(text)
@@ -91,8 +91,8 @@ class SearchIndex:
 
             # filter by threshold
             if score >= threshold:
-                translations = self._entities.get(entity_id, {})
-                results.append(Lookup(id=entity_id, translations=translations, score=score))
+                item = self._entities.get(entity_id, {})
+                results.append(Lookup(id=entity_id, item=item, score=score))
 
         # sort results by descending score
         return sorted(results, key=lambda r: r.score, reverse=True)

@@ -2,8 +2,7 @@ from collections import defaultdict
 from dataclasses import dataclass, field
 from typing import Any, NamedTuple, TypeAlias
 
-from . import parsing
-from .tokenize import tokenize
+from . import parsing, tokenize
 
 
 Index: TypeAlias = dict[str, set[str]]
@@ -20,7 +19,10 @@ class Entity(NamedTuple):
 @dataclass
 class SearchIndex:
     _index: Index = field(default_factory=dict)
+    """Inverted Index, mapping from N-grams (tokens) to Entity IDs."""
+
     _entities: Entities = field(default_factory=dict)
+    """Entity Storage, stores all translations (Entity ID -> {lang: text})."""
 
     def build(self, path: str, data: dict[str, Any]):
         index: Index = defaultdict(set)
@@ -29,13 +31,16 @@ class SearchIndex:
         parser = self._get_parser(path)
 
         for entity_id, lang, text in parser(data):
+            # collect translations for entity id
             entities[entity_id][lang] = text
 
-            tokens = tokenize(text)
+            # tokenization & indexing, generate N-grams for fuzzy search
+            for word in tokenize.words(text):
+                tokens = tokenize.ngrams(word)
 
-            for token in tokens:
-                if token:
-                    index[token].add(entity_id)
+                # store mapping in inverted index, I[ngram] -> {entity_id}
+                for ngram in tokens:
+                    index[ngram].add(entity_id)
 
         self._index = dict(index)
         self._entities = dict(entities)
@@ -44,29 +49,36 @@ class SearchIndex:
         if not query:
             return []
 
-        tokens = tokenize(query)
-        if not tokens:
+        # tokenize user search query
+        words = tokenize.words(query)
+        ngrams = {ngram for word in words for ngram in tokenize.ngrams(word)}
+
+        if not ngrams:
             return []
 
+        # count how many N-grams from the query (Q) hit each indexed entity (I)
+        # hits: {entity_id: count of matching N-grams}
         hits: dict[str, int] = defaultdict(int)
 
-        for token in tokens:
-            if token in self._index:
-                for entity_id in self._index[token]:
-                    hits[entity_id] += 1
+        # soft matching (OR) collect entity ids for all matching N-grams
+        for ngram in ngrams & self._index.keys():
+            for entity_id in self._index[ngram]:
+                hits[entity_id] += 1
 
         results: list[Entity] = []
-        num_tokens = len(tokens)
+        num_ngrams = len(ngrams)
 
+        # scoring & filtering hits
         for entity_id, count in hits.items():
             if count >= threshold:
-                score = count / num_tokens
+                # (|Q ∩ I|) / (|Q|)
+                score = round(count / num_ngrams, 2)
+
                 translations = self._entities.get(entity_id, {})
                 results.append(Entity(id=entity_id, translations=translations, score=score))
 
-        results.sort(key=lambda r: r.score, reverse=True)
-
-        return results
+        # sort results by descending score
+        return sorted(results, key=lambda r: r.score, reverse=True)
 
     def _get_parser(self, path: str):
         filename = path.split("/")[-1]

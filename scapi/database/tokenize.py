@@ -13,5 +13,22 @@ def normalize(text: str) -> str:
     return text
 
 
-def tokenize(text: str) -> set[str]:
+def words(text: str) -> set[str]:
     return set(normalize(text).split(" "))
+
+
+def ngrams(token: str, n: int = 3) -> set[str]:
+    if not token:
+        return set()
+
+    padded = f"#{token}#"
+
+    ngrams = set()
+    L = len(padded) - n + 1
+    for i in range(L):
+        ngrams.add(padded[i : i + n])
+
+    if len(token) < n:
+        ngrams.add(token)
+
+    return ngrams

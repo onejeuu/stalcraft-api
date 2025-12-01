@@ -32,7 +32,7 @@ class AppClient(SharedClient):
             token (optional): Created application token.
             client_id (optional): Application client identifier.
             client_secret (optional): Application client secret.
-            base_url (optional): API server base URL. Defaults to `PRODUCTION`.
+            base_url (optional): API server base URL. Defaults to `http://eapi.stalcraft.net`.
             timeout (optional): Request timeout in seconds. Defaults to `60s`.
             json (optional): Return JSON instead of models. Defaults to `False`.
         """
@@ -73,7 +73,7 @@ class AppClient(SharedClient):
         clan_id: str,
     ) -> ClanEndpoint:
         """
-        Factory method for public clan operations.
+        Factory method for clan endpoint.
 
         Args:
             clan_id: Clan identifier.

@@ -20,7 +20,6 @@ class TokenHTTPClient(HTTPClient):
         super().__init__(base_url=base_url, timeout=timeout)
 
         self._token = token
-        self._payload: TokenPayload = {}
 
         self._headers.update({"Content-Type": "application/json"})
 
@@ -28,7 +27,6 @@ class TokenHTTPClient(HTTPClient):
             self._headers.update(headers)
 
         if token:
-            self._payload = self._validate_token(token)
             self._headers.update({"Authorization": f"Bearer {self._token}"})
 
     @property
@@ -41,8 +39,4 @@ class TokenHTTPClient(HTTPClient):
         """Update authentication token."""
 
         self._token = new_token
-        self._payload = self._validate_token(new_token)
         self._headers["Authorization"] = f"Bearer {self._token}"
-
-    def _validate_token(self, token: str) -> Any:
-        return None

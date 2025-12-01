@@ -11,7 +11,7 @@ from scapi.http.types import Listing
 
 
 class AuctionEndpoint(APIClient):
-    """Endpoint for auction operations on specific item."""
+    """Auction endpoint for specified item."""
 
     def __init__(
         self,

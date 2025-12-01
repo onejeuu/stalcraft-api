@@ -8,7 +8,7 @@ from .shared import ClanEndpoint
 
 
 class UserClanEndpoint(ClanEndpoint):
-    """Endpoint for user specific clan operations."""
+    """User specific clan endpoint for specified clan."""
 
     async def members(
         self,

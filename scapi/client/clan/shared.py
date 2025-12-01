@@ -9,7 +9,7 @@ from scapi.http.client import HTTPClient
 
 
 class ClanEndpoint(APIClient):
-    """Endpoint for public clan information."""
+    """Clan endpoint for specified clan."""
 
     def __init__(
         self,

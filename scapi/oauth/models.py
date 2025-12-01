@@ -42,7 +42,7 @@ class UserToken(TokenResponse):
 
 
 class UserInfo(OAuthModel):
-    """User EXBO account information."""
+    """EXBO account information."""
 
     id: int
     uuid: UUID

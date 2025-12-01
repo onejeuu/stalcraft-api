@@ -27,7 +27,7 @@ class SharedClient(ABC, APIClient):
         Initialize shared client.
 
         Args:
-            base_url (optional): API server base URL. Defaults to `PRODUCTION`.
+            base_url (optional): API server base URL. Defaults to `http://eapi.stalcraft.net`.
             json (optional): Return JSON instead of models. Defaults to `False`.
         """
 
@@ -188,7 +188,7 @@ class SharedClient(ABC, APIClient):
         item_id: str,
     ) -> AuctionEndpoint:
         """
-        Factory method for auction endpoint operations.
+        Factory method for auction endpoint.
 
         Args:
             item_id: Item identifier.

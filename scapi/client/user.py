@@ -27,7 +27,7 @@ class UserClient(SharedClient):
 
         Args:
             token: User access token.
-            base_url (optional): API server base URL. Defaults to `PRODUCTION`.
+            base_url (optional): API server base URL. Defaults to `http://eapi.stalcraft.net`.
             timeout (optional): Request timeout in seconds. Defaults to `60s`.
             json (optional): Return JSON instead of models. Defaults to `False`.
         """
@@ -98,7 +98,7 @@ class UserClient(SharedClient):
         clan_id: str,
     ) -> UserClanEndpoint:
         """
-        Factory method for user specific clan operations.
+        Factory method for user specific clan endpoint.
 
         Args:
             clan_id: Clan identifier.

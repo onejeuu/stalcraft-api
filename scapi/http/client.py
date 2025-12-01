@@ -22,10 +22,10 @@ Data: TypeAlias = Json | str | bytes
 
 
 class HTTPClient:
-    """Async HTTP requests client."""
+    """HTTP requests client."""
 
-    _TTL_DNS_CACHE = 300
-    _STREAM_CHUNK_SIZE = 1024 * 8
+    _TTL_DNS_CACHE: int = 300
+    _STREAM_CHUNK_SIZE: int = 1024 * 8
 
     def __init__(
         self,

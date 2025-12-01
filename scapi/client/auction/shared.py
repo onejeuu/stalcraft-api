@@ -1,5 +1,8 @@
+from typing import Optional
+
 from scapi.client import models
-from scapi.defaults import Default
+from scapi.config import Config
+from scapi.consts import Defaults
 from scapi.enums import Order, Region, SortAuction
 from scapi.http.api import APIClient
 from scapi.http.client import HTTPClient
@@ -15,8 +18,7 @@ class AuctionEndpoint(APIClient):
         *,
         http: HTTPClient,
         item_id: str,
-        region: str | Region = Default.REGION,
-        json: bool = Default.JSON,
+        json: bool = Defaults.JSON,
     ):
         """
         Initialize auction endpoint.
@@ -24,22 +26,21 @@ class AuctionEndpoint(APIClient):
         Args:
             http: HTTP client instance.
             item_id: Item identifier.
-            region (optional): Game server region. Defaults to `RU`.
             json (optional): Return JSON instead of models. Defaults to `False`.
         """
 
         self._http = http
         self._item_id = item_id
-        self._region = region
         self._json = json
 
     async def lots(
         self,
-        limit: int = Default.LIMIT,
-        offset: int = Default.OFFSET,
-        sort: str | SortAuction = Default.SORT_AUCTION,
-        order: str | Order = Default.ORDER,
-        additional: bool = Default.ADDITIONAL,
+        limit: Optional[int] = None,
+        offset: Optional[int] = None,
+        sort: Optional[str | SortAuction] = None,
+        order: Optional[str | Order] = None,
+        additional: Optional[bool] = None,
+        region: Optional[str | Region] = None,
     ) -> Listing[models.AuctionLot]:
         """
         Retrieve active auction lots for item.
@@ -55,8 +56,15 @@ class AuctionEndpoint(APIClient):
             Paginated auction lots listing.
         """
 
+        limit = limit or Config.LIMIT
+        offset = offset or Config.OFFSET
+        sort = sort or Config.SORT_AUCTION
+        order = order or Config.ORDER
+        additional = additional or Config.ADDITIONAL
+        region = region or Config.REGION
+
         response = await self._http.GET(
-            url=f"{self._region}/auction/{self._item_id}/lots",
+            url=f"{region}/auction/{self._item_id}/lots",
             params=Params(
                 limit=limit,
                 offset=offset,
@@ -70,9 +78,10 @@ class AuctionEndpoint(APIClient):
 
     async def price_history(
         self,
-        limit: int = Default.LIMIT,
-        offset: int = Default.OFFSET,
-        additional: bool = Default.ADDITIONAL,
+        limit: Optional[int] = None,
+        offset: Optional[int] = None,
+        additional: Optional[bool] = None,
+        region: Optional[str | Region] = None,
     ) -> Listing[models.AuctionPrice]:
         """
         Retrieve item price history.
@@ -86,8 +95,13 @@ class AuctionEndpoint(APIClient):
             Paginated price history listing.
         """
 
+        limit = limit or Config.LIMIT
+        offset = offset or Config.OFFSET
+        additional = additional or Config.ADDITIONAL
+        region = region or Config.REGION
+
         response = await self._http.GET(
-            url=f"{self._region}/auction/{self._item_id}/history",
+            url=f"{region}/auction/{self._item_id}/history",
             params=Params(
                 limit=limit,
                 offset=offset,
@@ -98,4 +112,4 @@ class AuctionEndpoint(APIClient):
         return self._parse(response, models.AuctionPrice, ("prices", "total"))
 
     def __repr__(self):
-        return f"{self.__class__.__name__}(item_id='{self._item_id}', region='{self._region}', http={self._http})"
+        return f"{self.__class__.__name__}(item_id='{self._item_id}', http={self._http})"

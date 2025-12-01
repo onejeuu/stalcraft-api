@@ -1,8 +1,9 @@
-from typing import List
+from typing import List, Optional
 
 from scapi import exceptions
 from scapi.client import models
-from scapi.defaults import Default
+from scapi.config import Config
+from scapi.consts import Defaults
 from scapi.enums import Region
 from scapi.http.auth.token import TokenHTTPClient
 
@@ -17,9 +18,9 @@ class UserClient(SharedClient):
         self,
         *,
         token: str,
-        base_url: str = Default.BASE_URL,
-        timeout: int = Default.TIMEOUT,
-        json: bool = Default.JSON,
+        base_url: str = Defaults.BASE_URL,
+        timeout: int = Defaults.TIMEOUT,
+        json: bool = Defaults.JSON,
     ):
         """
         Initialize user client with authentication token.
@@ -48,7 +49,7 @@ class UserClient(SharedClient):
 
     async def characters(
         self,
-        region: str | Region = Default.REGION,
+        region: Optional[str | Region] = None,
     ) -> List[models.Character]:
         """
         Retrieve user characters.
@@ -60,6 +61,8 @@ class UserClient(SharedClient):
             List of user characters.
         """
 
+        region = region or Config.REGION
+
         response = await self._http.GET(
             url=f"{region}/characters",
         )
@@ -69,7 +72,7 @@ class UserClient(SharedClient):
     async def friends(
         self,
         character: str,
-        region: str | Region = Default.REGION,
+        region: Optional[str | Region] = None,
     ) -> List[str]:
         """
         Retrieve user character friends list.
@@ -82,6 +85,8 @@ class UserClient(SharedClient):
             List of user friends character names.
         """
 
+        region = region or Config.REGION
+
         response = await self._http.GET(
             f"{region}/friends/{character}",
         )
@@ -91,17 +96,15 @@ class UserClient(SharedClient):
     def clan(
         self,
         clan_id: str,
-        region: str | Region = Default.REGION,
     ) -> UserClanEndpoint:
         """
         Factory method for user specific clan operations.
 
         Args:
             clan_id: Clan identifier.
-            region (optional): Game server region. Defaults to `RU`.
 
         Returns:
             User clan endpoint instance.
         """
 
-        return UserClanEndpoint(clan_id=clan_id, region=region, http=self._http, json=self._json)
+        return UserClanEndpoint(clan_id=clan_id, http=self._http, json=self._json)

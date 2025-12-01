@@ -2,8 +2,7 @@ import warnings
 from typing import Optional
 
 from scapi import exceptions
-from scapi.defaults import Default
-from scapi.enums import Region
+from scapi.consts import Defaults
 from scapi.http.auth.creds import CredentialsHTTPClient
 from scapi.http.auth.token import TokenHTTPClient
 
@@ -20,9 +19,9 @@ class AppClient(SharedClient):
         token: Optional[str] = None,
         client_id: Optional[str] = None,
         client_secret: Optional[str] = None,
-        base_url: str = Default.BASE_URL,
-        timeout: int = Default.TIMEOUT,
-        json: bool = Default.JSON,
+        base_url: str = Defaults.BASE_URL,
+        timeout: int = Defaults.TIMEOUT,
+        json: bool = Defaults.JSON,
     ):
         """
         Initialize application client with authentication credentials.
@@ -72,17 +71,15 @@ class AppClient(SharedClient):
     def clan(
         self,
         clan_id: str,
-        region: str | Region = Default.REGION,
     ) -> ClanEndpoint:
         """
         Factory method for public clan operations.
 
         Args:
             clan_id: Clan identifier.
-            region (optional): Game server region. Defaults to `RU`.
 
         Returns:
             Clan endpoint instance.
         """
 
-        return ClanEndpoint(clan_id=clan_id, region=region, http=self._http, json=self._json)
+        return ClanEndpoint(clan_id=clan_id, http=self._http, json=self._json)

@@ -3,7 +3,8 @@ from datetime import datetime
 from typing import Optional
 
 from scapi.client import models
-from scapi.defaults import Default
+from scapi.config import Config
+from scapi.consts import Defaults
 from scapi.enums import OperationsMap, Order, Region, SortAuction
 from scapi.http.api import APIClient
 from scapi.http.client import HTTPClient
@@ -19,8 +20,8 @@ class SharedClient(ABC, APIClient):
     def __init__(
         self,
         *,
-        base_url: str = Default.BASE_URL,
-        json: bool = Default.JSON,
+        base_url: str = Defaults.BASE_URL,
+        json: bool = Defaults.JSON,
     ):
         """
         Initialize shared client.
@@ -57,7 +58,7 @@ class SharedClient(ABC, APIClient):
 
     async def emission(
         self,
-        region: str | Region = Default.REGION,
+        region: Optional[str | Region] = None,
     ) -> models.EmissionState:
         """
         Get current emission state.
@@ -69,6 +70,8 @@ class SharedClient(ABC, APIClient):
             Emission state.
         """
 
+        region = region or Config.REGION
+
         response = await self._http.GET(
             url=f"{region}/emission",
         )
@@ -78,7 +81,7 @@ class SharedClient(ABC, APIClient):
     async def profile(
         self,
         username: str,
-        region: str | Region = Default.REGION,
+        region: Optional[str | Region] = None,
     ) -> models.CharacterProfile:
         """
         Retrieve public character profile including alliance, stats, and clan affiliation.
@@ -91,6 +94,8 @@ class SharedClient(ABC, APIClient):
             Public character profile data.
         """
 
+        region = region or Config.REGION
+
         response = await self._http.GET(
             url=f"{region}/character/by-name/{username}/profile",
         )
@@ -99,9 +104,9 @@ class SharedClient(ABC, APIClient):
 
     async def clans(
         self,
-        limit: int = Default.LIMIT,
-        offset: int = Default.OFFSET,
-        region: str | Region = Default.REGION,
+        limit: Optional[int] = None,
+        offset: Optional[int] = None,
+        region: Optional[str | Region] = None,
     ) -> Listing[models.ClanInfo]:
         """
         List all registered clans.
@@ -115,6 +120,10 @@ class SharedClient(ABC, APIClient):
             Paginated clan listing.
         """
 
+        limit = limit or Config.LIMIT
+        offset = offset or Config.OFFSET
+        region = region or Config.REGION
+
         response = await self._http.GET(
             url=f"{region}/clans",
             params=Params(limit=limit, offset=offset),
@@ -124,15 +133,15 @@ class SharedClient(ABC, APIClient):
 
     async def operations_sessions(
         self,
-        limit: int = Default.LIMIT,
-        offset: int = Default.OFFSET,
-        sort: str | SortAuction = Default.SORT_OPERATION,
-        order: str | Order = Default.ORDER,
+        limit: Optional[int] = None,
+        offset: Optional[int] = None,
+        sort: Optional[str | SortAuction] = None,
+        order: Optional[str | Order] = None,
         map: Optional[str | OperationsMap] = None,
         username: Optional[str] = None,
         before: Optional[datetime] = None,
         after: Optional[datetime] = None,
-        region: str | Region = Default.REGION,
+        region: Optional[str | Region] = None,
     ) -> Listing[models.OperationSession]:
         """
         Returns list of operation sessions.
@@ -151,6 +160,12 @@ class SharedClient(ABC, APIClient):
         Returns:
             Paginated operations sessions listing.
         """
+
+        limit = limit or Config.LIMIT
+        offset = offset or Config.OFFSET
+        sort = sort or Config.SORT_OPERATION
+        order = order or Config.ORDER
+        region = region or Config.REGION
 
         response = await self._http.GET(
             url=f"{region}/operations/sessions",
@@ -171,17 +186,15 @@ class SharedClient(ABC, APIClient):
     def auction(
         self,
         item_id: str,
-        region: str | Region = Default.REGION,
     ) -> AuctionEndpoint:
         """
         Factory method for auction endpoint operations.
 
         Args:
             item_id: Item identifier.
-            region (optional): Game server region. Defaults to `RU`.
 
         Returns:
             Auction endpoint instance.
         """
 
-        return AuctionEndpoint(item_id=item_id, region=region, http=self._http, json=self._json)
+        return AuctionEndpoint(item_id=item_id, http=self._http, json=self._json)

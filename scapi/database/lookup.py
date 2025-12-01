@@ -5,39 +5,16 @@ from typing import Any, Optional
 
 from cachetools import TTLCache
 
+from scapi.config import Config
 from scapi.enums import Realm
 
 from .enums import IndexFile
 from .github import GitHubClient
 from .index import Data, Lookup, SearchIndex
+from .state import CommitsState
 
 
 SYNC_FILES: list[str] = [f"{realm}/{file}" for realm in Realm for file in IndexFile]
-
-
-class CommitsState:
-    """Commit state tracker with TTL cache for remote commit."""
-
-    def __init__(self, ttl: float):
-        self.local = ""
-        self._cache = TTLCache(maxsize=1, ttl=ttl)
-
-    @property
-    def remote(self) -> str:
-        """Cached remote commit hash."""
-        return self._cache.get("remote", "")
-
-    @remote.setter
-    def remote(self, value: str) -> None:
-        self._cache["remote"] = value
-
-    @property
-    def uptodate(self) -> bool:
-        """Local and remote commit equality."""
-        return bool(self.local and self.local == self.remote)
-
-    def __repr__(self):
-        return f"{self.__class__.__name__}(local='{self.local}', remote='{self.remote}', uptodate={self.uptodate})"
 
 
 class DatabaseLookup:
@@ -46,7 +23,7 @@ class DatabaseLookup:
     def __init__(
         self,
         github: Optional[GitHubClient] = None,
-        realm: str | Realm = Realm.RU,
+        realm: Optional[str | Realm] = None,
         threshold: float = 0.1,
         commit_ttl: float = 300,
         cache_ttl: float = 86400,
@@ -57,7 +34,7 @@ class DatabaseLookup:
 
         Args:
             github (optional): GitHub client instance.
-            realm (optional): Game version realm. Defaults to `RU`.
+            realm (optional): Default game version realm. Defaults to `RU`.
             threshold (optional): Default search similarity threshold (`0.0`-`1.0`). Defaults to `0.1`.
             commit_ttl (optional): Remote commit cache TTL seconds. Defaults to `300s` (`5 minute`).
             cache_ttl (optional): Cache TTL seconds. Defaults to `86400s` (`1 day`).
@@ -97,7 +74,7 @@ class DatabaseLookup:
             Entity json data or None.
         """
 
-        realm = realm or self._realm
+        realm = realm or self._realm or Config.REALM
         path = f"{realm}/{filename}"
 
         index = await self._index(path)
@@ -123,7 +100,7 @@ class DatabaseLookup:
             List of search results sorted by relevance.
         """
 
-        realm = realm or self._realm
+        realm = realm or self._realm or Config.REALM
         path = f"{realm}/{filename}"
 
         threshold = threshold if threshold is not None else self._threshold
@@ -202,7 +179,7 @@ class DatabaseLookup:
             Item json data.
         """
 
-        realm = realm or self._realm
+        realm = realm or self._realm or Config.REALM
         path = f"{realm}/{path}"
         lvl = max(0, min(15, upgrade_level))
 
@@ -235,7 +212,7 @@ class DatabaseLookup:
             Icon binary data.
         """
 
-        realm = realm or self._realm
+        realm = realm or self._realm or Config.REALM
         path = f"{realm}/{path}"
 
         if path in self._cache:

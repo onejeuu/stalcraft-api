@@ -1,6 +1,6 @@
 from typing import Any, Dict, Optional, TypeAlias
 
-from scapi.defaults import Default
+from scapi.consts import Defaults
 from scapi.http.client import Headers, HTTPClient
 
 
@@ -14,7 +14,7 @@ class TokenHTTPClient(HTTPClient):
         self,
         token: Optional[str] = None,
         base_url: str = "",
-        timeout: int = Default.TIMEOUT,
+        timeout: int = Defaults.TIMEOUT,
         headers: Optional[Headers] = None,
     ):
         super().__init__(base_url=base_url, timeout=timeout)

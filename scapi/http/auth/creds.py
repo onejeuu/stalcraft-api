@@ -1,6 +1,6 @@
 from typing import Optional
 
-from scapi.defaults import Default
+from scapi.consts import Defaults
 from scapi.http.client import Headers, HTTPClient
 
 
@@ -11,8 +11,8 @@ class CredentialsHTTPClient(HTTPClient):
         self,
         client_id: str,
         client_secret: str,
-        base_url: str = Default.BASE_URL,
-        timeout: int = Default.TIMEOUT,
+        base_url: str = "",
+        timeout: int = Defaults.TIMEOUT,
         headers: Optional[Headers] = None,
     ):
         super().__init__(base_url=base_url, timeout=timeout)

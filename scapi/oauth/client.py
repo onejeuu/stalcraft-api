@@ -1,7 +1,6 @@
 from typing import Optional
 
-from scapi.consts import BaseUrl
-from scapi.defaults import Default
+from scapi.consts import BaseUrl, Defaults
 from scapi.http.api import APIClient
 from scapi.http.client import HTTPClient
 from scapi.http.params import Params
@@ -18,9 +17,9 @@ class OAuthClient(APIClient):
         client_id: str,
         client_secret: str,
         base_url: str = BaseUrl.OAUTH,
-        redirect_uri: str = Default.REDIRECT_URI,
-        scope: str = Default.SCOPE,
-        json: bool = Default.JSON,
+        redirect_uri: str = Defaults.REDIRECT_URI,
+        scope: str = Defaults.SCOPE,
+        json: bool = Defaults.JSON,
     ):
         """
         Initialize OAuth client with application credentials.

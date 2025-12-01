@@ -1,4 +1,8 @@
+from typing import Optional
+
 from scapi.client import models
+from scapi.config import Config
+from scapi.enums import Region
 
 from .shared import ClanEndpoint
 
@@ -8,18 +12,24 @@ class UserClanEndpoint(ClanEndpoint):
 
     async def members(
         self,
+        region: Optional[str | Region] = None,
     ) -> list[models.ClanMember]:
         """
         Retrieve clan member list.
 
         **WARN:** Requires user clan membership.
 
+        Args:
+            region (optional): Game server region. Defaults to `RU`.
+
         Returns:
             List of clan members with ranks and join times.
         """
 
+        region = region or Config.REGION
+
         response = await self._http.GET(
-            url=f"{self._region}/clan/{self._clan_id}/members",
+            url=f"{region}/clan/{self._clan_id}/members",
         )
 
         return self._parse(response, models.ClanMember)

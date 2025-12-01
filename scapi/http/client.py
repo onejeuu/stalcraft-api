@@ -9,7 +9,7 @@ import aiofiles
 from aiohttp import ClientResponse, ClientSession, ClientTimeout, TCPConnector
 from pydantic import ValidationError
 
-from scapi.defaults import Default
+from scapi.consts import Defaults
 from scapi.exceptions import RequestError
 
 from .params import Params
@@ -31,7 +31,7 @@ class HTTPClient:
         self,
         *,
         base_url: str = "",
-        timeout: int = Default.TIMEOUT,
+        timeout: int = Defaults.TIMEOUT,
         headers: Optional[Headers] = None,
     ):
         """

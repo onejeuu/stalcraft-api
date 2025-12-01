@@ -55,13 +55,13 @@ class UserClient(SharedClient):
         Retrieve user characters.
 
         Args:
-            region (optional): Game server region. Defaults to `RU`.
+            region (optional): Game server region. Defaults to `ru`.
 
         Returns:
             List of user characters.
         """
 
-        region = region or Config.REGION
+        region = (region or Config.REGION).lower()
 
         response = await self._http.GET(
             url=f"{region}/characters",
@@ -79,13 +79,13 @@ class UserClient(SharedClient):
 
         Args:
             character: User character name.
-            region (optional): Game server region. Defaults to `RU`.
+            region (optional): Game server region. Defaults to `ru`.
 
         Returns:
             List of user friends character names.
         """
 
-        region = region or Config.REGION
+        region = (region or Config.REGION).lower()
 
         response = await self._http.GET(
             f"{region}/friends/{character}",

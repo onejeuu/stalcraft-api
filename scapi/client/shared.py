@@ -64,13 +64,13 @@ class SharedClient(ABC, APIClient):
         Get current emission state.
 
         Args:
-            region (optional): Game server region. Defaults to `RU`.
+            region (optional): Game server region. Defaults to `ru`.
 
         Returns:
             Emission state.
         """
 
-        region = region or Config.REGION
+        region = (region or Config.REGION).lower()
 
         response = await self._http.GET(
             url=f"{region}/emission",
@@ -88,13 +88,13 @@ class SharedClient(ABC, APIClient):
 
         Args:
             username: Character name.
-            region (optional): Game server region. Defaults to `RU`.
+            region (optional): Game server region. Defaults to `ru`.
 
         Returns:
             Public character profile data.
         """
 
-        region = region or Config.REGION
+        region = (region or Config.REGION).lower()
 
         response = await self._http.GET(
             url=f"{region}/character/by-name/{username}/profile",
@@ -114,15 +114,15 @@ class SharedClient(ABC, APIClient):
         Args:
             limit (optional): Amount of clans to return, starting from offset, (`0`-`100`). Defaults to `20`.
             offset (optional): Amount of clans to skip. Defaults to `0`.
-            region (optional): Game server region. Defaults to `RU`.
+            region (optional): Game server region. Defaults to `ru`.
 
         Returns:
             Paginated clan listing.
         """
 
-        limit = limit or Config.LIMIT
-        offset = offset or Config.OFFSET
-        region = region or Config.REGION
+        limit = max(0, min(200, limit or Config.LIMIT))
+        offset = max(0, offset or Config.OFFSET)
+        region = (region or Config.REGION).lower()
 
         response = await self._http.GET(
             url=f"{region}/clans",
@@ -139,8 +139,8 @@ class SharedClient(ABC, APIClient):
         order: Optional[str | Order] = None,
         map: Optional[str | OperationsMap] = None,
         username: Optional[str] = None,
-        before: Optional[datetime] = None,
-        after: Optional[datetime] = None,
+        before: Optional[str | datetime] = None,
+        after: Optional[str | datetime] = None,
         region: Optional[str | Region] = None,
     ) -> Listing[models.OperationSession]:
         """
@@ -149,23 +149,30 @@ class SharedClient(ABC, APIClient):
         Args:
             limit (optional): Amount of sessions to return, starting from offset, (`0`-`100`). Defaults to `20`.
             offset (optional): Amount of sessions to skip. Defaults to `0`.
-            sort (optional): Sorting field. Defaults to `DATE_FINISH`.
-            order (optional): Sorting direction. Defaults to `ASCENDING`.
+            sort (optional): Sorting field. Defaults to `date_finish`.
+            order (optional): Sorting direction. Defaults to `ascending`.
             map (optional): Filter by operations map name.
             username (optional): Filter by character name.
             before (optional): Filter sessions finished before date.
             after (optional): Filter sessions finished after date.
-            region (optional): Game server region. Defaults to `RU`.
+            region (optional): Game server region. Defaults to `ru`.
 
         Returns:
             Paginated operations sessions listing.
         """
 
-        limit = limit or Config.LIMIT
-        offset = offset or Config.OFFSET
-        sort = sort or Config.SORT_OPERATION
-        order = order or Config.ORDER
-        region = region or Config.REGION
+        limit = max(0, min(100, limit or Config.LIMIT))
+        offset = max(0, offset or Config.OFFSET)
+        sort = (sort or Config.SORT_OPERATION).lower()
+        order = (order or Config.ORDER).lower()
+        map = map.lower() if map else None
+        region = (region or Config.REGION).lower()
+
+        if before and isinstance(before, datetime):
+            before = before.strftime("%Y-%m-%dT%H:%M:%SZ")
+
+        if after and isinstance(after, datetime):
+            after = after.strftime("%Y-%m-%dT%H:%M:%SZ")
 
         response = await self._http.GET(
             url=f"{region}/operations/sessions",
@@ -176,8 +183,8 @@ class SharedClient(ABC, APIClient):
                 order=order,
                 map=map,
                 username=username,
-                before=before.strftime("%Y-%m-%dT%H:%M:%SZ") if before else None,
-                after=after.strftime("%Y-%m-%dT%H:%M:%SZ") if after else None,
+                before=before,
+                after=after,
             ),
         )
 

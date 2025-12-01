@@ -34,7 +34,7 @@ class DatabaseLookup:
 
         Args:
             github (optional): GitHub client instance.
-            realm (optional): Default game version realm. Defaults to `RU`.
+            realm (optional): Default game version realm. Defaults to `ru`.
             threshold (optional): Default search similarity threshold (`0.0`-`1.0`). Defaults to `0.1`.
             commit_ttl (optional): Remote commit cache TTL seconds. Defaults to `300s` (`5 minute`).
             cache_ttl (optional): Cache TTL seconds. Defaults to `86400s` (`1 day`).
@@ -67,14 +67,14 @@ class DatabaseLookup:
 
         Args:
             entity_id: Entity identifier.
-            filename (optional): Index file name. Defaults to `LISTING`.
-            realm (optional): Game version realm. Defaults to `RU`.
+            filename (optional): Index file name. Defaults to `listing.json`.
+            realm (optional): Game version realm. Defaults to `ru`.
 
         Returns:
             Entity json data or None.
         """
 
-        realm = realm or self._realm or Config.REALM
+        realm = (realm or self._realm or Config.REALM).lower()
         path = f"{realm}/{filename}"
 
         index = await self._index(path)
@@ -92,15 +92,15 @@ class DatabaseLookup:
 
         Args:
             query: Search text.
-            filename (optional): Index file name. Defaults to `LISTING`.
-            realm (optional): Game version realm. Defaults to `RU`.
+            filename (optional): Index file name. Defaults to `listing.json`.
+            realm (optional): Game version realm. Defaults to `ru`.
             threshold (optional): Override similarity threshold (`0.0`-`1.0`). Defaults to `0.1`.
 
         Returns:
             List of search results sorted by relevance.
         """
 
-        realm = realm or self._realm or Config.REALM
+        realm = (realm or self._realm or Config.REALM).lower()
         path = f"{realm}/{filename}"
 
         threshold = threshold if threshold is not None else self._threshold
@@ -120,8 +120,8 @@ class DatabaseLookup:
 
         Args:
             query: Search text.
-            filename (optional): Index file name. Defaults to `LISTING`.
-            realm (optional): Game version realm. Defaults to `RU`.
+            filename (optional): Index file name. Defaults to `listing.json`.
+            realm (optional): Game version realm. Defaults to `ru`.
             threshold (optional): Override similarity threshold (`0.0`-`1.0`). Defaults to `0.1`.
 
         Returns:
@@ -137,30 +137,6 @@ class DatabaseLookup:
 
         return results[0] if results else None
 
-    async def sync(
-        self,
-        force: bool = False,
-    ) -> bool:
-        """
-        Synchronize local database with remote.
-
-        Args:
-            force (optional): Force sync regardless of commit state.
-
-        Returns:
-            True if sync was performed, False if already up-to-date.
-        """
-
-        await self._validate_remote_commit()
-
-        if self._commits.uptodate and not force:
-            return False
-
-        self._update_commit()
-
-        await asyncio.gather(*[self._download(file) for file in SYNC_FILES])
-        return True
-
     async def item_info(
         self,
         path: str,
@@ -173,13 +149,13 @@ class DatabaseLookup:
         Args:
             path: Item data path.
             upgrade_level (optional): Item upgrade level (`0`-`15`). Defaults to `0`.
-            realm (optional): Game version realm. Defaults to `RU`.
+            realm (optional): Game version realm. Defaults to `ru`.
 
         Returns:
             Item json data.
         """
 
-        realm = realm or self._realm or Config.REALM
+        realm = (realm or self._realm or Config.REALM).lower()
         path = f"{realm}/{path}"
         lvl = max(0, min(15, upgrade_level))
 
@@ -206,13 +182,13 @@ class DatabaseLookup:
 
         Args:
             path: Icon file path.
-            realm (optional): Game version realm. Defaults to `RU`.
+            realm (optional): Game version realm. Defaults to `ru`.
 
         Returns:
             Icon binary data.
         """
 
-        realm = realm or self._realm or Config.REALM
+        realm = (realm or self._realm or Config.REALM).lower()
         path = f"{realm}/{path}"
 
         if path in self._cache:
@@ -222,6 +198,30 @@ class DatabaseLookup:
 
         self._cache[path] = data
         return data
+
+    async def sync(
+        self,
+        force: bool = False,
+    ) -> bool:
+        """
+        Synchronize local database with remote.
+
+        Args:
+            force (optional): Force sync regardless of commit state.
+
+        Returns:
+            True if sync was performed, False if already up-to-date.
+        """
+
+        await self._validate_remote_commit()
+
+        if self._commits.uptodate and not force:
+            return False
+
+        self._update_commit()
+
+        await asyncio.gather(*[self._download(file) for file in SYNC_FILES])
+        return True
 
     async def _index(self, path: str) -> SearchIndex:
         """Retrieve or build search index for path with commit validation."""

@@ -39,13 +39,13 @@ class ClanEndpoint(APIClient):
         Retrieve clan information.
 
         Args:
-            region (optional): Game server region. Defaults to `RU`.
+            region (optional): Game server region. Defaults to `ru`.
 
         Returns:
             Clan details.
         """
 
-        region = region or Config.REGION
+        region = (region or Config.REGION).lower()
 
         response = await self._http.GET(
             f"{region}/clan/{self._clan_id}/info",

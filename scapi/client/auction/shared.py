@@ -48,20 +48,20 @@ class AuctionEndpoint(APIClient):
         Args:
             limit (optional): Amount of lots to return (`0`-`100`). Defaults to `20`.
             offset (optional): Amount of lots to skip. Defaults to `0`.
-            sort (optional): Sorting field. Defaults to `TIME_CREATED`.
-            order (optional): Sorting direction. Defaults to `ASCENDING`.
+            sort (optional): Sorting field. Defaults to `time_created`.
+            order (optional): Sorting direction. Defaults to `ascending`.
             additional (optional): Include additional json data. Defaults to `False`.
 
         Returns:
             Paginated auction lots listing.
         """
 
-        limit = limit or Config.LIMIT
-        offset = offset or Config.OFFSET
-        sort = sort or Config.SORT_AUCTION
-        order = order or Config.ORDER
+        limit = max(0, min(200, limit or Config.LIMIT))
+        offset = max(0, offset or Config.OFFSET)
+        sort = (sort or Config.SORT_AUCTION).lower()
+        order = (order or Config.ORDER).lower()
         additional = additional or Config.ADDITIONAL
-        region = region or Config.REGION
+        region = (region or Config.REGION).lower()
 
         response = await self._http.GET(
             url=f"{region}/auction/{self._item_id}/lots",
@@ -95,10 +95,10 @@ class AuctionEndpoint(APIClient):
             Paginated price history listing.
         """
 
-        limit = limit or Config.LIMIT
-        offset = offset or Config.OFFSET
+        limit = max(0, min(200, limit or Config.LIMIT))
+        offset = max(0, offset or Config.OFFSET)
         additional = additional or Config.ADDITIONAL
-        region = region or Config.REGION
+        region = (region or Config.REGION).lower()
 
         response = await self._http.GET(
             url=f"{region}/auction/{self._item_id}/history",

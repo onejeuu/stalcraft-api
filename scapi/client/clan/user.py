@@ -20,13 +20,13 @@ class UserClanEndpoint(ClanEndpoint):
         **WARN:** Requires user clan membership.
 
         Args:
-            region (optional): Game server region. Defaults to `RU`.
+            region (optional): Game server region. Defaults to `ru`.
 
         Returns:
             List of clan members with ranks and join times.
         """
 
-        region = region or Config.REGION
+        region = (region or Config.REGION).lower()
 
         response = await self._http.GET(
             url=f"{region}/clan/{self._clan_id}/members",

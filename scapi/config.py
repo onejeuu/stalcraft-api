@@ -7,13 +7,13 @@ class Config:
     """Global configuration settings."""
 
     REGION: ClassVar[str | Region] = Region.RU
-    """Game server region. Defaults to `RU`."""
+    """Game server region. Defaults to `ru`."""
 
     REALM: ClassVar[str | Realm] = Realm.RU
-    """Game version realm. Defaults to `RU`."""
+    """Game version realm. Defaults to `ru`."""
 
     LANGUAGE: ClassVar[str | Language] = Language.RU
-    """**UNUSED**. Entity localization. Defaults to `RU`."""
+    """**UNUSED**. Entity localization. Defaults to `ru`."""
 
     LIMIT: ClassVar[int] = 20
     """Pagination limit (`0`-`100`). Defaults to `20`."""
@@ -22,13 +22,13 @@ class Config:
     """Pagination offset. Defaults to `0`."""
 
     ORDER: ClassVar[str | Order] = Order.ASCENDING
-    """Result ordering direction. Defaults to `ASCENDING`."""
+    """Result ordering direction. Defaults to `ascending`."""
 
     SORT_AUCTION: ClassVar[str | SortAuction] = SortAuction.TIME_CREATED
-    """Auction sorting field. Defaults to `TIME_CREATED`."""
+    """Auction sorting field. Defaults to `time_created`."""
 
     SORT_OPERATION: ClassVar[str | SortOperations] = SortOperations.DATE_FINISH
-    """Operations sessions sorting field. Defaults to `DATE_FINISH`."""
+    """Operations sessions sorting field. Defaults to `date_finish`."""
 
     ADDITIONAL: ClassVar[bool] = False
     """Auction additional json data flag. Defaults to `False`."""

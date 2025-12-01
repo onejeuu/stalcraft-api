@@ -2,7 +2,7 @@ import warnings
 from typing import Optional
 
 from scapi import exceptions
-from scapi.consts import Defaults
+from scapi.consts import BaseUrl, Defaults
 from scapi.http.auth.creds import CredentialsHTTPClient
 from scapi.http.auth.token import TokenHTTPClient
 
@@ -19,7 +19,7 @@ class AppClient(SharedClient):
         token: Optional[str] = None,
         client_id: Optional[str] = None,
         client_secret: Optional[str] = None,
-        base_url: str = Defaults.BASE_URL,
+        base_url: str = BaseUrl.PRODUCTION,
         timeout: int = Defaults.TIMEOUT,
         json: bool = Defaults.JSON,
     ):

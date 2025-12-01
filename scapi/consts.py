@@ -17,11 +17,7 @@ class DatabaseRepository:
 class Defaults:
     """Default constant values."""
 
-    # Client
-    BASE_URL: str = BaseUrl.PRODUCTION
     TIMEOUT: int = 60
     JSON: bool = False
-
-    # OAuth
     REDIRECT_URI: str = "http://localhost"
     SCOPE: str = ""

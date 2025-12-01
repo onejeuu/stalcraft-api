@@ -4,7 +4,7 @@ from typing import Optional
 
 from scapi.client import models
 from scapi.config import Config
-from scapi.consts import Defaults
+from scapi.consts import BaseUrl, Defaults
 from scapi.enums import OperationsMap, Order, Region, SortAuction
 from scapi.http.api import APIClient
 from scapi.http.client import HTTPClient
@@ -20,7 +20,7 @@ class SharedClient(ABC, APIClient):
     def __init__(
         self,
         *,
-        base_url: str = Defaults.BASE_URL,
+        base_url: str = BaseUrl.PRODUCTION,
         json: bool = Defaults.JSON,
     ):
         """

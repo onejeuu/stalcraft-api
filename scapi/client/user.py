@@ -3,7 +3,7 @@ from typing import List, Optional
 from scapi import exceptions
 from scapi.client import models
 from scapi.config import Config
-from scapi.consts import Defaults
+from scapi.consts import BaseUrl, Defaults
 from scapi.enums import Region
 from scapi.http.auth.token import TokenHTTPClient
 
@@ -18,7 +18,7 @@ class UserClient(SharedClient):
         self,
         *,
         token: str,
-        base_url: str = Defaults.BASE_URL,
+        base_url: str = BaseUrl.PRODUCTION,
         timeout: int = Defaults.TIMEOUT,
         json: bool = Defaults.JSON,
     ):

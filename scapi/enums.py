@@ -5,6 +5,8 @@ from strenum import UppercaseStrEnum as UpStrEnum
 
 
 class Region(StrEnum):
+    """Game server region for STALCRAFT API requests."""
+
     RU = RUSSIA = auto()
     EU = EUROPE = auto()
     NA = NORTH_AMERICA = auto()
@@ -12,11 +14,15 @@ class Region(StrEnum):
 
 
 class Realm(StrEnum):
+    """Game version with separate database."""
+
     RU = RUSSIA = auto()
     GLOBAL = auto()
 
 
 class Language(StrEnum):
+    """Supported localization languages."""
+
     RU = RUSSIAN = auto()
     EN = ENGLISH = auto()
     ES = SPANISH = auto()
@@ -25,6 +31,8 @@ class Language(StrEnum):
 
 
 class Alliance(StrEnum):
+    """Game alliance name."""
+
     STALKERS = auto()
     BANDITS = auto()
     DUTY = auto()
@@ -33,24 +41,9 @@ class Alliance(StrEnum):
     COVENANT = auto()
 
 
-class Order(StrEnum):
-    ASC = ASCENDING = auto()
-    DESC = DESCENDING = auto()
-
-
-class SortAuction(StrEnum):
-    TIME_CREATED = auto()
-    TIME_LEFT = auto()
-    CURRENT_PRICE = auto()
-    BUYOUT_PRICE = auto()
-
-
-class SortOperations(StrEnum):
-    DATE_FINISH = auto()
-    DIFFICULTY = auto()
-
-
 class ClanRank(UpStrEnum):
+    """Game clan member rank name."""
+
     RECRUIT = auto()
     COMMONER = auto()
     SOLDIER = auto()
@@ -60,20 +53,40 @@ class ClanRank(UpStrEnum):
     LEADER = auto()
 
 
+class Order(StrEnum):
+    """Results ordering direction."""
+
+    ASC = ASCENDING = auto()
+    DESC = DESCENDING = auto()
+
+
+class SortAuction(StrEnum):
+    """Auction results sorting criteria."""
+
+    TIME_CREATED = auto()
+    TIME_LEFT = auto()
+    CURRENT_PRICE = auto()
+    BUYOUT_PRICE = auto()
+
+
+class SortOperations(StrEnum):
+    """Operations session sorting criteria."""
+
+    DATE_FINISH = auto()
+    DIFFICULTY = auto()
+
+
+class OperationsMap(StrEnum):
+    """Operations session map names."""
+
+    BIG_CLEANUP = auto()
+    SHOCK_THERAPY = auto()
+
+
 class StatType(UpStrEnum):
+    """Statistic value type."""
+
     INTEGER = auto()
     DECIMAL = auto()
     DATE = auto()
     DURATION = auto()
-
-
-class EntityType(StrEnum):
-    LISTING = auto()
-    STATS = auto()
-    ACHIEVEMENTS = auto()
-    SETTLEMENTS = auto()
-
-
-class OperationsMap(StrEnum):
-    BIG_CLEANUP = auto()
-    SHOCK_THERAPY = auto()

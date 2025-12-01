@@ -6,6 +6,8 @@ from scapi.http.client import HTTPClient
 
 
 class ClanEndpoint(APIClient):
+    """Endpoint for public clan information."""
+
     def __init__(
         self,
         *,
@@ -14,6 +16,16 @@ class ClanEndpoint(APIClient):
         region: str | Region = Default.REGION,
         json: bool = Default.JSON,
     ):
+        """
+        Initialize clan endpoint.
+
+        Args:
+            http: HTTP client instance.
+            clan_id: Clan identifier.
+            region (optional): Game server region. Defaults to RU.
+            json (optional): Return raw JSON instead of validated models. Defaults to False.
+        """
+
         self._http = http
         self._clan_id = clan_id
         self._region = region
@@ -22,6 +34,13 @@ class ClanEndpoint(APIClient):
     async def info(
         self,
     ) -> models.ClanInfo:
+        """
+        Retrieve clan information.
+
+        Returns:
+            Clan details.
+        """
+
         response = await self._http.GET(
             f"{self._region}/clan/{self._clan_id}/info",
         )

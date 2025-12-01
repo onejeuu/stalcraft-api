@@ -5,19 +5,27 @@ from yarl import URL
 
 
 class ScApiException(Exception):
+    """Base exception for `scapi` errors."""
+
     pass
 
 
 class ClientError(ScApiException):
+    """Client request related error."""
+
     pass
 
 
 class CredentialsError(ClientError):
+    """Client missing credentials."""
+
     pass
 
 
 @dataclass
 class RequestError(ClientError):
+    """HTTP request error."""
+
     data: Any
     status: int
     method: str
@@ -40,20 +48,30 @@ class RequestError(ClientError):
 
 
 class BadRequestError(RequestError, codes={400}):
+    """Invalid request parameters or malformed data."""
+
     pass
 
 
 class UnauthorizedError(RequestError, codes={401}):
+    """Missing or invalid authentication credentials."""
+
     pass
 
 
 class NotFoundError(RequestError, codes={404}):
+    """Requested resource not found."""
+
     pass
 
 
 class RateLimitError(RequestError, codes={429}):
+    """API rate limit exceeded."""
+
     pass
 
 
 class ServerError(RequestError, codes={500, 502, 503, 504}):
+    """Server-side error during request."""
+
     pass

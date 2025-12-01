@@ -1,10 +1,10 @@
-from pathlib import Path
-
 from .consts import BaseUrl
 from .enums import Language, Order, Realm, Region, SortAuction, SortOperations
 
 
 class Default:
+    """Default values for parameters."""
+
     # Client
     BASE_URL = BaseUrl.PRODUCTION
     TIMEOUT = 60
@@ -28,6 +28,3 @@ class Default:
     # OAuth
     REDIRECT_URI = "http://localhost"
     SCOPE = ""
-
-    # Database
-    DATABASE_PATH = Path.home() / "scapi" / "stalcraft.db"

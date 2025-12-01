@@ -12,6 +12,8 @@ from .shared import SharedClient
 
 
 class AppClient(SharedClient):
+    """API Client for application specific endpoints."""
+
     def __init__(
         self,
         *,
@@ -22,6 +24,20 @@ class AppClient(SharedClient):
         timeout: int = Default.TIMEOUT,
         json: bool = Default.JSON,
     ):
+        """
+        Initialize application client with authentication credentials.
+
+        **NOTE:** Provide EITHER token OR both client_id and client_secret.
+
+        Args:
+            token (optional): Created application token.
+            client_id (optional): Application client identifier.
+            client_secret (optional): Application client secret.
+            base_url (optional): API server base URL. Defaults to production.
+            timeout (optional): Request timeout in seconds. Defaults to 60.
+            json (optional): Return raw JSON instead of validated models. Defaults to False.
+        """
+
         self._token = token
         self._client_id = client_id
         self._client_secret = client_secret
@@ -58,4 +74,15 @@ class AppClient(SharedClient):
         clan_id: str,
         region: str | Region = Default.REGION,
     ) -> ClanEndpoint:
+        """
+        Factory method for public clan operations.
+
+        Args:
+            clan_id: Clan identifier.
+            region (optional): Game server region. Defaults to RU.
+
+        Returns:
+            Clan endpoint instance.
+        """
+
         return ClanEndpoint(clan_id=clan_id, region=region, http=self._http, json=self._json)

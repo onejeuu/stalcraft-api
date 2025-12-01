@@ -22,6 +22,8 @@ Data: TypeAlias = Json | str | bytes
 
 
 class HTTPClient:
+    """Async HTTP requests client."""
+
     _TTL_DNS_CACHE = 300
     _STREAM_CHUNK_SIZE = 1024 * 8
 
@@ -32,6 +34,15 @@ class HTTPClient:
         timeout: int = Default.TIMEOUT,
         headers: Optional[Headers] = None,
     ):
+        """
+        Initialize HTTP client.
+
+        Args:
+            base_url (optional): Base URL for requests.
+            timeout (optional): Request timeout in seconds. Defaults to `60s`.
+            headers (optional): Default HTTP headers.
+        """
+
         self._base_url = base_url.rstrip("/")
         self._timeout = timeout
         self._headers = headers or {}
@@ -43,21 +54,11 @@ class HTTPClient:
 
     @property
     def ratelimit(self) -> RateLimit:
+        """Current ratelimit status."""
+
         return self._ratelimit
 
-    async def _create_session(self) -> ClientSession:
-        if self._session is None:
-            self._session = ClientSession(
-                timeout=ClientTimeout(total=self._timeout),
-                connector=TCPConnector(
-                    family=socket.AF_INET,
-                    ttl_dns_cache=self._TTL_DNS_CACHE,
-                    force_close=True,
-                ),
-            )
-        return self._session
-
-    async def _request(
+    async def request(
         self,
         method: str,
         url: str,
@@ -67,6 +68,22 @@ class HTTPClient:
         filename: Optional[str] = None,
         raw: bool = False,
     ) -> Any:
+        """
+        Send HTTP request.
+
+        Args:
+            method: HTTP method.
+            url: Request URL.
+            params (optional): Query parameters.
+            headers (optional): Request headers.
+            data (optional): Request body.
+            filename (optional): File path to streaming.
+            raw (optional): Return raw bytes without parsing.
+
+        Returns:
+            Parsed response data.
+        """
+
         url = urljoin(self._base_url + "/", url.lstrip("/"))
 
         # Prepare request options
@@ -74,7 +91,7 @@ class HTTPClient:
         rheaders = {**self._headers, **(headers or {})}
 
         # Create session
-        session = await self._create_session()
+        session = await self._use_session()
 
         # Send http request
         async with session.request(method=method, url=url, params=rparams, headers=rheaders, data=data) as response:
@@ -98,7 +115,23 @@ class HTTPClient:
 
             return data
 
+    async def _use_session(self) -> ClientSession:
+        """Create or reuse aiohttp client session."""
+
+        if self._session is None:
+            self._session = ClientSession(
+                timeout=ClientTimeout(total=self._timeout),
+                connector=TCPConnector(
+                    family=socket.AF_INET,
+                    ttl_dns_cache=self._TTL_DNS_CACHE,
+                    force_close=True,
+                ),
+            )
+        return self._session
+
     async def _parse(self, response: ClientResponse, raw: bool) -> Any:
+        """Parse response based on content type."""
+
         if not raw:
             content_type = response.headers.get("content-type", "").lower()
 
@@ -111,12 +144,16 @@ class HTTPClient:
         return await response.read()
 
     async def _stream_to_file(self, response: ClientResponse, filename: str) -> str:
+        """Stream response content to local file."""
+
         async with aiofiles.open(filename, "wb") as fp:
             async for chunk in response.content.iter_chunked(self._STREAM_CHUNK_SIZE):
                 await fp.write(chunk)
         return filename
 
     async def _update_ratelimit(self, response: ClientResponse) -> None:
+        """Update ratelimit values from response headers."""
+
         try:
             current = self._ratelimit.model_dump()
             updated = RateLimit.model_validate(response.headers).model_dump(exclude_none=True)
@@ -128,6 +165,8 @@ class HTTPClient:
             pass
 
     async def _on_error(self, response: ClientResponse) -> None:
+        """Handle HTTP error responses."""
+
         default = "Unknown error"
 
         try:
@@ -146,7 +185,7 @@ class HTTPClient:
         headers: Optional[Headers] = None,
         raw: bool = False,
     ):
-        return await self._request(
+        return await self.request(
             method="HEAD",
             url=url,
             params=params,
@@ -162,7 +201,7 @@ class HTTPClient:
         filename: Optional[str] = None,
         raw: bool = False,
     ):
-        return await self._request(
+        return await self.request(
             method="GET",
             url=url,
             params=params,
@@ -179,7 +218,7 @@ class HTTPClient:
         data: Optional[Data] = None,
         raw: bool = False,
     ):
-        return await self._request(
+        return await self.request(
             method="POST",
             url=url,
             params=params,
@@ -196,7 +235,7 @@ class HTTPClient:
         data: Optional[Data] = None,
         raw: bool = False,
     ):
-        return await self._request(
+        return await self.request(
             method="PUT",
             url=url,
             params=params,
@@ -212,7 +251,7 @@ class HTTPClient:
         headers: Optional[Headers] = None,
         raw: bool = False,
     ):
-        return await self._request(
+        return await self.request(
             method="DELETE",
             url=url,
             params=params,
@@ -228,7 +267,7 @@ class HTTPClient:
         data: Optional[Data] = None,
         raw: bool = False,
     ):
-        return await self._request(
+        return await self.request(
             method="PATCH",
             url=url,
             params=params,
@@ -236,6 +275,12 @@ class HTTPClient:
             headers=headers,
             raw=raw,
         )
+
+    async def close(self) -> None:
+        """Close client session."""
+
+        if self._session and not self._session.closed:
+            await self._session.close()
 
     def _cleanup(self) -> None:
         if self._session and not self._session.closed:
@@ -245,10 +290,6 @@ class HTTPClient:
                 loop.close()
             except Exception:
                 pass
-
-    async def close(self) -> None:
-        if self._session and not self._session.closed:
-            await self._session.close()
 
     async def __aenter__(self):
         return self

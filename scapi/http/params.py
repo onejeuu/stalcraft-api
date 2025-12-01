@@ -6,6 +6,8 @@ QueryParams: TypeAlias = Dict[str, str]
 
 
 class Params:
+    """HTTP query parameter container."""
+
     def __init__(self, **kwargs: Any) -> None:
         self._data: QueryParams = {k: str(v) for k, v in kwargs.items() if v is not None}
 

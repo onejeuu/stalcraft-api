@@ -19,6 +19,8 @@ class APIClient:
 
     @property
     def ratelimit(self) -> RateLimit:
+        """Current ratelimit status."""
+
         return self._http.ratelimit
 
     def _parse(
@@ -27,6 +29,8 @@ class APIClient:
         model: Optional[type[M]] = None,
         listing: Optional[tuple[str, str]] = None,
     ) -> Any:
+        """Parse http response into models or return raw."""
+
         if not model or self._json:
             return response
 

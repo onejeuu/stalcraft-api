@@ -12,6 +12,8 @@ class RateLimit(BaseModel):
 
     @property
     def estimated_used(self) -> Optional[int]:
+        """Estimated requests used based on limit and remaining."""
+
         if self.limit is not None and self.remaining is not None:
             return max(0, self.limit - self.remaining)
         return None

@@ -16,12 +16,15 @@ SYNC_FILES: list[str] = [f"{realm}/{file}" for realm in Realm for file in IndexF
 
 
 class CommitsState:
+    """Commit state tracker with TTL cache for remote commit."""
+
     def __init__(self, ttl: float):
         self.local = ""
         self._cache = TTLCache(maxsize=1, ttl=ttl)
 
     @property
     def remote(self) -> str:
+        """Cached remote commit hash."""
         return self._cache.get("remote", "")
 
     @remote.setter
@@ -30,6 +33,7 @@ class CommitsState:
 
     @property
     def uptodate(self) -> bool:
+        """Local and remote commit equality."""
         return bool(self.local and self.local == self.remote)
 
     def __repr__(self):
@@ -37,6 +41,8 @@ class CommitsState:
 
 
 class DatabaseLookup:
+    """Entity lookup and search interface for game database."""
+
     def __init__(
         self,
         github: Optional[GitHubClient] = None,
@@ -44,8 +50,20 @@ class DatabaseLookup:
         threshold: float = 0.1,
         commit_ttl: float = 300,
         cache_ttl: float = 86400,
-        cache_size: int = 256,
+        cache_size: int = 128,
     ):
+        """
+        Initialize database lookup.
+
+        Args:
+            github (optional): GitHub client instance.
+            realm (optional): Game version realm. Defaults to `RU`.
+            threshold (optional): Default search similarity threshold (`0.0`-`1.0`). Defaults to `0.1`.
+            commit_ttl (optional): Remote commit cache TTL seconds. Defaults to `300s` (`5 minute`).
+            cache_ttl (optional): Cache TTL seconds. Defaults to `86400s` (`1 day`).
+            cache_size (optional): Cache size limit. Defaults to `128`.
+        """
+
         self._github = github or GitHubClient()
         self._realm = realm
         self._threshold = threshold
@@ -58,6 +76,7 @@ class DatabaseLookup:
 
     @property
     def state(self) -> CommitsState:
+        """Current commit synchronization state."""
         return self._commits
 
     async def get(
@@ -66,6 +85,18 @@ class DatabaseLookup:
         filename: str | IndexFile = IndexFile.LISTING,
         realm: Optional[str | Realm] = None,
     ) -> Optional[Data]:
+        """
+        Retrieve entity data by ID.
+
+        Args:
+            entity_id: Entity identifier.
+            filename (optional): Index file name. Defaults to `LISTING`.
+            realm (optional): Game version realm. Defaults to `RU`.
+
+        Returns:
+            Entity json data or None.
+        """
+
         realm = realm or self._realm
         path = f"{realm}/{filename}"
 
@@ -79,6 +110,19 @@ class DatabaseLookup:
         realm: Optional[str | Realm] = None,
         threshold: Optional[float] = None,
     ) -> list[Lookup]:
+        """
+        Search entities by text query.
+
+        Args:
+            query: Search text.
+            filename (optional): Index file name. Defaults to `LISTING`.
+            realm (optional): Game version realm. Defaults to `RU`.
+            threshold (optional): Override similarity threshold (`0.0`-`1.0`). Defaults to `0.1`.
+
+        Returns:
+            List of search results sorted by relevance.
+        """
+
         realm = realm or self._realm
         path = f"{realm}/{filename}"
 
@@ -94,6 +138,19 @@ class DatabaseLookup:
         realm: Optional[str | Realm] = None,
         threshold: Optional[float] = None,
     ) -> Optional[Lookup]:
+        """
+        Find single best match for text query.
+
+        Args:
+            query: Search text.
+            filename (optional): Index file name. Defaults to `LISTING`.
+            realm (optional): Game version realm. Defaults to `RU`.
+            threshold (optional): Override similarity threshold (`0.0`-`1.0`). Defaults to `0.1`.
+
+        Returns:
+            Best match result or None.
+        """
+
         results = await self.search(
             query=query,
             filename=filename,
@@ -107,6 +164,16 @@ class DatabaseLookup:
         self,
         force: bool = False,
     ) -> bool:
+        """
+        Synchronize local database with remote.
+
+        Args:
+            force (optional): Force sync regardless of commit state.
+
+        Returns:
+            True if sync was performed, False if already up-to-date.
+        """
+
         await self._validate_remote_commit()
 
         if self._commits.uptodate and not force:
@@ -120,9 +187,21 @@ class DatabaseLookup:
     async def item_info(
         self,
         path: str,
-        realm: Optional[str | Realm] = None,
         upgrade_level: int = 0,
+        realm: Optional[str | Realm] = None,
     ) -> Any:
+        """
+        Retrieve item information.
+
+        Args:
+            path: Item data path.
+            upgrade_level (optional): Item upgrade level (`0`-`15`). Defaults to `0`.
+            realm (optional): Game version realm. Defaults to `RU`.
+
+        Returns:
+            Item json data.
+        """
+
         realm = realm or self._realm
         path = f"{realm}/{path}"
         lvl = max(0, min(15, upgrade_level))
@@ -145,6 +224,17 @@ class DatabaseLookup:
         path: str,
         realm: Optional[str | Realm] = None,
     ) -> bytes:
+        """
+        Download item icon image.
+
+        Args:
+            path: Icon file path.
+            realm (optional): Game version realm. Defaults to `RU`.
+
+        Returns:
+            Icon binary data.
+        """
+
         realm = realm or self._realm
         path = f"{realm}/{path}"
 
@@ -157,6 +247,8 @@ class DatabaseLookup:
         return data
 
     async def _index(self, path: str) -> SearchIndex:
+        """Retrieve or build search index for path with commit validation."""
+
         await self._validate_remote_commit()
 
         if self._commits.uptodate and path in self._cache:
@@ -167,6 +259,8 @@ class DatabaseLookup:
         return await self._download(path)
 
     async def _download(self, path: str) -> SearchIndex:
+        """Download and build search index from json file."""
+
         content: bytes = await self._github.rawfile(path=path)
         data = json.loads(content)
 
@@ -177,10 +271,14 @@ class DatabaseLookup:
         return index
 
     async def _validate_remote_commit(self) -> None:
+        """Fetch latest remote commit if not cached."""
+
         if not self._commits.remote:
             self._commits.remote = await self._github.latest_commit()
 
     def _update_commit(self) -> None:
+        """Update local commit and clear cache on change."""
+
         if not self._commits.uptodate:
             self._commits.local = self._commits.remote
             self._cache.clear()

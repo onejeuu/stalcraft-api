@@ -7,12 +7,16 @@ M = TypeVar("M", bound=BaseModel)
 
 
 class BaseListing(List[M]):
+    """Base paginated list with total count."""
+
     def __init__(self, items: List[M], total: int = 0):
         super().__init__(items)
         self.total = total
 
 
 class Listing(BaseListing[M]):
+    """Paginated API response wrapper."""
+
     _KEY_DATA = "data"
     _KEY_TOTAL = "total"
 

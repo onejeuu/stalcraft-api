@@ -5,6 +5,8 @@ from scapi.http.client import Headers, HTTPClient
 
 
 class CredentialsHTTPClient(HTTPClient):
+    """HTTP client with client credentials authentication."""
+
     def __init__(
         self,
         client_id: str,

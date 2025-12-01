@@ -8,6 +8,8 @@ TokenPayload: TypeAlias = Dict[str, Any]
 
 
 class TokenHTTPClient(HTTPClient):
+    """HTTP client with Bearer token authentication."""
+
     def __init__(
         self,
         token: Optional[str] = None,
@@ -31,9 +33,13 @@ class TokenHTTPClient(HTTPClient):
 
     @property
     def token_part(self) -> str:
+        """Masked token."""
+
         return str(self._token and f"{self._token[:10]}...{self._token[-5:]}")
 
     def update_token(self, new_token: str) -> None:
+        """Update authentication token."""
+
         self._token = new_token
         self._payload = self._validate_token(new_token)
         self._headers["Authorization"] = f"Bearer {self._token}"

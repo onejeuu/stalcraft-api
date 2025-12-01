@@ -11,6 +11,8 @@ from .shared import SharedClient
 
 
 class UserClient(SharedClient):
+    """API Client for user specific endpoints."""
+
     def __init__(
         self,
         *,
@@ -19,6 +21,16 @@ class UserClient(SharedClient):
         timeout: int = Default.TIMEOUT,
         json: bool = Default.JSON,
     ):
+        """
+        Initialize user client with authentication token.
+
+        Args:
+            token: User access token.
+            base_url (optional): API server base URL. Defaults to PRODUCTION.
+            timeout (optional): Request timeout in seconds. Defaults to 60.
+            json (optional): Return raw JSON instead of validated models. Defaults to False.
+        """
+
         self._token = token
         self._timeout = timeout
 
@@ -38,6 +50,16 @@ class UserClient(SharedClient):
         self,
         region: str | Region = Default.REGION,
     ) -> List[models.Character]:
+        """
+        Retrieve user characters.
+
+        Args:
+            region (optional): Game server region. Defaults to RU.
+
+        Returns:
+            List of user characters.
+        """
+
         response = await self._http.GET(
             url=f"{region}/characters",
         )
@@ -49,6 +71,17 @@ class UserClient(SharedClient):
         character: str,
         region: str | Region = Default.REGION,
     ) -> List[str]:
+        """
+        Retrieve user character friends list.
+
+        Args:
+            character: User character name.
+            region (optional): Game server region. Defaults to RU.
+
+        Returns:
+            List of user friends character names.
+        """
+
         response = await self._http.GET(
             f"{region}/friends/{character}",
         )
@@ -60,4 +93,15 @@ class UserClient(SharedClient):
         clan_id: str,
         region: str | Region = Default.REGION,
     ) -> UserClanEndpoint:
+        """
+        Factory method for user specific clan operations.
+
+        Args:
+            clan_id: Clan identifier.
+            region (optional): Game server region. Defaults to RU.
+
+        Returns:
+            User clan endpoint instance.
+        """
+
         return UserClanEndpoint(clan_id=clan_id, region=region, http=self._http, json=self._json)

@@ -12,6 +12,8 @@ Entities = dict[str, Data]
 
 
 class Lookup(NamedTuple):
+    """Search result entry."""
+
     id: str
     data: dict[str, Any]
     score: float = 0.0
@@ -19,6 +21,8 @@ class Lookup(NamedTuple):
 
 @dataclass
 class SearchIndex:
+    """In-memory search index for entity lookup with N-gram tokenization."""
+
     _index: Index = field(default_factory=dict, repr=False)
     """Inverted Index, mapping from N-grams (tokens) to Entity IDs."""
 
@@ -29,6 +33,8 @@ class SearchIndex:
     """N-gram Counts, mapping Entity ID to total unique N-grams."""
 
     def build(self, path: str, data: Any):
+        """Build index from structured data at given path."""
+
         index: Index = defaultdict(set)
         entities: Entities = defaultdict(lambda: defaultdict(dict))
         counts: dict[str, set[str]] = defaultdict(set)
@@ -51,9 +57,22 @@ class SearchIndex:
         self._counts = {entity_id: len(ngrams) for entity_id, ngrams in counts.items()}
 
     def get(self, entity_id: str) -> Data | None:
+        """Retrieve entity data by ID."""
+
         return self._entities.get(entity_id)
 
     def search(self, query: str, threshold: float) -> list[Lookup]:
+        """
+        Search entities with similarity scoring.
+
+        Args:
+            query: Search text.
+            threshold: Minimum similarity score (0.0-1.0).
+
+        Returns:
+            List of matched entities sorted by relevance.
+        """
+
         if not query:
             return []
 

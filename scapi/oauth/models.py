@@ -6,10 +6,14 @@ from pydantic import BaseModel, field_validator
 
 
 class OAuthModel(BaseModel):
+    """Base model for OAuth response data."""
+
     pass
 
 
 class TokenResponse(OAuthModel):
+    """Base token response."""
+
     token_type: str
     access_token: str
     expires_in: datetime
@@ -26,14 +30,20 @@ class TokenResponse(OAuthModel):
 
 
 class AppToken(TokenResponse):
+    """Application access token."""
+
     pass
 
 
 class UserToken(TokenResponse):
+    """User access and refresh token."""
+
     refresh_token: str
 
 
 class UserInfo(OAuthModel):
+    """User EXBO account information."""
+
     id: int
     uuid: UUID
     login: str

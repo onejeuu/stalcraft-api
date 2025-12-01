@@ -15,6 +15,8 @@ _PARSERS: dict[str, Parser] = {}
 
 
 def get(path: str) -> Parser:
+    """Retrieve parser for file path."""
+
     filename = path.split("/")[-1]
 
     if filename not in _PARSERS:

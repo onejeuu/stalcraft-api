@@ -1,10 +1,12 @@
 from typing import Any, Optional
 
-from scapi.consts import ItemsRepository
+from scapi.consts import DatabaseRepository as Repo
 from scapi.http.api import APIClient
 from scapi.http.auth.token import TokenHTTPClient
 from scapi.http.client import Headers
 
+
+TIMEOUT = 300
 
 HEADERS = {
     "Connection": "keep-alive",
@@ -15,16 +17,30 @@ HEADERS = {
 
 
 class GitHubClient(APIClient):
+    """API Client for GitHub repository operations."""
+
     def __init__(
         self,
         *,
         token: Optional[str] = None,
-        owner: str = ItemsRepository.OWNER,
-        repository: str = ItemsRepository.REPOSITORY,
-        branch: str = ItemsRepository.BRANCH,
-        timeout: int = ItemsRepository.TIMEOUT,
+        owner: str = Repo.OWNER,
+        repository: str = Repo.REPOSITORY,
+        branch: str = Repo.BRANCH,
+        timeout: int = TIMEOUT,
         headers: Optional[Headers] = None,
     ):
+        """
+        Initialize GitHub client.
+
+        Args:
+            token (optional): GitHub API token for authenticated requests.
+            owner (optional): Repository owner. Defaults to EXBO-Studio.
+            repository (optional): Repository name. Defaults to stalcraft-database.
+            branch (optional): Repository branch. Defaults to main.
+            timeout (optional): Request timeout in seconds. Defaults to 300.
+            headers (optional): Custom HTTP headers.
+        """
+
         self._token = token
         self._owner = owner
         self._repository = repository
@@ -38,16 +54,56 @@ class GitHubClient(APIClient):
         return bool(self._token)
 
     async def latest_commit(self) -> str:
+        """
+        Get latest commit hash.
+
+        Returns:
+            Commit SHA hash.
+        """
+
         data = await self._http.GET(f"https://api.github.com/repos/{self._slug}/commits/{self._branch}")
         return data["sha"]
 
     async def diff(self, base: str, head: str) -> dict[str, Any]:
+        """
+        Compare commits or branches.
+
+        Args:
+            base: Base commit or branch.
+            head: Head commit or branch.
+
+        Returns:
+            Comparison data.
+        """
+
         return await self._http.GET(f"https://api.github.com/repos/{self._slug}/compare/{base}...{head}")
 
     async def contents(self, path: str = ""):
+        """
+        List repository contents at specified path.
+
+        Args:
+            path (optional): Directory path. Defaults to repository root.
+
+        Returns:
+            Repository contents listing.
+        """
+
         return await self._http.GET(f"https://api.github.com/repos/{self._slug}/contents/{path}")
 
     async def rawfile(self, path: str, ref: Optional[str] = None, output: Optional[str] = None):
+        """
+        Download raw file from repository.
+
+        Args:
+            path: File path within repository.
+            ref (optional): Git reference. Defaults to configured branch.
+            output (optional): Local filename for file streaming.
+
+        Returns:
+            File content bytes.
+        """
+
         ref = ref or self._branch
         return await self._http.GET(
             f"https://raw.githubusercontent.com/{self._slug}/{ref}/{path}",
@@ -56,6 +112,16 @@ class GitHubClient(APIClient):
         )
 
     async def archive(self, output: Optional[str] = None):
+        """
+        Download repository as ZIP archive.
+
+        Args:
+            output (optional): Local filename for file streaming.
+
+        Returns:
+            Archive content bytes.
+        """
+
         return await self._http.GET(
             f"https://github.com/{self._slug}/archive/refs/heads/{self._branch}.zip",
             filename=output,

@@ -10,21 +10,41 @@ Additional: TypeAlias = Dict[str, Any]
 
 
 class ClientModel(BaseModel):
+    """Base model for API response."""
+
     pass
 
 
 class RegionInfo(ClientModel):
+    """
+    Game server region information.
+
+    Endpoint: https://eapi.stalcraft.net/reference#/paths/regions/get
+    """
+
     id: str
     name: str
 
 
 class EmissionState(ClientModel):
+    """
+    Current and previous emission status.
+
+    Reference: https://eapi.stalcraft.net/reference#/schemas/EmissionResponse
+    """
+
     current_start: Optional[datetime] = Field(None, alias="currentStart")
     previous_start: Optional[datetime] = Field(None, alias="previousStart")
     previous_end: Optional[datetime] = Field(None, alias="previousEnd")
 
 
 class ClanInfo(ClientModel):
+    """
+    Clan details and statistics.
+
+    Reference: https://eapi.stalcraft.net/reference#/schemas/ClanInfo
+    """
+
     name: str
     uuid: str = Field(..., alias="id")
     tag: str
@@ -38,34 +58,66 @@ class ClanInfo(ClientModel):
 
 
 class ClanMember(ClientModel):
+    """
+    Clan member details.
+
+    Reference: https://eapi.stalcraft.net/reference#/schemas/ClanMember
+    """
+
     name: str
     rank: enums.ClanRank
     join_time: datetime = Field(..., alias="joinTime")
 
 
 class ClanAffiliation(ClientModel):
+    """
+    Character clan affiliation.
+
+    Reference: https://eapi.stalcraft.net/reference#/schemas/CharacterClanInfo
+    """
+
     info: ClanInfo
     member: ClanMember
 
 
 class CharacterInfo(ClientModel):
+    """Basic character metadata."""
+
     name: str
     uuid: str = Field(..., alias="id")
     creation_time: datetime = Field(..., alias="creationTime")
 
 
 class Character(ClientModel):
+    """
+    User Character details.
+
+    Endpoint: https://eapi.stalcraft.net/reference#/paths/region--characters/get
+    """
+
     info: CharacterInfo = Field(..., alias="information")
     clan: Optional[ClanAffiliation] = Field(None)
 
 
 class Statistic(ClientModel):
+    """
+    Character statistic.
+
+    Reference: https://eapi.stalcraft.net/reference#/schemas/CharacterStatValue
+    """
+
     id: str
     type: enums.StatType
     value: Any
 
 
 class CharacterProfile(ClientModel):
+    """
+    Public character profile.
+
+    Reference: https://eapi.stalcraft.net/reference#/schemas/CharacterProfileData
+    """
+
     name: str = Field(..., alias="username")
     uuid: str
     status: str
@@ -76,14 +128,13 @@ class CharacterProfile(ClientModel):
     stats: list[Statistic]
 
 
-class AuctionPrice(ClientModel):
-    amount: int
-    price: int
-    time: datetime
-    additional: Optional[Additional] = Field(None)
-
-
 class AuctionLot(ClientModel):
+    """
+    Actual auction item lot.
+
+    Reference: https://eapi.stalcraft.net/reference#/schemas/Lot
+    """
+
     item_id: str = Field(..., alias="itemId")
     amount: int
     start_price: int = Field(..., alias="startPrice")
@@ -94,7 +145,26 @@ class AuctionLot(ClientModel):
     additional: Optional[Additional] = Field(None)
 
 
+class AuctionPrice(ClientModel):
+    """
+    Historical auction price entry.
+
+    Reference: https://eapi.stalcraft.net/reference#/schemas/PriceEntry
+    """
+
+    amount: int
+    price: int
+    time: datetime
+    additional: Optional[Additional] = Field(None)
+
+
 class OperationParticipant(ClientModel):
+    """
+    Player statistics in an operation session.
+
+    Reference: https://eapi.stalcraft.net/reference#/schemas/OperationSessionParticipant
+    """
+
     username: str
     death: int
     mob_kills: int = Field(..., alias="mobKills")
@@ -110,6 +180,12 @@ class OperationParticipant(ClientModel):
 
 
 class OperationSession(ClientModel):
+    """
+    Operation session details.
+
+    Reference: https://eapi.stalcraft.net/reference#/schemas/OperationSession
+    """
+
     id: int
     map: str
     start_time: datetime = Field(..., alias="startTime")

@@ -67,7 +67,7 @@ class SearchIndex:
 
         Args:
             query: Search text.
-            threshold: Minimum similarity score (0.0-1.0).
+            threshold: Minimum similarity score (`0.0`-`1.0`).
 
         Returns:
             List of matched entities sorted by relevance.

@@ -34,10 +34,10 @@ class GitHubClient(APIClient):
 
         Args:
             token (optional): GitHub API token for authenticated requests.
-            owner (optional): Repository owner. Defaults to EXBO-Studio.
-            repository (optional): Repository name. Defaults to stalcraft-database.
-            branch (optional): Repository branch. Defaults to main.
-            timeout (optional): Request timeout in seconds. Defaults to 300.
+            owner (optional): Repository owner. Defaults to `EXBO-Studio`.
+            repository (optional): Repository name. Defaults to `stalcraft-database`.
+            branch (optional): Repository branch. Defaults to `main`.
+            timeout (optional): Request timeout in seconds. Defaults to `300s`.
             headers (optional): Custom HTTP headers.
         """
 

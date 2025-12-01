@@ -27,15 +27,15 @@ class AppClient(SharedClient):
         """
         Initialize application client with authentication credentials.
 
-        **NOTE:** Provide EITHER token OR both client_id and client_secret.
+        **Note:** Provide EITHER token OR both client_id and client_secret.
 
         Args:
             token (optional): Created application token.
             client_id (optional): Application client identifier.
             client_secret (optional): Application client secret.
-            base_url (optional): API server base URL. Defaults to production.
-            timeout (optional): Request timeout in seconds. Defaults to 60.
-            json (optional): Return raw JSON instead of validated models. Defaults to False.
+            base_url (optional): API server base URL. Defaults to `PRODUCTION`.
+            timeout (optional): Request timeout in seconds. Defaults to `60s`.
+            json (optional): Return JSON instead of models. Defaults to `False`.
         """
 
         self._token = token
@@ -79,7 +79,7 @@ class AppClient(SharedClient):
 
         Args:
             clan_id: Clan identifier.
-            region (optional): Game server region. Defaults to RU.
+            region (optional): Game server region. Defaults to `RU`.
 
         Returns:
             Clan endpoint instance.

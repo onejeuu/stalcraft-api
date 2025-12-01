@@ -26,8 +26,8 @@ class SharedClient(ABC, APIClient):
         Initialize shared client.
 
         Args:
-            base_url (optional): API server base URL. Defaults to PRODUCTION.
-            json (optional): Return raw JSON instead of validated models. Defaults to False.
+            base_url (optional): API server base URL. Defaults to `PRODUCTION`.
+            json (optional): Return JSON instead of models. Defaults to `False`.
         """
 
         self._base_url = base_url
@@ -63,7 +63,7 @@ class SharedClient(ABC, APIClient):
         Get current emission state.
 
         Args:
-            region (optional): Game server region. Defaults to RU.
+            region (optional): Game server region. Defaults to `RU`.
 
         Returns:
             Emission state.
@@ -85,7 +85,7 @@ class SharedClient(ABC, APIClient):
 
         Args:
             username: Character name.
-            region (optional): Game server region. Defaults to RU.
+            region (optional): Game server region. Defaults to `RU`.
 
         Returns:
             Public character profile data.
@@ -107,9 +107,9 @@ class SharedClient(ABC, APIClient):
         List all registered clans.
 
         Args:
-            limit (optional): Amount of clans to return, starting from offset, (0-100). Defaults to 20.
-            offset (optional): Amount of clans to skip. Defaults to 0.
-            region (optional): Game server region. Defaults to RU.
+            limit (optional): Amount of clans to return, starting from offset, (`0`-`100`). Defaults to `20`.
+            offset (optional): Amount of clans to skip. Defaults to `0`.
+            region (optional): Game server region. Defaults to `RU`.
 
         Returns:
             Paginated clan listing.
@@ -138,15 +138,15 @@ class SharedClient(ABC, APIClient):
         Returns list of operation sessions.
 
         Args:
-            limit (optional): Amount of sessions to return, starting from offset, (0-100). Defaults to 20.
-            offset (optional): Amount of sessions to skip. Defaults to 0.
-            sort (optional): Sorting field. Defaults to DATE_FINISH.
-            order (optional): Sorting direction. Defaults to ASCENDING.
+            limit (optional): Amount of sessions to return, starting from offset, (`0`-`100`). Defaults to `20`.
+            offset (optional): Amount of sessions to skip. Defaults to `0`.
+            sort (optional): Sorting field. Defaults to `DATE_FINISH`.
+            order (optional): Sorting direction. Defaults to `ASCENDING`.
             map (optional): Filter by operations map name.
             username (optional): Filter by character name.
-            before (optional): Filter sessions ending before date.
-            after (optional): Filter sessions ending after date.
-            region (optional): Game server region. Defaults to RU.
+            before (optional): Filter sessions finished before date.
+            after (optional): Filter sessions finished after date.
+            region (optional): Game server region. Defaults to `RU`.
 
         Returns:
             Paginated operations sessions listing.
@@ -178,7 +178,7 @@ class SharedClient(ABC, APIClient):
 
         Args:
             item_id: Item identifier.
-            region (optional): Game server region. Defaults to RU.
+            region (optional): Game server region. Defaults to `RU`.
 
         Returns:
             Auction endpoint instance.

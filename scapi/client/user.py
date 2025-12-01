@@ -26,9 +26,9 @@ class UserClient(SharedClient):
 
         Args:
             token: User access token.
-            base_url (optional): API server base URL. Defaults to PRODUCTION.
-            timeout (optional): Request timeout in seconds. Defaults to 60.
-            json (optional): Return raw JSON instead of validated models. Defaults to False.
+            base_url (optional): API server base URL. Defaults to `PRODUCTION`.
+            timeout (optional): Request timeout in seconds. Defaults to `60s`.
+            json (optional): Return JSON instead of models. Defaults to `False`.
         """
 
         self._token = token
@@ -54,7 +54,7 @@ class UserClient(SharedClient):
         Retrieve user characters.
 
         Args:
-            region (optional): Game server region. Defaults to RU.
+            region (optional): Game server region. Defaults to `RU`.
 
         Returns:
             List of user characters.
@@ -76,7 +76,7 @@ class UserClient(SharedClient):
 
         Args:
             character: User character name.
-            region (optional): Game server region. Defaults to RU.
+            region (optional): Game server region. Defaults to `RU`.
 
         Returns:
             List of user friends character names.
@@ -98,7 +98,7 @@ class UserClient(SharedClient):
 
         Args:
             clan_id: Clan identifier.
-            region (optional): Game server region. Defaults to RU.
+            region (optional): Game server region. Defaults to `RU`.
 
         Returns:
             User clan endpoint instance.

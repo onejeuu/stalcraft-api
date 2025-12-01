@@ -24,8 +24,8 @@ class AuctionEndpoint(APIClient):
         Args:
             http: HTTP client instance.
             item_id: Item identifier.
-            region (optional): Game server region. Defaults to RU.
-            json (optional): Return raw JSON instead of validated models. Defaults to False.
+            region (optional): Game server region. Defaults to `RU`.
+            json (optional): Return JSON instead of models. Defaults to `False`.
         """
 
         self._http = http
@@ -45,11 +45,11 @@ class AuctionEndpoint(APIClient):
         Retrieve active auction lots for item.
 
         Args:
-            limit (optional): Amount of lots to return (0-100). Defaults to 20.
-            offset (optional): Amount of lots to skip. Defaults to 0.
-            sort (optional): Sorting field. Defaults to TIME_CREATED.
-            order (optional): Sorting direction. Defaults to ASCENDING.
-            additional (optional): Include additional json data. Defaults to False.
+            limit (optional): Amount of lots to return (`0`-`100`). Defaults to `20`.
+            offset (optional): Amount of lots to skip. Defaults to `0`.
+            sort (optional): Sorting field. Defaults to `TIME_CREATED`.
+            order (optional): Sorting direction. Defaults to `ASCENDING`.
+            additional (optional): Include additional json data. Defaults to `False`.
 
         Returns:
             Paginated auction lots listing.
@@ -78,9 +78,9 @@ class AuctionEndpoint(APIClient):
         Retrieve item price history.
 
         Args:
-            limit (optional): Amount of prices to return (0-100). Defaults to 20.
-            offset (optional): Amount of prices to skip. Defaults to 0.
-            additional (optional): Include additional json data. Defaults to False.
+            limit (optional): Amount of prices to return (`0`-`100`). Defaults to `20`.
+            offset (optional): Amount of prices to skip. Defaults to `0`.
+            additional (optional): Include additional json data. Defaults to `False`.
 
         Returns:
             Paginated price history listing.

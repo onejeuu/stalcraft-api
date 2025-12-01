@@ -10,7 +10,7 @@ from . import models
 
 
 class OAuthClient(APIClient):
-    """Client for OAuth 2.0 authentication with EXBO services."""
+    """API Client for OAuth 2.0 authentication with EXBO services."""
 
     def __init__(
         self,
@@ -28,10 +28,10 @@ class OAuthClient(APIClient):
         Args:
             client_id: Application client identifier.
             client_secret: Application client secret.
-            base_url (optional): OAuth server base URL.
-            redirect_uri (optional): Redirect URI for authorization flow.
-            scope (optional, stub): Requested access scope.
-            json (optional): Return raw JSON instead of validated models.
+            base_url (optional): OAuth server base URL. Defaults to `https://exbo.net/oauth`.
+            redirect_uri (optional): Redirect URI for authorization flow. Defaults to `http://localhost`.
+            scope (optional, stub): Requested access scope. Defaults to `""`.
+            json (optional): Return JSON instead of models. Defaults to `False`.
         """
 
         self._client_id = client_id

@@ -22,8 +22,8 @@ class ClanEndpoint(APIClient):
         Args:
             http: HTTP client instance.
             clan_id: Clan identifier.
-            region (optional): Game server region. Defaults to RU.
-            json (optional): Return raw JSON instead of validated models. Defaults to False.
+            region (optional): Game server region. Defaults to `RU`.
+            json (optional): Return JSON instead of models. Defaults to `False`.
         """
 
         self._http = http

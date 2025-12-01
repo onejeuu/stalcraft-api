@@ -27,5 +27,5 @@ class ClanEndpoint(APIClient):
 
         return self._parse(response, models.ClanInfo)
 
-    def __str__(self):
-        return f"<{self.__class__.__name__} clan_id='{self._clan_id}' region='{self._region}' http={self._http}>"
+    def __repr__(self):
+        return f"{self.__class__.__name__}(clan_id='{self._clan_id}', region='{self._region}', http={self._http})"

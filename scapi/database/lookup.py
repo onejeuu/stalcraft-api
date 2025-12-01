@@ -1,6 +1,5 @@
 import asyncio
 import json
-from io import BytesIO
 from pathlib import Path
 from typing import Any, Optional
 
@@ -10,7 +9,7 @@ from scapi.enums import Realm
 
 from .enums import IndexFile
 from .github import GitHubClient
-from .index import Lookup, SearchIndex, Translations
+from .index import Data, Lookup, SearchIndex
 
 
 SYNC_FILES: list[str] = [f"{realm}/{file}" for realm in Realm for file in IndexFile]
@@ -50,16 +49,23 @@ class DatabaseLookup:
         self._github = github or GitHubClient()
         self._realm = realm
         self._threshold = threshold
+        self._commit_ttl = commit_ttl
+        self._cache_ttl = cache_ttl
+        self._cache_size = cache_size
 
         self._commits = CommitsState(ttl=commit_ttl)
         self._cache = TTLCache(maxsize=cache_size, ttl=cache_ttl)
+
+    @property
+    def state(self) -> CommitsState:
+        return self._commits
 
     async def get(
         self,
         entity_id: str,
         filename: str | IndexFile = IndexFile.LISTING,
         realm: Optional[str | Realm] = None,
-    ) -> Optional[Translations]:
+    ) -> Optional[Data]:
         realm = realm or self._realm
         path = f"{realm}/{filename}"
 
@@ -116,7 +122,6 @@ class DatabaseLookup:
         data = json.loads(content)
 
         self._cache[path] = data
-
         return data
 
     async def item_icon(
@@ -135,7 +140,7 @@ class DatabaseLookup:
         self._cache[path] = data
         return data
 
-    async def _index(self, path: str):
+    async def _index(self, path: str) -> SearchIndex:
         await self._validate_remote_commit()
 
         if self._commits.uptodate and path in self._cache:
@@ -163,3 +168,6 @@ class DatabaseLookup:
         if not self._commits.uptodate:
             self._commits.local = self._commits.remote
             self._cache.clear()
+
+    def __repr__(self):
+        return f"{self.__class__.__name__}(realm='{self._realm}', threshold={self._threshold}, uptodate={self._commits.uptodate}, commit_ttl={self._commit_ttl}, cache_ttl={self._cache_ttl})"

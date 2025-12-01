@@ -60,5 +60,5 @@ class GitHubClient(APIClient):
             filename=output,
         )
 
-    def __str__(self):
-        return f"<{self.__class__.__name__} token={bool(self._token)} repo='{self._slug}' branch='{self._branch}' http={self._http}>"
+    def __repr__(self):
+        return f"{self.__class__.__name__}(token={self.has_token}, repo='{self._slug}', branch='{self._branch}', http={self._http})"

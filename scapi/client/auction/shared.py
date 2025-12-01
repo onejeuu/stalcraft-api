@@ -58,5 +58,5 @@ class AuctionEndpoint(APIClient):
 
         return self._parse(response, models.AuctionLot, ("lots", "total"))
 
-    def __str__(self):
-        return f"<{self.__class__.__name__} item_id='{self._item_id}' region='{self._region}' http={self._http}>"
+    def __repr__(self):
+        return f"{self.__class__.__name__}(item_id='{self._item_id}', region='{self._region}', http={self._http})"

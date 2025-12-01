@@ -261,5 +261,5 @@ class HTTPClient:
         await self.close()
         return False
 
-    def __str__(self):
-        return f"<{self.__class__.__name__} base_url='{self._base_url}' timeout={self._timeout} ratelimit={repr(self._ratelimit)}>"
+    def __repr__(self):
+        return f"{self.__class__.__name__}(base_url='{self._base_url}', timeout={self._timeout}, ratelimit={repr(self._ratelimit)})"

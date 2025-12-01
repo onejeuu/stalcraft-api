@@ -6,8 +6,9 @@ from . import parsing, tokenize
 
 
 Index: TypeAlias = dict[str, set[str]]
-Entities = dict[str, dict[str, Any]]
-Translations = dict[str, str]
+
+Data = dict[str, Any]
+Entities = dict[str, Data]
 
 
 class Lookup(NamedTuple):
@@ -18,13 +19,13 @@ class Lookup(NamedTuple):
 
 @dataclass
 class SearchIndex:
-    _index: Index = field(default_factory=dict)
+    _index: Index = field(default_factory=dict, repr=False)
     """Inverted Index, mapping from N-grams (tokens) to Entity IDs."""
 
-    _entities: Entities = field(default_factory=dict)
+    _entities: Entities = field(default_factory=dict, repr=False)
     """Entity Storage, stores all translations (Entity ID -> {lang: text})."""
 
-    _counts: dict[str, int] = field(default_factory=dict)
+    _counts: dict[str, int] = field(default_factory=dict, repr=False)
     """N-gram Counts, mapping Entity ID to total unique N-grams."""
 
     def build(self, path: str, data: Any):
@@ -49,7 +50,7 @@ class SearchIndex:
         self._entities = dict(entities)
         self._counts = {entity_id: len(ngrams) for entity_id, ngrams in counts.items()}
 
-    def get(self, entity_id: str) -> Translations | None:
+    def get(self, entity_id: str) -> Data | None:
         return self._entities.get(entity_id)
 
     def search(self, query: str, threshold: float) -> list[Lookup]:
@@ -96,3 +97,6 @@ class SearchIndex:
 
         # sort results by descending score
         return sorted(results, key=lambda r: r.score, reverse=True)
+
+    def __repr__(self):
+        return f"{self.__class__.__name__}(entities={len(self._entities)}, index={len(self._index)})"

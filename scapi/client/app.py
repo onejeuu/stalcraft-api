@@ -14,9 +14,9 @@ from .shared import SharedClient
 class AppClient(SharedClient):
     def __init__(
         self,
-        token: Optional[str] = None,
         client_id: Optional[str] = None,
         client_secret: Optional[str] = None,
+        token: Optional[str] = None,
         base_url: str = Default.BASE_URL,
         timeout: int = Default.TIMEOUT,
         json: bool = Default.JSON,

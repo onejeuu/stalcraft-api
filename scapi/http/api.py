@@ -55,5 +55,5 @@ class APIClient:
         await self.close()
         return False
 
-    def __str__(self):
-        return f"<{self.__class__.__name__} http={self._http}>"
+    def __repr__(self):
+        return f"{self.__class__.__name__}(http={self._http})"

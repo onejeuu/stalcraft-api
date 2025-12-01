@@ -1,7 +1,8 @@
 import asyncio
 import json
+from io import BytesIO
 from pathlib import Path
-from typing import Optional
+from typing import Any, Optional
 
 from cachetools import TTLCache
 
@@ -98,16 +99,15 @@ class DatabaseLookup:
         self,
         path: str,
         realm: Optional[str | Realm] = None,
-        upgrade_level: Optional[int] = None,
-    ):
+        upgrade_level: int = 0,
+    ) -> Any:
         realm = realm or self._realm
         path = f"{realm}/{path}"
-        lvl = max(0, min(15, upgrade_level or 0))
+        lvl = max(0, min(15, upgrade_level))
 
         if lvl > 0:
             tmp = Path(path)
-            stem = tmp.stem
-            path = (tmp.parent / f"_variants/{stem}/{lvl}.json").as_posix()
+            path = (tmp.parent / f"_variants/{tmp.stem}/{lvl}.json").as_posix()
 
         if path in self._cache:
             return self._cache[path]
@@ -117,6 +117,22 @@ class DatabaseLookup:
 
         self._cache[path] = data
 
+        return data
+
+    async def item_icon(
+        self,
+        path: str,
+        realm: Optional[str | Realm] = None,
+    ) -> bytes:
+        realm = realm or self._realm
+        path = f"{realm}/{path}"
+
+        if path in self._cache:
+            return self._cache[path]
+
+        data: bytes = await self._github.rawfile(path=path)
+
+        self._cache[path] = data
         return data
 
     async def _index(self, path: str):

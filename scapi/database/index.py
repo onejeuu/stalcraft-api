@@ -12,7 +12,7 @@ Translations = dict[str, str]
 
 class Lookup(NamedTuple):
     id: str
-    item: dict[str, Any]
+    data: dict[str, Any]
     score: float = 0.0
 
 
@@ -92,7 +92,7 @@ class SearchIndex:
             # filter by threshold
             if score >= threshold:
                 item = self._entities.get(entity_id, {})
-                results.append(Lookup(id=entity_id, item=item, score=score))
+                results.append(Lookup(id=entity_id, data=item, score=score))
 
         # sort results by descending score
         return sorted(results, key=lambda r: r.score, reverse=True)

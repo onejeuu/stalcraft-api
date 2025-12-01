@@ -87,6 +87,22 @@ class DatabaseLookup:
         index = await self._index(path)
         return index.search(query, threshold)
 
+    async def find(
+        self,
+        query: str,
+        filename: str | IndexFile = IndexFile.LISTING,
+        realm: Optional[str | Realm] = None,
+        threshold: Optional[float] = None,
+    ) -> Optional[Lookup]:
+        results = await self.search(
+            query=query,
+            filename=filename,
+            realm=realm,
+            threshold=threshold,
+        )
+
+        return results[0] if results else None
+
     async def sync(
         self,
         force: bool = False,

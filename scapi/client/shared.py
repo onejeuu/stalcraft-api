@@ -71,7 +71,7 @@ class SharedClient(ABC, APIClient):
 
         return self._parse(response, models.ClanInfo, ("data", "totalClans"))
 
-    async def operation_sessions(
+    async def operations_sessions(
         self,
         limit: int = Default.LIMIT,
         offset: int = Default.OFFSET,

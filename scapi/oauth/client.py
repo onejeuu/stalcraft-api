@@ -12,6 +12,7 @@ from . import models
 class OAuthClient(APIClient):
     def __init__(
         self,
+        *,
         client_id: str,
         client_secret: str,
         base_url: str = BaseUrl.OAUTH,

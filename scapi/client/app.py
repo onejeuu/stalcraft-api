@@ -14,9 +14,10 @@ from .shared import SharedClient
 class AppClient(SharedClient):
     def __init__(
         self,
+        *,
+        token: Optional[str] = None,
         client_id: Optional[str] = None,
         client_secret: Optional[str] = None,
-        token: Optional[str] = None,
         base_url: str = Default.BASE_URL,
         timeout: int = Default.TIMEOUT,
         json: bool = Default.JSON,
@@ -26,7 +27,7 @@ class AppClient(SharedClient):
         self._client_secret = client_secret
         self._timeout = timeout
 
-        super().__init__(base_url, json)
+        super().__init__(base_url=base_url, json=json)
 
         if token and (client_id or client_secret):
             warnings.warn("Redundant auth parameters. Provide EITHER 'token' OR both 'client_id' and 'client_secret'.")
@@ -57,4 +58,4 @@ class AppClient(SharedClient):
         clan_id: str,
         region: str | Region = Default.REGION,
     ) -> ClanEndpoint:
-        return ClanEndpoint(self._http, clan_id, region, self._json)
+        return ClanEndpoint(clan_id=clan_id, region=region, http=self._http, json=self._json)

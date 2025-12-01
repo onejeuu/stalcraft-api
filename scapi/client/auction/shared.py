@@ -10,6 +10,7 @@ from scapi.http.types import Listing
 class AuctionEndpoint(APIClient):
     def __init__(
         self,
+        *,
         http: HTTPClient,
         item_id: str,
         region: str | Region = Default.REGION,

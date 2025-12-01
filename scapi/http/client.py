@@ -27,6 +27,7 @@ class HTTPClient:
 
     def __init__(
         self,
+        *,
         base_url: str = "",
         timeout: int = Default.TIMEOUT,
         headers: Optional[Headers] = None,

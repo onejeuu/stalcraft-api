@@ -8,6 +8,7 @@ from scapi.http.client import HTTPClient
 class ClanEndpoint(APIClient):
     def __init__(
         self,
+        *,
         http: HTTPClient,
         clan_id: str,
         region: str | Region = Default.REGION,

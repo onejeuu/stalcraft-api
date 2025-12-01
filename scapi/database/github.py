@@ -17,6 +17,7 @@ HEADERS = {
 class GitHubClient(APIClient):
     def __init__(
         self,
+        *,
         token: Optional[str] = None,
         owner: str = ItemsRepository.OWNER,
         repository: str = ItemsRepository.REPOSITORY,

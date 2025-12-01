@@ -13,6 +13,7 @@ from .shared import SharedClient
 class UserClient(SharedClient):
     def __init__(
         self,
+        *,
         token: str,
         base_url: str = Default.BASE_URL,
         timeout: int = Default.TIMEOUT,
@@ -21,7 +22,7 @@ class UserClient(SharedClient):
         self._token = token
         self._timeout = timeout
 
-        super().__init__(base_url, json)
+        super().__init__(base_url=base_url, json=json)
 
     def _create_http_client(self):
         if self._token:
@@ -59,4 +60,4 @@ class UserClient(SharedClient):
         clan_id: str,
         region: str | Region = Default.REGION,
     ) -> UserClanEndpoint:
-        return UserClanEndpoint(self._http, clan_id, region, self._json)
+        return UserClanEndpoint(clan_id=clan_id, region=region, http=self._http, json=self._json)

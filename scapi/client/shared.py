@@ -16,6 +16,7 @@ from .auction.shared import AuctionEndpoint
 class SharedClient(ABC, APIClient):
     def __init__(
         self,
+        *,
         base_url: str = Default.BASE_URL,
         json: bool = Default.JSON,
     ):
@@ -103,4 +104,4 @@ class SharedClient(ABC, APIClient):
         item_id: str,
         region: str | Region = Default.REGION,
     ) -> AuctionEndpoint:
-        return AuctionEndpoint(self._http, item_id, region, self._json)
+        return AuctionEndpoint(item_id=item_id, region=region, http=self._http, json=self._json)

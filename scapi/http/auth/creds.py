@@ -13,7 +13,7 @@ class CredentialsHTTPClient(HTTPClient):
         timeout: int = Default.TIMEOUT,
         headers: Optional[Headers] = None,
     ):
-        super().__init__(base_url, timeout)
+        super().__init__(base_url=base_url, timeout=timeout)
 
         self._client_id = client_id
         self._client_secret = client_secret

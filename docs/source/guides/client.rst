@@ -1,87 +1,130 @@
 Working with API Clients
 ==================================================
 
-This guide covers practical usage of api clients: ``AppClient`` for **public** data and ``UserClient`` for **private** data.
+This guide covers practical usage of the API clients. You'll learn how to access **public** game data with ``AppClient`` and **private** player data with ``UserClient``.
 
 
 ----------------------------------------
 Basic Concepts
 ----------------------------------------
 
-STALCRAFT API organizes data by regions (``RU``, ``EU``, ``NA``, ``SEA``). Most endpoints require specifying a region, either per-call or through default client configuration.
+| STALCRAFT API organizes data by regions (``RU``, ``EU``, ``NA``, ``SEA``).
+| Most endpoints require specifying a region.
 
-Clients return **Pydantic models** by default, providing type safety and IDE autocompletion. You can optionally request raw JSON responses.
+**Authentication Types:**
+
+-  ``Application Credentials``, ``App Token`` - **For public data** (auction, emissions, profiles)
+- ``User Token`` - **For public and private data** (characters, friends, clan membership)
+
+**Response Formats:**
+
+- ``Pydantic Models`` (default) - Typed Python objects with IDE hints
+- ``Raw JSON`` - Original API response
+
+
+.. hint::
+
+  For application register and token creation, refer to the :doc:`OAuth Guide <oauth>`.
 
 
 ----------------------------------------
 Getting Started
 ----------------------------------------
 
-Initialization
-^^^^^^^^^^^^^^^
+Initializing AppClient
+^^^^^^^^^^^^^^^^^^^^^^^
+
 
 .. warning::
 
-  Never hardcode API credentials in source code. Examples show strings for
-  clarity, but production code **SHOULD** use environment variables.
+  | **NEVER** include credentials in source code. Examples show strings for clarity.
+  | Production code **SHOULD** use `environment variables <https://12factor.net/config>`_.
 
-Start by creating an ``AppClient``. You can authenticate either with a created token or with client credentials:
+
+Start by creating an ``AppClient``. You can authenticate either with **Application Credentials** OR with **App Token**.
 
 .. code-block:: python
+  :caption: App Client Initialization
 
   from scapi import AppClient, Region
 
-  # Option 1: Using existing app token (simplest)
-  client = AppClient(token="YOUR_APP_TOKEN")
-
-  # Option 2: Using application credentials
+  # Option 1: Using application credentials
   client = AppClient(
     client_id="YOUR_CLIENT_ID",
     client_secret="YOUR_CLIENT_SECRET"
   )
 
-  # Option 3: With custom client defaults
+  # Option 2: Using created app token
+  client = AppClient(token="YOUR_APP_TOKEN")
+
+  # And you can set defaults for this client instance
   client = AppClient(
     token="YOUR_APP_TOKEN",
     region=Region.EU,  # Default region in requests
-    json=True          # Return raw json
+    json=True          # Return raw json instead of typed models
   )
 
 
-Making Requests
-^^^^^^^^^^^^^^^^
+Making First Requests
+^^^^^^^^^^^^^^^^^^^^^^
 
-Once initialized, call endpoints directly:
+Once client initialized, you can call endpoints directly.
+
+API calls are asynchronous (``async``/``await``). You need to run them inside an event loop.
+
+For simplicity, examples in this guide show only the relevant ``await`` calls. Assume they're inside an ``async`` function, typically called from ``asyncio.run()``.
+
+
+.. tip::
+
+  If you're new to async Python, check the `official asyncio documentation <https://docs.python.org/3/library/asyncio.html>`_.
+
 
 .. code-block:: python
+  :caption: Basic Example
 
-  # List available regions
-  regions = await client.regions()
-  for region in regions:
-    print(f"{region.id}: {region.name}")
+  import asyncio
+  from scapi import AppClient
 
-  # Get emission status for current region
-  # Region in request uses specified, or client default, or config default
-  emission = await client.emission()
-  print(f"Current emission: {emission.current_start}")
-  print(f"Previous: {emission.previous_start} - {emission.previous_end}")
+  client = AppClient(token="YOUR_APP_TOKEN")
 
-  # Get public character profile
-  profile = await client.profile("ZIV")
-  print(f"Character alliance: {profile.alliance}")
-  print(f"Clan: {profile.clan.info.name if profile.clan else 'No clan'}")
+  async def main():
+    # List available api regions
+    regions = await client.regions()
+    for region in regions:
+      print(f"{region.id}: {region.name}")
+
+    # Get emission status
+    emission = await client.emission()
+    print(f"Current emission: {emission.current_start}")
+    print(f"Previous: {emission.previous_start} - {emission.previous_end}")
+
+    # Get public character profile
+    profile = await client.profile("ZIV")
+    print(f"Character alliance: {profile.alliance}")
+    print(f"Clan: {profile.clan.info.name if profile.clan else 'No clan'}")
+
+  asyncio.run(main())
 
 
-Different Regions
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Use Different Regions
+^^^^^^^^^^^^^^^^^^^^^^
 
-Specify regions per-call or change the default:
+| Region selection follows a priority chain:
+| ``explicit call parameter`` → ``client instance default`` → ``global Config.REGION``.
+
+| When you specify a region in a method call, it overrides all defaults.
+| If omitted, the client checks its own ``region`` parameter.
+| If that's also unset, it falls back to ``Config.REGION`` (which defaults to ``"ru"``).
+
+This allows flexible configuration.
 
 .. code-block:: python
+  :caption: Different Regions Usage
 
   from scapi import AppClient, Region, Config
 
-  # Client with default region
+  # Client with default region (EU)
   client = AppClient(token="YOUR_APP_TOKEN", region=Region.EU)
 
   # Uses client default (EU)
@@ -93,17 +136,20 @@ Specify regions per-call or change the default:
   # Change config default from (RU) to (NA)
   Config.REGION = Region.NA
 
-  # No client default → uses Config.REGION (NA)
+  # Create client with no default region
   client = AppClient(token="YOUR_APP_TOKEN")
+
+  # No client region default → uses Config.REGION (NA)
   emission = await client.emission()
 
 
 Operations Sessions
 ^^^^^^^^^^^^^^^^^^^^
 
-The ``operations_sessions()`` method retrieves operation history with filtering options.
+The ``operations_sessions()`` method returns listing including participants, weapons, stats, and other information.
 
 .. code-block:: python
+  :caption: Operations Sessions Example
 
   # Get recent operation sessions
   sessions = await client.operations_sessions(limit=3)
@@ -111,17 +157,26 @@ The ``operations_sessions()`` method retrieves operation history with filtering 
     print(f"Map: {session.map}, Duration: {session.duration_seconds // 60} minutes")
 
   # Filter by map and date
-  sessions = await client.operations_sessions(map=OperationsMap.SHOCK_THERAPY, after="2025-12-01T00:00:00Z", limit=3)
+  sessions = await client.operations_sessions(
+    map=OperationsMap.SHOCK_THERAPY,
+    after="2025-12-01T00:00:00Z",
+    limit=3
+  )
   users = [user.username for session in sessions for user in session.participants]
-  print(f"Shock Therapy sessions since Dec 2025: {users}")
+  print(f"Shock Therapy users since Dec 2025: {users}")
 
 
 Auction Methods
 ^^^^^^^^^^^^^^^^
 
-The ``auction()`` factory method returns a dedicated endpoint for a specific item. Chain async methods like ``lots()`` or ``price_history()`` directly.
+| The ``auction()`` **factory method** returns a dedicated endpoint for a specific item.
+| Chain async methods like ``lots()`` or ``price_history()`` directly.
+
+| Use ``sort`` and ``order`` parameters to control listing order.
+| The ``limit`` parameter caps results per request (max ``200``).
 
 .. code-block:: python
+  :caption: Auction Methods Example
 
   ITEM_ID = "zyv9"
 
@@ -142,10 +197,19 @@ The ``auction()`` factory method returns a dedicated endpoint for a specific ite
   print(f"Historical prices: {history}")
 
 
+.. admonition:: Finding Item IDs
+  :class: tip
+
+  Use ``DatabaseLookup`` (see :doc:`Database Guide <database>`) or reference the `official Stalcraft Database <https://github.com/EXBO-Studio/stalcraft-database>`_.
+
+
 Clan Methods
 ^^^^^^^^^^^^^
 
+| The ``clan()`` **factory method** returns a dedicated endpoint for a specific clan.
+
 .. code-block:: python
+  :caption: Clan Methods Example
 
   CLAN_ID = "a552092f-e7c9-4cc3-a256-1e3f525770bf"
 

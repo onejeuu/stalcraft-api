@@ -22,6 +22,14 @@ dependencies = [
 [dependency-groups]
 dev = ["rich>=14.2.0", "pytest>=9.0.0", "pytest-asyncio>=1.3.0"]
 
+docs = [
+    "sphinx>=8.2.3,<9.0.0",
+    "sphinx-autobuild>=2025.8.25",
+    "sphinx-autodoc-typehints>=3.5.2",
+    "sphinx-book-theme>=1.1.4",
+    "sphinx-intl>=2.3.2",
+]
+
 [project.urls]
 Repository = "https://github.com/onejeuu/stalcraft-api"
 

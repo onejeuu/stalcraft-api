@@ -77,7 +77,7 @@ class OAuthClient(APIClient):
         """
         Request application token using client credentials grant.
 
-        **Note:** New tokens replace and invalidate previous ones.
+        **NOTE:** New tokens replace and invalidate previous ones.
 
         Args:
             scope (optional): Override default scope.
@@ -105,7 +105,7 @@ class OAuthClient(APIClient):
         """
         Exchange authorization code for user token.
 
-        **Note:** New tokens replace and invalidate previous ones.
+        **NOTE:** New tokens replace and invalidate previous ones.
 
         Args:
             code: Authorization code from user redirect.

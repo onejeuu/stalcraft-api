@@ -3,6 +3,7 @@ from typing import Optional
 
 from scapi import exceptions
 from scapi.consts import BaseUrl, Defaults
+from scapi.enums import Region
 from scapi.http.auth.creds import CredentialsHTTPClient
 from scapi.http.auth.token import TokenHTTPClient
 
@@ -22,11 +23,12 @@ class AppClient(SharedClient):
         base_url: str = BaseUrl.PRODUCTION,
         timeout: int = Defaults.TIMEOUT,
         json: bool = Defaults.JSON,
+        region: Optional[Region | str] = None,
     ):
         """
         Initialize application client with authentication credentials.
 
-        **Note:** Provide EITHER token OR both client_id and client_secret.
+        **NOTE:** Provide EITHER token OR both client_id and client_secret.
 
         Args:
             token (optional): Created application token.
@@ -35,6 +37,7 @@ class AppClient(SharedClient):
             base_url (optional): API server base URL. Defaults to `http://eapi.stalcraft.net`.
             timeout (optional): Request timeout in seconds. Defaults to `60s`.
             json (optional): Return JSON instead of models. Defaults to `False`.
+            region (optional): Game server region. Defaults to `ru`.
         """
 
         self._token = token
@@ -42,7 +45,7 @@ class AppClient(SharedClient):
         self._client_secret = client_secret
         self._timeout = timeout
 
-        super().__init__(base_url=base_url, json=json)
+        super().__init__(base_url=base_url, json=json, region=region)
 
         if token and (client_id or client_secret):
             warnings.warn("Redundant auth parameters. Provide EITHER 'token' OR both 'client_id' and 'client_secret'.")
@@ -71,15 +74,19 @@ class AppClient(SharedClient):
     def clan(
         self,
         clan_id: str,
+        region: Optional[Region | str] = None,
     ) -> ClanEndpoint:
         """
         Factory method for clan endpoint.
 
         Args:
             clan_id: Clan identifier.
+            region (optional): Game server region. Defaults to `ru`.
 
         Returns:
             Clan endpoint instance.
         """
 
-        return ClanEndpoint(clan_id=clan_id, http=self._http, json=self._json)
+        region = region or self._region
+
+        return ClanEndpoint(clan_id=clan_id, region=region, http=self._http, json=self._json)

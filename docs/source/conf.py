@@ -1,0 +1,69 @@
+# Configuration file for the Sphinx documentation builder.
+#
+# For the full list of built-in configuration values, see the documentation:
+# https://www.sphinx-doc.org/en/master/usage/configuration.html
+
+
+from sphinx.ext import autodoc
+from sphinx.locale import _
+
+import scapi
+
+
+# -- Project information -----------------------------------------------------
+# https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
+
+project = "scapi"
+copyright = "2025, onejeuu"
+
+author = scapi.__author__
+release = scapi.__version__
+
+html_title = f"{project} {release}"
+
+
+# -- General configuration ---------------------------------------------------
+# https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
+
+extensions = [
+    "sphinx.ext.autodoc",
+    "sphinx.ext.napoleon",
+    "sphinx.ext.viewcode",
+    "sphinx.ext.githubpages",
+    "sphinx.ext.intersphinx",
+    "sphinx_autodoc_typehints",
+]
+
+templates_path = ["_templates"]
+exclude_patterns = []
+
+locale_dirs = ["../locale/"]
+gettext_compact = False
+
+language = "en"
+
+# -- Options for HTML output -------------------------------------------------
+# https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
+
+html_theme = "sphinx_book_theme"
+html_extra_path = ["data"]
+
+napoleon_google_docstring = True
+napoleon_numpy_docstring = True
+
+autodoc_member_order = "bysource"
+add_module_names = False
+
+
+# -- Remove "Bases: object" from classes -------------------------------------
+
+useless_bases = _("Bases: %s") % ":py:class:`object`"
+
+
+class MockedClassDocumenter(autodoc.ClassDocumenter):
+    def add_line(self, line: str, source: str, *lineno: int) -> None:
+        if useless_bases not in line:
+            super().add_line(line, source, *lineno)
+
+
+autodoc.ClassDocumenter = MockedClassDocumenter

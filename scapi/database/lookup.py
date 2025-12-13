@@ -23,7 +23,7 @@ class DatabaseLookup:
     def __init__(
         self,
         github: Optional[GitHubClient] = None,
-        realm: Optional[str | Realm] = None,
+        realm: Optional[Realm | str] = None,
         threshold: float = 0.1,
         commit_ttl: float = 300,
         cache_ttl: float = 86400,
@@ -59,8 +59,8 @@ class DatabaseLookup:
     async def get(
         self,
         entity_id: str,
-        filename: str | IndexFile = IndexFile.LISTING,
-        realm: Optional[str | Realm] = None,
+        filename: IndexFile | str = IndexFile.LISTING,
+        realm: Optional[Realm | str] = None,
     ) -> Optional[Data]:
         """
         Retrieve entity data by ID.
@@ -83,8 +83,8 @@ class DatabaseLookup:
     async def search(
         self,
         query: str,
-        filename: str | IndexFile = IndexFile.LISTING,
-        realm: Optional[str | Realm] = None,
+        filename: IndexFile | str = IndexFile.LISTING,
+        realm: Optional[Realm | str] = None,
         threshold: Optional[float] = None,
     ) -> list[Lookup]:
         """
@@ -111,8 +111,8 @@ class DatabaseLookup:
     async def find(
         self,
         query: str,
-        filename: str | IndexFile = IndexFile.LISTING,
-        realm: Optional[str | Realm] = None,
+        filename: IndexFile | str = IndexFile.LISTING,
+        realm: Optional[Realm | str] = None,
         threshold: Optional[float] = None,
     ) -> Optional[Lookup]:
         """
@@ -141,7 +141,7 @@ class DatabaseLookup:
         self,
         path: str,
         upgrade_level: int = 0,
-        realm: Optional[str | Realm] = None,
+        realm: Optional[Realm | str] = None,
     ) -> Any:
         """
         Retrieve item information.
@@ -175,7 +175,7 @@ class DatabaseLookup:
     async def item_icon(
         self,
         path: str,
-        realm: Optional[str | Realm] = None,
+        realm: Optional[Realm | str] = None,
     ) -> bytes:
         """
         Download item icon image.

@@ -5,7 +5,7 @@ from typing import Optional
 from scapi.client import models
 from scapi.config import Config
 from scapi.consts import BaseUrl, Defaults
-from scapi.enums import OperationsMap, Order, Region, SortAuction
+from scapi.enums import OperationsMap, Order, Region, SortOperations
 from scapi.http.api import APIClient
 from scapi.http.client import HTTPClient
 from scapi.http.params import Params
@@ -22,6 +22,7 @@ class SharedClient(ABC, APIClient):
         *,
         base_url: str = BaseUrl.PRODUCTION,
         json: bool = Defaults.JSON,
+        region: Optional[Region | str] = None,
     ):
         """
         Initialize shared client.
@@ -29,10 +30,12 @@ class SharedClient(ABC, APIClient):
         Args:
             base_url (optional): API server base URL. Defaults to `http://eapi.stalcraft.net`.
             json (optional): Return JSON instead of models. Defaults to `False`.
+            region (optional): Default game server region. Defaults to `ru`.
         """
 
         self._base_url = base_url
         self._json = json
+        self._region = region
         self._http = self._create_http_client()
 
     @abstractmethod
@@ -58,7 +61,7 @@ class SharedClient(ABC, APIClient):
 
     async def emission(
         self,
-        region: Optional[str | Region] = None,
+        region: Optional[Region | str] = None,
     ) -> models.EmissionState:
         """
         Get current emission state.
@@ -70,7 +73,7 @@ class SharedClient(ABC, APIClient):
             Emission state.
         """
 
-        region = (region or Config.REGION).lower()
+        region = (region or self._region or Config.REGION).lower()
 
         response = await self._http.GET(
             url=f"{region}/emission",
@@ -81,7 +84,7 @@ class SharedClient(ABC, APIClient):
     async def profile(
         self,
         username: str,
-        region: Optional[str | Region] = None,
+        region: Optional[Region | str] = None,
     ) -> models.CharacterProfile:
         """
         Retrieve public character profile including alliance, stats, and clan affiliation.
@@ -94,7 +97,7 @@ class SharedClient(ABC, APIClient):
             Public character profile data.
         """
 
-        region = (region or Config.REGION).lower()
+        region = (region or self._region or Config.REGION).lower()
 
         response = await self._http.GET(
             url=f"{region}/character/by-name/{username}/profile",
@@ -106,7 +109,7 @@ class SharedClient(ABC, APIClient):
         self,
         limit: Optional[int] = None,
         offset: Optional[int] = None,
-        region: Optional[str | Region] = None,
+        region: Optional[Region | str] = None,
     ) -> Listing[models.ClanInfo]:
         """
         List all registered clans.
@@ -122,7 +125,7 @@ class SharedClient(ABC, APIClient):
 
         limit = max(0, min(200, limit or Config.LIMIT))
         offset = max(0, offset or Config.OFFSET)
-        region = (region or Config.REGION).lower()
+        region = (region or self._region or Config.REGION).lower()
 
         response = await self._http.GET(
             url=f"{region}/clans",
@@ -135,13 +138,13 @@ class SharedClient(ABC, APIClient):
         self,
         limit: Optional[int] = None,
         offset: Optional[int] = None,
-        sort: Optional[str | SortAuction] = None,
-        order: Optional[str | Order] = None,
-        map: Optional[str | OperationsMap] = None,
+        sort: Optional[SortOperations | str] = None,
+        order: Optional[Order | str] = None,
+        map: Optional[OperationsMap | str] = None,
         username: Optional[str] = None,
-        before: Optional[str | datetime] = None,
-        after: Optional[str | datetime] = None,
-        region: Optional[str | Region] = None,
+        before: Optional[datetime | str] = None,
+        after: Optional[datetime | str] = None,
+        region: Optional[Region | str] = None,
     ) -> Listing[models.OperationSession]:
         """
         Returns list of operation sessions.
@@ -166,13 +169,15 @@ class SharedClient(ABC, APIClient):
         sort = (sort or Config.SORT_OPERATION).lower()
         order = (order or Config.ORDER).lower()
         map = map.lower() if map else None
-        region = (region or Config.REGION).lower()
+        region = (region or self._region or Config.REGION).lower()
 
         if before and isinstance(before, datetime):
             before = before.strftime("%Y-%m-%dT%H:%M:%SZ")
 
         if after and isinstance(after, datetime):
             after = after.strftime("%Y-%m-%dT%H:%M:%SZ")
+
+        # TODO: parse and validate datetime string
 
         response = await self._http.GET(
             url=f"{region}/operations/sessions",
@@ -193,15 +198,19 @@ class SharedClient(ABC, APIClient):
     def auction(
         self,
         item_id: str,
+        region: Optional[Region | str] = None,
     ) -> AuctionEndpoint:
         """
         Factory method for auction endpoint.
 
         Args:
             item_id: Item identifier.
+            region (optional): Game server region. Defaults to `ru`.
 
         Returns:
             Auction endpoint instance.
         """
 
-        return AuctionEndpoint(item_id=item_id, http=self._http, json=self._json)
+        region = region or self._region
+
+        return AuctionEndpoint(item_id=item_id, region=region, http=self._http, json=self._json)

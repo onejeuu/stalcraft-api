@@ -85,6 +85,7 @@ class HTTPClient:
         """
 
         url = urljoin(self._base_url + "/", url.lstrip("/"))
+        print(method, url)
 
         # Prepare request options
         rparams = params.to_dict() if isinstance(params, Params) else {}

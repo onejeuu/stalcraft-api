@@ -12,7 +12,7 @@ class UserClanEndpoint(ClanEndpoint):
 
     async def members(
         self,
-        region: Optional[str | Region] = None,
+        region: Optional[Region | str] = None,
     ) -> list[models.ClanMember]:
         """
         Retrieve clan member list.
@@ -26,7 +26,7 @@ class UserClanEndpoint(ClanEndpoint):
             List of clan members with ranks and join times.
         """
 
-        region = (region or Config.REGION).lower()
+        region = (region or self._region or Config.REGION).lower()
 
         response = await self._http.GET(
             url=f"{region}/clan/{self._clan_id}/members",

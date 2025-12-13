@@ -17,6 +17,7 @@ class ClanEndpoint(APIClient):
         http: HTTPClient,
         clan_id: str,
         json: bool = Defaults.JSON,
+        region: Optional[Region | str] = None,
     ):
         """
         Initialize clan endpoint.
@@ -25,15 +26,17 @@ class ClanEndpoint(APIClient):
             http: HTTP client instance.
             clan_id: Clan identifier.
             json (optional): Return JSON instead of models. Defaults to `False`.
+            region (optional): Default game server region. Defaults to `ru`.
         """
 
         self._http = http
         self._clan_id = clan_id
         self._json = json
+        self._region = region
 
     async def info(
         self,
-        region: Optional[str | Region] = None,
+        region: Optional[Region | str] = None,
     ) -> models.ClanInfo:
         """
         Retrieve clan information.
@@ -45,7 +48,7 @@ class ClanEndpoint(APIClient):
             Clan details.
         """
 
-        region = (region or Config.REGION).lower()
+        region = (region or self._region or Config.REGION).lower()
 
         response = await self._http.GET(
             f"{region}/clan/{self._clan_id}/info",

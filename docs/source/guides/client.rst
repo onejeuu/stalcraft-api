@@ -70,7 +70,7 @@ Making First Requests
 
 Once client initialized, you can call endpoints directly.
 
-API calls are asynchronous (``async``/``await``). You need to run them inside an event loop.
+API calls are asynchronous (``async``/``await``). You need to run them inside an `event loop <https://docs.python.org/3/library/asyncio-eventloop.html>`_.
 
 For simplicity, examples in this guide show only the relevant ``await`` calls. Assume they're inside an ``async`` function, typically called from ``asyncio.run()``.
 
@@ -149,7 +149,7 @@ Operations Sessions
 The ``operations_sessions()`` method returns listing including participants, weapons, stats, and other information.
 
 .. code-block:: python
-  :caption: Operations Sessions Example
+  :caption: Operations Sessions Usage
 
   # Get recent operation sessions
   sessions = await client.operations_sessions(limit=3)
@@ -176,8 +176,9 @@ Auction Methods
 | The ``limit`` parameter caps results per request (max ``200``).
 
 .. code-block:: python
-  :caption: Auction Methods Example
+  :caption: Auction Methods Usage
 
+  # Target Item ID
   ITEM_ID = "zyv9"
 
   # Get active lots
@@ -209,7 +210,7 @@ Clan Methods
 | The ``clan()`` **factory method** returns a dedicated endpoint for a specific clan.
 
 .. code-block:: python
-  :caption: Clan Methods Example
+  :caption: Clan Methods Usage
 
   CLAN_ID = "a552092f-e7c9-4cc3-a256-1e3f525770bf"
 
@@ -221,17 +222,20 @@ Clan Methods
 
 
 ----------------------------------------
-User Client
+UserClient for Private Data
 ----------------------------------------
 
-``UserClient`` extends public API access with owner-specific endpoints. Each user token has independent rate limits.
+``UserClient`` requires an OAuth user token and provides access to player-specific endpoints while maintaining all ``AppClient`` functionality.
+
 
 .. important::
 
   | User-specific endpoints only return data for the account that owns the token.
   | You cannot access other players private information.
 
+
 .. code-block:: python
+  :caption: User Client Usage
 
   from scapi import UserClient
 
@@ -254,9 +258,11 @@ User Client
 Clan Methods
 ^^^^^^^^^^^^^
 
+
 .. important::
 
   This endpoint will fail with a 401 error if the token owner is not a member of the specified clan.
+
 
 .. code-block:: python
 
@@ -268,3 +274,34 @@ Clan Methods
 
   except Exception as err:
     print(f"Cannot access members: {err}")
+
+
+----------------------------------------
+Error Handling and Rate Limits
+----------------------------------------
+
+| API errors raise specific exceptions.
+| Rate limit information is available through the client.
+
+.. code-block:: python
+
+  from scapi import AppClient, exceptions
+
+  client = AppClient(token="YOUR_APP_TOKEN")
+
+  for offset in range(99):
+    try:
+      lots = await client.auction("zyv9").lots(limit=1, offset=offset)
+      print(f"Lot {lots}")
+
+    except exceptions.RateLimitError:
+      print(f"Rate limit exceeded {client.ratelimit}")
+      break
+
+    except exceptions.ScApiException as err:
+      print(f"Error {err}")
+      break
+
+    except Exception as err:
+      print(f"Unexcepted error {err}")
+      break

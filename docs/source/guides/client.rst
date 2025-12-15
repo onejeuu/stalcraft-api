@@ -5,37 +5,47 @@ This guide covers practical usage of the API clients. You'll learn how to access
 
 
 ----------------------------------------
-Basic Concepts
+📌 Basic Concepts
 ----------------------------------------
 
-| STALCRAFT API organizes data by regions (``RU``, ``EU``, ``NA``, ``SEA``).
-| Most endpoints require specifying a region.
+| **Regions:** STALCRAFT API data is organized by ``RU``, ``EU``, ``NA``, ``SEA`` regions.
+| Most endpoints require specifying a region, since game data exists independently per region.
 
-**Authentication Types:**
+**🔑 Authentication Types:**
 
--  ``Application Credentials``, ``App Token`` - **For public data** (auction, emissions, profiles)
-- ``User Token`` - **For public and private data** (characters, friends, clan membership)
+-  ``Application Credentials`` or ``App Token`` - **For public data** (auction, emissions, profiles)
+- ``User Token`` - **For both public and private data** (characters, friends, clan membership)
 
-**Response Formats:**
+**📄 Response Formats:**
 
-- ``Pydantic Models`` (default) - Typed Python objects with IDE hints
+- ``Pydantic Models`` (default) - Typed Python objects with IDE autocompletion
 - ``Raw JSON`` - Original API response
 
 
-.. hint::
+.. seealso::
 
-  For application register and token creation, refer to the :doc:`OAuth Guide <oauth>`.
+  `Official Terminology <https://eapi.stalcraft.net/overview.html#terminology>`_ explains regions, realms, accounts, and characters in detail.
+
+
+.. admonition:: Before You Begin
+  :class: hint
+
+  | To follow the examples, you'll need authentication credentials or tokens.
+  | See :doc:`OAuth Guide <oauth>` to register an application and obtain credentials.
+
+  | **For testing:**
+  | Use Demo API (``https://dapi.stalcraft.net``) with tokens provided in `official documentation <https://eapi.stalcraft.net/overview.html#demo-api>`_.
 
 
 ----------------------------------------
-Getting Started
+🚀 Getting Started
 ----------------------------------------
 
 Initializing AppClient
 ^^^^^^^^^^^^^^^^^^^^^^^
 
 
-.. warning::
+.. important::
 
   | **NEVER** include credentials in source code. Examples show strings for clarity.
   | Production code **SHOULD** use `environment variables <https://12factor.net/config>`_.
@@ -72,16 +82,16 @@ Once client initialized, you can call endpoints directly.
 
 API calls are asynchronous (``async``/``await``). You need to run them inside an `event loop <https://docs.python.org/3/library/asyncio-eventloop.html>`_.
 
-For simplicity, examples in this guide show only the relevant ``await`` calls. Assume they're inside an ``async`` function, typically called from ``asyncio.run()``.
 
+.. note::
 
-.. tip::
+  For simplicity, examples in this guide show only the relevant ``await`` calls. Assume they're inside an ``async`` function, typically called from ``asyncio.run()``.
 
   If you're new to async Python, check the `official asyncio documentation <https://docs.python.org/3/library/asyncio.html>`_.
 
 
 .. code-block:: python
-  :caption: Basic Example
+  :caption: Basic Usage Example
 
   import asyncio
   from scapi import AppClient
@@ -110,14 +120,18 @@ For simplicity, examples in this guide show only the relevant ``await`` calls. A
 Use Different Regions
 ^^^^^^^^^^^^^^^^^^^^^^
 
-| Region selection follows a priority chain:
+| Region selection follows a priority:
 | ``explicit call parameter`` → ``client instance default`` → ``global Config.REGION``.
 
 | When you specify a region in a method call, it overrides all defaults.
 | If omitted, the client checks its own ``region`` parameter.
 | If that's also unset, it falls back to ``Config.REGION`` (which defaults to ``"ru"``).
 
-This allows flexible configuration.
+
+.. note::
+
+  ``Config`` contains global defaults applied to **all clients** unless overridden.
+
 
 .. code-block:: python
   :caption: Different Regions Usage
@@ -175,6 +189,18 @@ Auction Methods
 | Use ``sort`` and ``order`` parameters to control listing order.
 | The ``limit`` parameter caps results per request (max ``200``).
 
+
+.. admonition:: Where to Find Item IDs
+  :class: tip
+
+  API uses internal identifiers (like ``"zyv9"``) instead of item names.
+
+  For production use, the library provides ``DatabaseLookup``, a built-in system that syncs item names to IDs automatically.
+  See :doc:`Database Guide <database>` for setup and usage.
+
+  For testing or custom solutions reference to `official Stalcraft Database <https://github.com/EXBO-Studio/stalcraft-database>`_.
+
+
 .. code-block:: python
   :caption: Auction Methods Usage
 
@@ -198,12 +224,6 @@ Auction Methods
   print(f"Historical prices: {history}")
 
 
-.. admonition:: Finding Item IDs
-  :class: tip
-
-  Use ``DatabaseLookup`` (see :doc:`Database Guide <database>`) or reference the `official Stalcraft Database <https://github.com/EXBO-Studio/stalcraft-database>`_.
-
-
 Clan Methods
 ^^^^^^^^^^^^^
 
@@ -222,7 +242,7 @@ Clan Methods
 
 
 ----------------------------------------
-UserClient for Private Data
+🔐 UserClient for Private Data
 ----------------------------------------
 
 ``UserClient`` requires an OAuth user token and provides access to player-specific endpoints while maintaining all ``AppClient`` functionality.
@@ -265,6 +285,7 @@ Clan Methods
 
 
 .. code-block:: python
+  :caption: User Clan Methods
 
   try:
     members = await client.clan("a552092f-e7c9-4cc3-a256-1e3f525770bf").members()
@@ -277,31 +298,44 @@ Clan Methods
 
 
 ----------------------------------------
-Error Handling and Rate Limits
+🚫 Basic Error Handling
 ----------------------------------------
 
 | API errors raise specific exceptions.
 | Rate limit information is available through the client.
 
+
+.. seealso::
+
+  For more details refer to :doc:`Error Handling <errors>`.
+
+
 .. code-block:: python
+  :caption: Error Handling
 
   from scapi import AppClient, exceptions
 
   client = AppClient(token="YOUR_APP_TOKEN")
 
-  for offset in range(99):
-    try:
-      lots = await client.auction("zyv9").lots(limit=1, offset=offset)
-      print(f"Lot {lots}")
+  try:
+    clans = await client.clans()
+    print(f"Found {len(clans)} clans.")
 
-    except exceptions.RateLimitError:
-      print(f"Rate limit exceeded {client.ratelimit}")
-      break
+  except exceptions.RateLimitError:
+    print("Too many requests, slow down.")
+    print(client.ratelimit)
 
-    except exceptions.ScApiException as err:
-      print(f"Error {err}")
-      break
+  except exceptions.UnauthorizedError:
+    print("Invalid or expired token.")
 
-    except Exception as err:
-      print(f"Unexcepted error {err}")
-      break
+
+----------------------------------------
+⏩ What's Next
+----------------------------------------
+
+Continue with:
+
+- :doc:`Authentication Guide <oauth>` – Register application and get tokens
+- :doc:`Database Lookup <database>` – Find items IDs by name
+- :doc:`Error Handling <errors>` – Handle exceptions and rate limits
+- :doc:`Examples <../examples/index>` – Complete usage examples

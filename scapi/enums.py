@@ -11,6 +11,7 @@ class Region(StrEnum):
     EU = EUROPE = auto()
     NA = NORTH_AMERICA = auto()
     SEA = SOUTH_EAST_ASIA = auto()
+    NEA = NORTH_EAST_ASIA = auto()
 
 
 class Realm(StrEnum):

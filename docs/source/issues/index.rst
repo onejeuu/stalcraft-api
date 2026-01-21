@@ -6,5 +6,5 @@
   :titlesonly:
 
   clients
-  oauth
+  auth
   database

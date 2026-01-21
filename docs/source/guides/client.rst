@@ -41,15 +41,15 @@ This guide covers practical usage of the API clients. You'll learn how to access
 🚀 Getting Started
 ----------------------------------------
 
-Initializing AppClient
-^^^^^^^^^^^^^^^^^^^^^^^
-
 
 .. important::
 
   | **NEVER** include credentials in source code.
   | Production code **SHOULD** use `environment variables <https://12factor.net/config>`_.
 
+
+Initializing AppClient
+^^^^^^^^^^^^^^^^^^^^^^^
 
 Start by creating an ``AppClient``. You can authenticate either with **Application Credentials** OR with **App Token**.
 

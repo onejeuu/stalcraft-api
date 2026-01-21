@@ -60,7 +60,7 @@ Registration Process
 🔑 Working with OAuthClient
 ----------------------------------------
 
-The ``OAuthClient`` handles all authentication flows. Initialize it with your credentials:
+The ``OAuthClient`` handles all authentication flows. Initialize it with your credentials.
 
 .. code-block:: python
   :caption: Create OAuth Client
@@ -85,7 +85,7 @@ The ``OAuthClient`` handles all authentication flows. Initialize it with your cr
 📡 App Token
 ----------------------------------------
 
-App tokens authenticate your application for **public data only** (auctions, emissions, public profiles).
+App tokens authenticate your application for **public data** (auctions, emissions, public profiles).
 
 .. code-block:: python
   :caption: Get App Token
@@ -178,3 +178,39 @@ You can validate user tokens and retrieve basic account information.
 
 Use this to verify token validity and identify the authenticated user.
 
+
+----------------------------------------
+🚨 Common Issues
+----------------------------------------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 40 601
+
+   * - Problem
+     - Solution
+   * - **No callback redirect after user authorization**
+     - Ensure ``redirect_uri`` exactly matches your registered application URI.
+   * - **Authorization code expired**
+     - Use authorization codes immediately. They expire quickly.
+   * - **Application not approved**
+     - Production access requires manual approval. Use Demo API while waiting.
+   * - **Token stops working**
+     - New tokens invalidate previous ones. Check for recent token generation.
+
+
+.. seealso::
+
+  For detailed troubleshooting, see :doc:`Authentication Issues <../issues/auth>`.
+
+
+----------------------------------------
+⏩ What's Next
+----------------------------------------
+
+Continue with:
+
+- :doc:`API Clients Guide <client>` – Use tokens with AppClient and UserClient.
+- :doc:`Database Lookup <database>` – Find items IDs by name
+- :doc:`Error Handling <errors>` – Handle exceptions and rate limits
+- :doc:`Examples <../examples/index>` – Complete usage examples

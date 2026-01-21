@@ -8,7 +8,7 @@ This guide covers practical usage of the API clients. You'll learn how to access
 📌 Basic Concepts
 ----------------------------------------
 
-| **Regions:** STALCRAFT API data is organized by ``RU``, ``EU``, ``NA``, ``SEA`` regions.
+| **Regions:** STALCRAFT API data is organized by ``RU``, ``EU``, ``NA``, ``SEA``, ``NEA`` regions.
 | Most endpoints require specifying a region, since game data exists independently per region.
 
 **🔑 Authentication Types:**
@@ -47,7 +47,7 @@ Initializing AppClient
 
 .. important::
 
-  | **NEVER** include credentials in source code. Examples show strings for clarity.
+  | **NEVER** include credentials in source code.
   | Production code **SHOULD** use `environment variables <https://12factor.net/config>`_.
 
 
@@ -198,7 +198,7 @@ Auction Methods
   For production use, the library provides ``DatabaseLookup``, a built-in system that syncs item names to IDs automatically.
   See :doc:`Database Guide <database>` for setup and usage.
 
-  For testing or custom solutions reference to `official Stalcraft Database <https://github.com/EXBO-Studio/stalcraft-database>`_.
+  For testing or custom solutions reference to `official Stalcraft Database repository <https://github.com/EXBO-Studio/stalcraft-database>`_.
 
 
 .. code-block:: python

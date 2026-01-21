@@ -8,6 +8,7 @@ Index
 
   guides/index
   examples/index
+  issues/index
   api/index
 
 ----------------------------------------

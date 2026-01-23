@@ -13,7 +13,7 @@ from .index.search import Entity, Lookup, SearchIndex
 from .state import CommitState
 
 
-SYNC_FILES: list[str] = [f"{realm}/{file}" for realm in Realm for file in IndexFile]
+INDEX_FILES: list[str] = [f"{realm}/{file}" for realm in Realm for file in IndexFile]
 
 
 class DatabaseLookup:
@@ -27,6 +27,7 @@ class DatabaseLookup:
         stale_time: float = 900,
         asset_ttl: float = 86400,
         asset_capacity: int = 128,
+        sync_on_update: bool = True,
     ):
         """
         Initialize database lookup.
@@ -38,6 +39,7 @@ class DatabaseLookup:
             stale_time (optional): Remote commit cache TTL seconds. Defaults to `900s` (`15 minute`).
             asset_ttl (optional): Files cache TTL seconds. Defaults to `86400s` (`1 day`).
             asset_capacity (optional): Files cache size limit. Defaults to `128`.
+            sync_on_update (optional): Sync all indexes on commit update, otherwise lazy load. Defaults to `True`.
         """
 
         self._github = github or GitHubClient()
@@ -46,15 +48,11 @@ class DatabaseLookup:
         self._stale_time = stale_time
         self._asset_ttl = asset_ttl
         self._asset_cap = asset_capacity
+        self._sync_on_update = sync_on_update
 
         self._state = CommitState(ttl=self._stale_time)
         self._assets = TTLCache(maxsize=self._asset_cap, ttl=self._asset_ttl)
         self._indexes: dict[str, SearchIndex] = {}
-
-    @property
-    def state(self) -> CommitState:
-        """Current commit synchronization state."""
-        return self._state
 
     async def get_entity(
         self,
@@ -77,7 +75,7 @@ class DatabaseLookup:
         realm = (realm or self._realm or Config.REALM).lower()
         path = f"{realm}/{filename}"
 
-        index = await self._index(path)
+        index = await self._get_index(path)
         return index.get(entity_id)
 
     async def search(
@@ -105,7 +103,7 @@ class DatabaseLookup:
 
         threshold = threshold if threshold is not None else self._threshold
 
-        index = await self._index(path)
+        index = await self._get_index(path)
         return index.search(query, threshold)
 
     async def find_one(
@@ -220,10 +218,10 @@ class DatabaseLookup:
 
         self._update_commit()
 
-        await asyncio.gather(*[self._download(file) for file in SYNC_FILES])
+        await asyncio.gather(*[self._download_index(path) for path in INDEX_FILES])
         return True
 
-    async def _index(self, path: str) -> SearchIndex:
+    async def _get_index(self, path: str) -> SearchIndex:
         """Retrieve or build search index for path with commit validation."""
 
         await self._validate_remote_commit()
@@ -231,11 +229,14 @@ class DatabaseLookup:
         if self._state.uptodate and path in self._indexes:
             return self._indexes[path]
 
+        if self._sync_on_update:
+            await self.sync(force=True)
+            return self._indexes[path]
+
         self._update_commit()
+        return await self._download_index(path)
 
-        return await self._download(path)
-
-    async def _download(self, path: str) -> SearchIndex:
+    async def _download_index(self, path: str) -> SearchIndex:
         """Download and build search index from json file."""
 
         content: bytes = await self._github.rawfile(path=path)

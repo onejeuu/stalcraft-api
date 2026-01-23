@@ -8,9 +8,9 @@ from scapi.http.client import Headers
 
 TIMEOUT = 300
 
+# TODO: update headers
 HEADERS = {
     "Connection": "keep-alive",
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
     "Accept-Encoding": "gzip, deflate, br",
     "Accept": "*/*",
 }

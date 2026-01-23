@@ -26,8 +26,8 @@ class DatabaseLookup:
         realm: Optional[Realm | str] = None,
         threshold: float = 0.1,
         stale_time: float = 900,
-        cache_ttl: float = 86400,
-        cache_capacity: int = 128,
+        asset_ttl: float = 86400,
+        asset_capacity: int = 128,
     ):
         """
         Initialize database lookup.
@@ -37,21 +37,20 @@ class DatabaseLookup:
             realm (optional): Default game version realm. Defaults to `ru`.
             threshold (optional): Default search similarity threshold (`0.0`-`1.0`). Defaults to `0.1`.
             stale_time (optional): Remote commit cache TTL seconds. Defaults to `900s` (`15 minute`).
-            cache_ttl (optional): Files cache TTL seconds. Defaults to `86400s` (`1 day`).
-            cache_capacity (optional): Files cache size limit. Defaults to `128`.
+            asset_ttl (optional): Files cache TTL seconds. Defaults to `86400s` (`1 day`).
+            asset_capacity (optional): Files cache size limit. Defaults to `128`.
         """
 
         self._github = github or GitHubClient()
         self._realm = realm
         self._threshold = threshold
         self._stale_time = stale_time
-        self._cache_ttl = cache_ttl
-        self._cache_cap = cache_capacity
+        self._asset_ttl = asset_ttl
+        self._asset_cap = asset_capacity
 
-        # TODO: sep items details cache & search index
-        # TODO: save db
         self._commits = CommitsState(ttl=self._stale_time)
-        self._cache = TTLCache(maxsize=self._cache_cap, ttl=self._cache_ttl)
+        self._assets = TTLCache(maxsize=self._asset_cap, ttl=self._asset_ttl)
+        self._indexes: dict[str, SearchIndex] = {}
 
     @property
     def state(self) -> CommitsState:
@@ -165,13 +164,13 @@ class DatabaseLookup:
             tmp = Path(path)
             path = (tmp.parent / f"_variants/{tmp.stem}/{lvl}.json").as_posix()
 
-        if path in self._cache:
-            return self._cache[path]
+        if path in self._assets:
+            return self._assets[path]
 
         content: bytes = await self._github.rawfile(path=path)
         data = json.loads(content)
 
-        self._cache[path] = data
+        self._assets[path] = data
         return data
 
     async def item_icon(
@@ -193,12 +192,12 @@ class DatabaseLookup:
         realm = (realm or self._realm or Config.REALM).lower()
         path = f"{realm}/{path}"
 
-        if path in self._cache:
-            return self._cache[path]
+        if path in self._assets:
+            return self._assets[path]
 
         data: bytes = await self._github.rawfile(path=path)
 
-        self._cache[path] = data
+        self._assets[path] = data
         return data
 
     async def sync(
@@ -230,8 +229,8 @@ class DatabaseLookup:
 
         await self._validate_remote_commit()
 
-        if self._commits.uptodate and path in self._cache:
-            return self._cache[path]
+        if self._commits.uptodate and path in self._indexes:
+            return self._indexes[path]
 
         self._update_commit()
 
@@ -246,7 +245,7 @@ class DatabaseLookup:
         index = SearchIndex()
         index.build(path, data)
 
-        self._cache[path] = index
+        self._indexes[path] = index
         return index
 
     async def _validate_remote_commit(self) -> None:
@@ -260,7 +259,7 @@ class DatabaseLookup:
 
         if not self._commits.uptodate:
             self._commits.local = self._commits.remote
-            self._cache.clear()
+            self._indexes.clear()
 
     def __repr__(self):
-        return f"{self.__class__.__name__}(realm='{self._realm}', threshold={self._threshold}, uptodate={self._commits.uptodate}, stale_time={self._stale_time}, cache_ttl={self._cache_ttl})"
+        return f"{self.__class__.__name__}(realm='{self._realm}', threshold={self._threshold}, uptodate={self._commits.uptodate}, stale_time={self._stale_time}, asset_ttl={self._asset_ttl})"

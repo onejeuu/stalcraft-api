@@ -1,14 +1,14 @@
 from collections import defaultdict
-from dataclasses import dataclass, field
 from typing import Any, NamedTuple, TypeAlias
 
 from . import parsing, tokenize
 
 
 Index: TypeAlias = dict[str, set[str]]
+Counts: TypeAlias = dict[str, int]
 
-Entity = dict[str, Any]
-Entities = dict[str, Entity]
+Entity: TypeAlias = dict[str, Any]
+Entities: TypeAlias = dict[str, Entity]
 
 
 class Lookup(NamedTuple):
@@ -19,27 +19,26 @@ class Lookup(NamedTuple):
     score: float = 0.0
 
 
-# TODO: remove dataclass?
-@dataclass
 class SearchIndex:
     """In-memory search index for entity lookup with N-gram tokenization."""
 
-    _index: Index = field(default_factory=dict, repr=False)
-    """Inverted Index, mapping from N-grams (tokens) to Entity IDs."""
+    def __init__(self):
+        self._index: Index = {}
+        """Inverted Index, mapping from N-grams (tokens) to Entity IDs."""
 
-    _entities: Entities = field(default_factory=dict, repr=False)
-    """Entity Storage, stores all translations (Entity ID -> {lang: text})."""
+        self._entities: Entities = {}
+        """Entity Storage, stores all data (Entity ID -> JSON{})."""
 
-    _counts: dict[str, int] = field(default_factory=dict, repr=False)
-    """N-gram Counts, mapping Entity ID to total unique N-grams."""
+        self._counts: Counts = {}
+        """N-gram Counts, mapping Entity ID to total unique N-grams."""
 
     def build(self, path: str, data: Any):
         """Build index from structured data at given path."""
 
         # TODO: multilang fix
         index: Index = defaultdict(set)
-        entities: Entities = defaultdict(lambda: defaultdict(dict))
         counts: dict[str, set[str]] = defaultdict(set)
+        entities: Entities = defaultdict(lambda: defaultdict(dict))
 
         parser = parsing.get(path)
 

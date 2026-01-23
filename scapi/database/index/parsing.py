@@ -2,7 +2,7 @@ import warnings
 from functools import wraps
 from typing import Any, Callable, Iterator, TypeAlias
 
-from .enums import IndexFile
+from scapi.enums import IndexFile
 
 
 Item: TypeAlias = dict[str, Any]

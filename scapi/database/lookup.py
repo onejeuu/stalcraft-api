@@ -6,12 +6,11 @@ from typing import Any, Optional
 from cachetools import TTLCache
 
 from scapi.config import Config
-from scapi.enums import Realm
+from scapi.enums import IndexFile, Realm
 
-from .enums import IndexFile
 from .github import GitHubClient
-from .index import Entity, Lookup, SearchIndex
-from .state import CommitsState
+from .index.search import Entity, Lookup, SearchIndex
+from .state import CommitState
 
 
 SYNC_FILES: list[str] = [f"{realm}/{file}" for realm in Realm for file in IndexFile]
@@ -48,14 +47,14 @@ class DatabaseLookup:
         self._asset_ttl = asset_ttl
         self._asset_cap = asset_capacity
 
-        self._commits = CommitsState(ttl=self._stale_time)
+        self._state = CommitState(ttl=self._stale_time)
         self._assets = TTLCache(maxsize=self._asset_cap, ttl=self._asset_ttl)
         self._indexes: dict[str, SearchIndex] = {}
 
     @property
-    def state(self) -> CommitsState:
+    def state(self) -> CommitState:
         """Current commit synchronization state."""
-        return self._commits
+        return self._state
 
     async def get_entity(
         self,
@@ -216,7 +215,7 @@ class DatabaseLookup:
 
         await self._validate_remote_commit()
 
-        if self._commits.uptodate and not force:
+        if self._state.uptodate and not force:
             return False
 
         self._update_commit()
@@ -229,7 +228,7 @@ class DatabaseLookup:
 
         await self._validate_remote_commit()
 
-        if self._commits.uptodate and path in self._indexes:
+        if self._state.uptodate and path in self._indexes:
             return self._indexes[path]
 
         self._update_commit()
@@ -251,15 +250,15 @@ class DatabaseLookup:
     async def _validate_remote_commit(self) -> None:
         """Fetch latest remote commit if not cached."""
 
-        if not self._commits.remote:
-            self._commits.remote = await self._github.latest_commit()
+        if not self._state.remote:
+            self._state.remote = await self._github.latest_commit()
 
     def _update_commit(self) -> None:
         """Update local commit and clear cache on change."""
 
-        if not self._commits.uptodate:
-            self._commits.local = self._commits.remote
+        if not self._state.uptodate:
+            self._state.local = self._state.remote
             self._indexes.clear()
 
     def __repr__(self):
-        return f"{self.__class__.__name__}(realm='{self._realm}', threshold={self._threshold}, uptodate={self._commits.uptodate}, stale_time={self._stale_time}, asset_ttl={self._asset_ttl})"
+        return f"{self.__class__.__name__}(realm='{self._realm}', threshold={self._threshold}, uptodate={self._state.uptodate}, stale_time={self._stale_time}, asset_ttl={self._asset_ttl})"

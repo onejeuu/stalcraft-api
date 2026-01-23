@@ -36,7 +36,7 @@ class DatabaseLookup:
             github (optional): GitHub client instance.
             realm (optional): Default game version realm. Defaults to `ru`.
             threshold (optional): Default search similarity threshold (`0.0`-`1.0`). Defaults to `0.1`.
-            stale_time (optional): Remote commit cache TTL seconds. Defaults to `900s` (`15 minute`).
+            stale_time (optional): Remote commit cache TTL seconds (`0` to disable). Defaults to `900s` (`15 minute`).
             asset_ttl (optional): Files cache TTL seconds. Defaults to `86400s` (`1 day`).
             asset_capacity (optional): Files cache size limit. Defaults to `128`.
             sync_on_update (optional): Sync all indexes on commit update, otherwise lazy load. Defaults to `True`.
@@ -262,4 +262,7 @@ class DatabaseLookup:
             self._indexes.clear()
 
     def __repr__(self):
-        return f"{self.__class__.__name__}(realm='{self._realm}', threshold={self._threshold}, uptodate={self._state.uptodate}, stale_time={self._stale_time}, asset_ttl={self._asset_ttl})"
+        return (
+            f"{self.__class__.__name__}(realm='{self._realm}', threshold={self._threshold}, uptodate={self._state.uptodate}, sync_on_update={self._sync_on_update}, "
+            f"stale_time={self._stale_time}, asset_ttl={self._asset_ttl})"
+        )

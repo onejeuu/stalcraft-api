@@ -1,4 +1,6 @@
 import time
+from datetime import datetime
+from typing import Optional
 
 
 class CommitState:
@@ -31,5 +33,12 @@ class CommitState:
 
         return self.local == self._remote
 
+    @property
+    def until(self) -> Optional[datetime]:
+        """Expiration time as datetime or None if infinite."""
+        if self._until == float("inf") or self._until == 0.0:
+            return None
+        return datetime.fromtimestamp(self._until)
+
     def __repr__(self) -> str:
-        return f"{self.__class__.__name__}(local='{self.local}', remote='{self.remote}', uptodate={self.uptodate})"
+        return f"{self.__class__.__name__}(local='{self.local}', remote='{self.remote}', uptodate={self.uptodate}, until={self.until})"

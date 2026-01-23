@@ -32,6 +32,11 @@ class SearchIndex:
         self._counts: Counts = {}
         """N-gram Counts, mapping Entity ID to total unique N-grams."""
 
+    def get(self, entity_id: str) -> Entity | None:
+        """Retrieve entity data by ID."""
+
+        return self._entities.get(entity_id)
+
     def build(self, path: str, data: Any):
         """Build index from structured data at given path."""
 
@@ -56,11 +61,6 @@ class SearchIndex:
         self._index = dict(index)
         self._entities = dict(entities)
         self._counts = {entity_id: len(ngrams) for entity_id, ngrams in counts.items()}
-
-    def get(self, entity_id: str) -> Entity | None:
-        """Retrieve entity data by ID."""
-
-        return self._entities.get(entity_id)
 
     def search(self, query: str, threshold: float) -> list[Lookup]:
         """

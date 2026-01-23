@@ -57,7 +57,7 @@ def _stats(data: Data):
 def _achievements(data: Data):
     for item in data:
         entity_id = item["id"]
-        yield from _extract_translations(item, entity_id, fields=["name", "description"])
+        yield from _extract_translations(item, entity_id, fields=["title"])
 
 
 def _extract_translations(item: Any, entity_id: str, fields: list[str]):

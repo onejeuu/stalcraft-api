@@ -7,8 +7,8 @@ from . import parsing, tokenize
 
 Index: TypeAlias = dict[str, set[str]]
 
-Data = dict[str, Any]
-Entities = dict[str, Data]
+Entity = dict[str, Any]
+Entities = dict[str, Entity]
 
 
 class Lookup(NamedTuple):
@@ -19,6 +19,7 @@ class Lookup(NamedTuple):
     score: float = 0.0
 
 
+# TODO: remove dataclass?
 @dataclass
 class SearchIndex:
     """In-memory search index for entity lookup with N-gram tokenization."""
@@ -35,6 +36,7 @@ class SearchIndex:
     def build(self, path: str, data: Any):
         """Build index from structured data at given path."""
 
+        # TODO: multilang fix
         index: Index = defaultdict(set)
         entities: Entities = defaultdict(lambda: defaultdict(dict))
         counts: dict[str, set[str]] = defaultdict(set)
@@ -56,7 +58,7 @@ class SearchIndex:
         self._entities = dict(entities)
         self._counts = {entity_id: len(ngrams) for entity_id, ngrams in counts.items()}
 
-    def get(self, entity_id: str) -> Data | None:
+    def get(self, entity_id: str) -> Entity | None:
         """Retrieve entity data by ID."""
 
         return self._entities.get(entity_id)
@@ -107,6 +109,8 @@ class SearchIndex:
 
             # |Q ∩ I| / (|Q| + |I| - |Q ∩ I|)
             union = q_num_ngrams + e_num_ngrams - count
+
+            # TODO: consider length fix
             score = round(count / union, 2) if union != 0 else 0.0
 
             # filter by threshold

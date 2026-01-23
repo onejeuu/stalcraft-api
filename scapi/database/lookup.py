@@ -10,7 +10,7 @@ from scapi.enums import Realm
 
 from .enums import IndexFile
 from .github import GitHubClient
-from .index import Data, Lookup, SearchIndex
+from .index import Entity, Lookup, SearchIndex
 from .state import CommitsState
 
 
@@ -25,9 +25,9 @@ class DatabaseLookup:
         github: Optional[GitHubClient] = None,
         realm: Optional[Realm | str] = None,
         threshold: float = 0.1,
-        commit_ttl: float = 300,
+        stale_time: float = 900,
         cache_ttl: float = 86400,
-        cache_size: int = 128,
+        cache_capacity: int = 128,
     ):
         """
         Initialize database lookup.
@@ -36,32 +36,34 @@ class DatabaseLookup:
             github (optional): GitHub client instance.
             realm (optional): Default game version realm. Defaults to `ru`.
             threshold (optional): Default search similarity threshold (`0.0`-`1.0`). Defaults to `0.1`.
-            commit_ttl (optional): Remote commit cache TTL seconds. Defaults to `300s` (`5 minute`).
-            cache_ttl (optional): Cache TTL seconds. Defaults to `86400s` (`1 day`).
-            cache_size (optional): Cache size limit. Defaults to `128`.
+            stale_time (optional): Remote commit cache TTL seconds. Defaults to `900s` (`15 minute`).
+            cache_ttl (optional): Files cache TTL seconds. Defaults to `86400s` (`1 day`).
+            cache_capacity (optional): Files cache size limit. Defaults to `128`.
         """
 
         self._github = github or GitHubClient()
         self._realm = realm
         self._threshold = threshold
-        self._commit_ttl = commit_ttl
+        self._stale_time = stale_time
         self._cache_ttl = cache_ttl
-        self._cache_size = cache_size
+        self._cache_cap = cache_capacity
 
-        self._commits = CommitsState(ttl=commit_ttl)
-        self._cache = TTLCache(maxsize=cache_size, ttl=cache_ttl)
+        # TODO: sep items details cache & search index
+        # TODO: save db
+        self._commits = CommitsState(ttl=self._stale_time)
+        self._cache = TTLCache(maxsize=self._cache_cap, ttl=self._cache_ttl)
 
     @property
     def state(self) -> CommitsState:
         """Current commit synchronization state."""
         return self._commits
 
-    async def get(
+    async def get_entity(
         self,
         entity_id: str,
         filename: IndexFile | str = IndexFile.LISTING,
         realm: Optional[Realm | str] = None,
-    ) -> Optional[Data]:
+    ) -> Optional[Entity]:
         """
         Retrieve entity data by ID.
 
@@ -108,7 +110,7 @@ class DatabaseLookup:
         index = await self._index(path)
         return index.search(query, threshold)
 
-    async def find(
+    async def find_one(
         self,
         query: str,
         filename: IndexFile | str = IndexFile.LISTING,
@@ -261,4 +263,4 @@ class DatabaseLookup:
             self._cache.clear()
 
     def __repr__(self):
-        return f"{self.__class__.__name__}(realm='{self._realm}', threshold={self._threshold}, uptodate={self._commits.uptodate}, commit_ttl={self._commit_ttl}, cache_ttl={self._cache_ttl})"
+        return f"{self.__class__.__name__}(realm='{self._realm}', threshold={self._threshold}, uptodate={self._commits.uptodate}, stale_time={self._stale_time}, cache_ttl={self._cache_ttl})"

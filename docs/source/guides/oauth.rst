@@ -41,7 +41,7 @@ These work only with the **Demo API** endpoint (``https://dapi.stalcraft.net``).
 Production API access requires registering an application through the **official Telegram bot**.
 
 Registration Process
-^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 1. **Access the bot**: `@stalcraft_api_bot <https://t.me/stalcraft_api_bot>`_ in Telegram
 2. **Authenticate with your EXBO account**
@@ -145,7 +145,7 @@ Use this token with ``UserClient`` to access public and player-specific endpoint
 🔄 User Token Refresh
 ----------------------------------------
 
-User tokens expire after *approximately* **6 months**. Refresh them before expiration using the ``refresh_token``.
+User tokens expire after *approximately* **12 months**. Refresh them before expiration using the ``refresh_token``.
 
 .. code-block:: python
   :caption: Refresh User Token

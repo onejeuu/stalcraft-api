@@ -49,9 +49,9 @@ This guide covers practical usage of the API clients. You'll learn how to access
 
 
 Initializing AppClient
-^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Start by creating an ``AppClient``. You can authenticate either with **Application Credentials** OR with **App Token**.
+Start by creating an ``AppClient``. You can authenticate either with **Application Credentials** ``OR`` with **App Token**.
 
 .. code-block:: python
   :caption: App Client Initialization
@@ -76,7 +76,7 @@ Start by creating an ``AppClient``. You can authenticate either with **Applicati
 
 
 Making First Requests
-^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Once client initialized, you can call endpoints directly.
 
@@ -87,7 +87,7 @@ API calls are asynchronous (``async``/``await``). You need to run them inside an
 
   For simplicity, examples in this guide show only the relevant ``await`` calls. Assume they're inside an ``async`` function, typically called from ``asyncio.run()``.
 
-  If you're new to async Python, check the `official asyncio documentation <https://docs.python.org/3/library/asyncio.html>`_.
+  If you're new to **async Python**, check the `official asyncio documentation <https://docs.python.org/3/library/asyncio.html>`_.
 
 
 .. code-block:: python
@@ -118,7 +118,7 @@ API calls are asynchronous (``async``/``await``). You need to run them inside an
 
 
 Use Different Regions
-^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 | Region selection follows a priority:
 | ``explicit call parameter`` → ``client instance default`` → ``global Config.REGION``.
@@ -157,31 +157,8 @@ Use Different Regions
   emission = await client.emission()
 
 
-Operations Sessions
-^^^^^^^^^^^^^^^^^^^^
-
-The ``operations_sessions()`` method returns listing including participants, weapons, stats, and other information.
-
-.. code-block:: python
-  :caption: Operations Sessions Usage
-
-  # Get recent operation sessions
-  sessions = await client.operations_sessions(limit=3)
-  for session in sessions:
-    print(f"Map: {session.map}, Duration: {session.duration_seconds // 60} minutes")
-
-  # Filter by map and date
-  sessions = await client.operations_sessions(
-    map=OperationsMap.SHOCK_THERAPY,
-    after="2025-12-01T00:00:00Z",
-    limit=3
-  )
-  users = [user.username for session in sessions for user in session.participants]
-  print(f"Shock Therapy users since Dec 2025: {users}")
-
-
 Auction Methods
-^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 | The ``auction()`` **factory method** returns a dedicated endpoint for a specific item.
 | Chain async methods like ``lots()`` or ``price_history()`` directly.
@@ -225,7 +202,7 @@ Auction Methods
 
 
 Clan Methods
-^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 | The ``clan()`` **factory method** returns a dedicated endpoint for a specific clan.
 
@@ -239,6 +216,29 @@ Clan Methods
   print(f"Clan {clan.name}: Level {clan.level}")
   print(f"Members: {clan.member_count}")
   print(f"Created: {clan.registration_time}")
+
+
+Operations Sessions
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The ``operations_sessions()`` method returns listing including participants, weapons, stats, and other information.
+
+.. code-block:: python
+  :caption: Operations Sessions Usage
+
+  # Get recent operation sessions
+  sessions = await client.operations_sessions(limit=3)
+  for session in sessions:
+    print(f"Map: {session.map}, Duration: {session.duration_seconds // 60} minutes")
+
+  # Filter by map and date
+  sessions = await client.operations_sessions(
+    map=OperationsMap.SHOCK_THERAPY,
+    after="2025-12-01T00:00:00Z",
+    limit=3
+  )
+  users = [user.username for session in sessions for user in session.participants]
+  print(f"Shock Therapy users since Dec 2025: {users}")
 
 
 ----------------------------------------
@@ -276,7 +276,7 @@ Clan Methods
 
 
 Clan Methods
-^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 
 .. important::

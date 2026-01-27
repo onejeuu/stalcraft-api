@@ -217,6 +217,7 @@ class DatabaseLookup:
 
         await self._validate_remote_commit()
 
+        # TODO: check to stale_time 0?
         if not force and self._state.uptodate:
             return False
 
@@ -261,6 +262,7 @@ class DatabaseLookup:
     def _update_commit(self) -> None:
         """Update local commit and clear cache on change."""
 
+        # TODO: clear assets cache?
         if not self._state.uptodate:
             self._state.local = self._state.remote
             self._indexes.clear()

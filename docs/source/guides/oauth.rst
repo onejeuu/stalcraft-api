@@ -184,19 +184,18 @@ Use this to verify token validity and identify the authenticated user.
 ----------------------------------------
 
 .. list-table::
-   :header-rows: 1
-   :widths: 40 601
+  :header-rows: 1
 
-   * - Problem
-     - Solution
-   * - **No callback redirect after user authorization**
-     - Ensure ``redirect_uri`` exactly matches your registered application URI.
-   * - **Authorization code expired**
-     - Use authorization codes immediately. They expire quickly.
-   * - **Application not approved**
-     - Production access requires manual approval. Use Demo API while waiting.
-   * - **Token stops working**
-     - New tokens invalidate previous ones. Check for recent token generation.
+  * - Problem
+    - Solution
+  * - **No callback redirect after user authorization**
+    - Ensure ``redirect_uri`` exactly matches your registered application URI.
+  * - **Authorization code expired**
+    - Use authorization codes immediately. They expire quickly.
+  * - **Application not approved**
+    - Production access requires manual approval. Use Demo API while waiting.
+  * - **Token stops working**
+    - New tokens invalidate previous ones. Check for recent token generation.
 
 
 .. seealso::

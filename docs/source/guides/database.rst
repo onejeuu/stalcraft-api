@@ -75,14 +75,8 @@ Caching & Synchronization
   | The lookup will never contact GitHub unless you call ``sync(force=True)``.
 
 
-State Monitoring
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Use lookup.state to determine if the local database is current or needs synchronization.
-
-
 --------------------------------------------------
-⚙️ Initial Setup
+🚀 Initial Setup
 --------------------------------------------------
 
 Create a ``DatabaseLookup`` with default settings.
@@ -102,7 +96,7 @@ First Synchronization
 | This downloads the index files from GitHub and caches them locally.
 
 | Synchronization takes **1–10 seconds**, depending on your connection.
-| Data is then cached in memory for subsequent requests.
+| Indexes is then cached in memory for subsequent requests.
 
 .. code-block:: python
 
@@ -146,6 +140,9 @@ Choose settings based on how your application runs.
 --------------------------------------------------
 🔍 Search Workflow
 --------------------------------------------------
+
+Standard Pipeline
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Most operations follow this pattern: **search** → **extract ID/paths** → **fetch details or call API**.
 
@@ -250,3 +247,89 @@ Specify the filename ``parameter`` to search achievements or stats instead of it
     filename=IndexFile.STATS,
   )
 
+
+--------------------------------------------------
+⚙️ Advanced Configuration
+--------------------------------------------------
+
+Custom GitHub Client
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+For production use, provide a ``GitHubClient`` with a **personal access token** to avoid rate limits.
+
+.. code-block:: python
+
+  from scapi import DatabaseLookup, GitHubClient
+
+  # Create GitHub client with token
+  github = GitHubClient(token=os.getenv("GHP_ACCESS_TOKEN"))
+
+  # Pass it to the lookup
+  lookup = DatabaseLookup(github=github)
+
+
+Optimizing Parameters
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ettings should match your application’s access pattern. Consider three dimensions:
+
+**Update frequency**: How often you need fresh data.
+
+- **Frequent updates** (price monitor, live dashboard): Set ``stale_time=300–900`` (5–15 minutes). The lookup will check GitHub regularly and reload data when changes are detected.
+- **Infrequent updates** (static analysis, occasional reports): Set ``stale_time=3600+`` (1+ hour) or ``stale_time=0`` and call ``sync(force=True)`` manually.
+
+**Index usage**: Which parts of the database you actually use.
+
+- **Multiple index types**: ``sync_on_update=True`` ensures all indexes stay in sync when any one updates.
+- **Single index type**: ``sync_on_update=False`` prevents downloading unused indexes like ``achievements.json``.
+
+**Asset cache lifetime**: How long you can tolerate cached data.
+
+- **Long cache** (24+ hours): Suitable for background jobs where momentary staleness is acceptable. Increase ``asset_ttl``.
+- **Short cache** (minutes): For real‑time applications where data must be recent. Decrease ``asset_ttl``.
+- **Memory trade‑off**: Higher ``asset_ttl`` and ``asset_capacity`` keep more data in **RAM**, improving speed at the cost of memory usage.
+
+.. tip::
+
+  There is no universal “best” setting. Adjust parameters based on **how often your data changes, which indexes you query, and how fresh the results need to be**.
+
+
+--------------------------------------------------
+🚨 Common Issues
+--------------------------------------------------
+
+.. list-table::
+  :header-rows: 1
+
+  * - Problem
+    - Solution
+  * - **GitHub rate limit errors**
+    - Provide `GitHub personal access token <https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens>`_ to ``GitHubClient``. Authenticated requests have higher limits.
+  * - **Item not found in search**
+    - Lower the threshold parameter (e.g., to ``0.05``). The default ``0.1`` may be too strict for some names.
+  * - **Search returns irrelevant matches**
+    - Increase the threshold (e.g., to ``0.25``). Check if the query matches the item’s name in the language you expect.
+  * - **Data seems stale / not updating**
+    - Reduce stale_time or call ``sync(force=True)``. Verify ``lookup.state.uptodate`` is True.
+  * - **High memory usage**
+    - Decrease ``asset_capacity`` and ``asset_ttl``. The cache stores JSON and PNG in RAM.
+  * - **Sync is slow on startup**
+    - Expected for first sync (1‑10 seconds). Provide a GitHub token to increase download speed by reducing authentication checks and lift rate limits.
+  * - **Methods** ``item_info()`` / ``item_icon()`` **are slow**
+    - These methods download files from GitHub. Ensure a token is provided and consider caching results in your application.
+
+.. seealso::
+
+  For detailed troubleshooting, see :doc:`Database Issues <../issues/database>`.
+
+
+----------------------------------------
+⏩ What's Next
+----------------------------------------
+
+Continue with:
+
+- :doc:`API Clients Guide <client>` – Use tokens with AppClient and UserClient.
+- :doc:`Authentication Guide <oauth>` – Register application and get tokens
+- :doc:`Error Handling <errors>` – Handle exceptions and rate limits
+- :doc:`Examples <../examples/index>` – Complete usage examples

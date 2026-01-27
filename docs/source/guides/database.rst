@@ -79,6 +79,8 @@ Caching & Synchronization
 🚀 Initial Setup
 --------------------------------------------------
 
+!!! TODO update info about sync realm
+
 Create a ``DatabaseLookup`` with default settings.
 It will be configured for the ``ru`` realm, indexes considered stale after **15 minutes** (``stale_time=900``) and caching assets for **24 hours** (``asset_ttl=86400``).
 

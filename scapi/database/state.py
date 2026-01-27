@@ -6,6 +6,8 @@ from typing import Optional
 class CommitState:
     """Commit state tracker with TTL cache for remote commit."""
 
+    _time_offset = time.time() - time.monotonic()
+
     def __init__(self, ttl: float, local: str = ""):
         self.local = local
 
@@ -16,19 +18,19 @@ class CommitState:
     @property
     def remote(self) -> str:
         """Cached remote commit hash."""
-        if time.time() > self._until:
+        if time.monotonic() > self._until:
             return ""
         return self._remote
 
     @remote.setter
     def remote(self, value: str) -> None:
         self._remote = value
-        self._until = time.time() + self._ttl if self._ttl > 0 else float("inf")
+        self._until = time.monotonic() + self._ttl if self._ttl > 0 else float("inf")
 
     @property
     def uptodate(self) -> bool:
         """Local and remote commit equality."""
-        if not self.local or time.time() > self._until:
+        if not self.local or time.monotonic() > self._until:
             return False
 
         return self.local == self._remote
@@ -38,7 +40,8 @@ class CommitState:
         """Expiration time as datetime or None if infinite."""
         if self._until == float("inf") or self._until == 0.0:
             return None
-        return datetime.fromtimestamp(self._until)
+        timestamp = self._until + self._time_offset
+        return datetime.fromtimestamp(timestamp)
 
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}(local='{self.local}', remote='{self.remote}', uptodate={self.uptodate}, until={self.until})"

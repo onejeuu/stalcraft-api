@@ -175,7 +175,13 @@ Auction Methods
   For production use, the library provides ``DatabaseLookup``, a built-in system that syncs item names to IDs automatically.
   See :doc:`Database Guide <database>` for setup and usage.
 
-  For testing or custom solutions reference to `official Stalcraft Database repository <https://github.com/EXBO-Studio/stalcraft-database>`_.
+  .. code-block:: python
+    :caption: Usage Example
+
+    item = await lookup.find_one("AK-105")
+    lots = await client.auction(item.id).lots()
+
+  For testing or custom solutions reference to official `stalcraft-database <https://github.com/EXBO-Studio/stalcraft-database>`_ repository.
 
 
 .. code-block:: python
@@ -327,6 +333,19 @@ Clan Methods
 
   except exceptions.UnauthorizedError:
     print("Invalid or expired token.")
+
+
+--------------------------------------------------
+🚨 Common Issues
+--------------------------------------------------
+
+.. list-table::
+  :header-rows: 1
+
+  * - Problem
+    - Solution
+  * - Problem
+    - Solution
 
 
 ----------------------------------------

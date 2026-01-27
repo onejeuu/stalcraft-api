@@ -13,7 +13,8 @@ from .index.search import Entity, Lookup, SearchIndex
 from .state import CommitState
 
 
-INDEX_FILES: list[str] = [f"{realm}/{file}" for realm in Realm for file in IndexFile]
+ALL_REALMS_KEYWORDS = ("all", "any", "*")
+ALL_INDEX_FILES: list[str] = [f"{realm}/{file}" for realm in Realm for file in IndexFile]
 
 
 class DatabaseLookup:
@@ -39,16 +40,16 @@ class DatabaseLookup:
             stale_time (optional): Remote commit cache TTL seconds (`0` to disable). Defaults to `900s` (`15 minute`).
             asset_ttl (optional): Files cache TTL seconds. Defaults to `86400s` (`1 day`).
             asset_capacity (optional): Files cache size limit. Defaults to `128`.
-            sync_on_update (optional): Sync all indexes on commit update, otherwise lazy load. Defaults to `True`.
+            sync_on_update (optional): Synchronize all indexes on commit update, otherwise lazy load. Defaults to `True`.
         """
 
         self._github = github or GitHubClient()
         self._realm = realm
-        self._threshold = threshold
-        self._stale_time = stale_time
-        self._asset_ttl = asset_ttl
-        self._asset_cap = asset_capacity
-        self._sync_on_update = sync_on_update
+        self._threshold = max(0.0, min(1.0, threshold))
+        self._stale_time = max(0, stale_time)
+        self._asset_ttl = max(0.0, asset_ttl)
+        self._asset_cap = max(0, asset_capacity)
+        self._sync_on_update = bool(sync_on_update)
 
         self._state = CommitState(ttl=self._stale_time)
         self._assets = TTLCache(maxsize=self._asset_cap, ttl=self._asset_ttl)
@@ -204,12 +205,14 @@ class DatabaseLookup:
     async def sync(
         self,
         force: bool = False,
+        realm: Optional[Realm | str] = None,
     ) -> bool:
         """
         Synchronize local database with remote.
 
         Args:
             force (optional): Force sync regardless of commit state.
+            realm (optional): Game version realm. Use value from `ALL_REALMS_KEYWORDS` (e.g. `all`) to sync all realms. Defaults to `ru`.
 
         Returns:
             True if sync was performed, False if already up-to-date.
@@ -217,13 +220,21 @@ class DatabaseLookup:
 
         await self._validate_remote_commit()
 
-        # TODO: check to stale_time 0?
-        if not force and self._state.uptodate:
+        # Early exit if already up‑to‑date and not forced
+        if not force and self._state.uptodate and self._stale_time != 0:
             return False
 
         self._update_commit()
 
-        await asyncio.gather(*[self._download_index(path) for path in INDEX_FILES])
+        # Determine which index files to download
+        if realm and realm.lower() in ALL_REALMS_KEYWORDS:
+            targets = ALL_INDEX_FILES
+
+        else:
+            realm = (realm or self._realm or Config.REALM).lower()
+            targets = [f"{realm}/{file}" for file in IndexFile]
+
+        await asyncio.gather(*[self._download_index(path) for path in targets])
         return True
 
     async def _get_index(self, path: str) -> SearchIndex:
@@ -262,10 +273,10 @@ class DatabaseLookup:
     def _update_commit(self) -> None:
         """Update local commit and clear cache on change."""
 
-        # TODO: clear assets cache?
         if not self._state.uptodate:
             self._state.local = self._state.remote
             self._indexes.clear()
+            self._assets.clear()
 
     def __repr__(self):
         return (

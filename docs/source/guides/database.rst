@@ -84,9 +84,29 @@ It will be configured for the ``ru`` realm, indexes considered stale after **15 
 
 .. code-block:: python
 
-  from scapi import DatabaseLookup
+  import asyncio
+  import os
+  from scapi import DatabaseLookup, GitHubClient
 
-  lookup = DatabaseLookup()
+  # Production use REQUIRES a GitHub token
+  github = GitHubClient(token=os.getenv("GITHUB_TOKEN"))
+  lookup = DatabaseLookup(github=github)
+
+  async def main():
+    # Initial sync downloads and caches indexes
+    await lookup.sync()
+
+    # Now ready for searches
+    results = await lookup.search("AK-105")
+    print(f"Found {len(results)} items")
+
+  asyncio.run(main())
+
+
+.. tip::
+
+  Call ``sync()`` once when your application starts.
+  It downloads JSON files from GitHub, caches them locally, and builds an in‑memory search index.
 
 
 First Synchronization
@@ -229,7 +249,7 @@ Method ``item_icon()`` downloads the item icon as PNG bytes.
 Different Data Types
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Specify the filename ``parameter`` to search achievements or stats instead of items.
+Specify the ``filename`` parameter to search achievements or stats instead of items.
 
 .. code-block:: python
 
@@ -255,7 +275,8 @@ Specify the filename ``parameter`` to search achievements or stats instead of it
 Custom GitHub Client
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-For production use, provide a ``GitHubClient`` with a **personal access token** to avoid rate limits.
+Production use requires a `GitHub personal access token <https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens>`_.
+Without one, you will hit rate limits quickly. ``DatabaseLookup`` without a token is for testing only.
 
 .. code-block:: python
 
@@ -291,7 +312,8 @@ Settings should match your applications access pattern. Consider three dimension
 
 .. tip::
 
-  There is no universal “best” setting. Adjust parameters based on **how often your data changes, which indexes you query, and how fresh the results need to be**.
+  There is no universal “best” setting.
+  Adjust parameters based on **how often your data changes, which indexes you query, and how fresh the results need to be**.
 
 
 --------------------------------------------------

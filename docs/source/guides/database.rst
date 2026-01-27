@@ -271,19 +271,19 @@ For production use, provide a ``GitHubClient`` with a **personal access token** 
 Optimizing Parameters
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-ettings should match your application’s access pattern. Consider three dimensions:
+Settings should match your applications access pattern. Consider three dimensions:
 
-**Update frequency**: How often you need fresh data.
+``📡`` **Update frequency**: How often you need fresh data.
 
 - **Frequent updates** (price monitor, live dashboard): Set ``stale_time=300–900`` (5–15 minutes). The lookup will check GitHub regularly and reload data when changes are detected.
 - **Infrequent updates** (static analysis, occasional reports): Set ``stale_time=3600+`` (1+ hour) or ``stale_time=0`` and call ``sync(force=True)`` manually.
 
-**Index usage**: Which parts of the database you actually use.
+``📊`` **Index usage**: Which parts of the database you actually use.
 
 - **Multiple index types**: ``sync_on_update=True`` ensures all indexes stay in sync when any one updates.
 - **Single index type**: ``sync_on_update=False`` prevents downloading unused indexes like ``achievements.json``.
 
-**Asset cache lifetime**: How long you can tolerate cached data.
+``💾`` **Asset cache lifetime**: How long you can tolerate cached data.
 
 - **Long cache** (24+ hours): Suitable for background jobs where momentary staleness is acceptable. Increase ``asset_ttl``.
 - **Short cache** (minutes): For real‑time applications where data must be recent. Decrease ``asset_ttl``.

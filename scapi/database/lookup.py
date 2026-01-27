@@ -54,6 +54,10 @@ class DatabaseLookup:
         self._assets = TTLCache(maxsize=self._asset_cap, ttl=self._asset_ttl)
         self._indexes: dict[str, SearchIndex] = {}
 
+    @property
+    def state(self) -> CommitState:
+        return self._state
+
     async def get_entity(
         self,
         entity_id: str,
@@ -213,7 +217,7 @@ class DatabaseLookup:
 
         await self._validate_remote_commit()
 
-        if self._state.uptodate and not force:
+        if not force and self._state.uptodate:
             return False
 
         self._update_commit()

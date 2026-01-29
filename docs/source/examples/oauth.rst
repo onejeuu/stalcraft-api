@@ -1,2 +1,2 @@
-OAuth Flow
+Authentications Flow
 ==================================================

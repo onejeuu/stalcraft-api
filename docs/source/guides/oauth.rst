@@ -75,15 +75,17 @@ The ``OAuthClient`` handles all authentication flows. Initialize it with your cr
   )
 
 
-.. admonition:: Token Replacement
-  :class: caution
-
-  Newly created tokens immediately **invalidate all previous tokens** for the same application. Avoid unnecessary regeneration.
-
-
 ----------------------------------------
 📡 App Token
 ----------------------------------------
+
+
+.. admonition:: Token Replacement
+  :class: caution
+
+  Each successful call to ``get_app_token()`` or ``get_user_token()`` **invalidates all previously issued tokens** for that same application (or user).
+  Avoid unnecessary token regeneration. Store tokens securely and reuse them until they expire or are revoked.
+
 
 App tokens authenticate your application for **public data** (auctions, emissions, public profiles).
 
@@ -105,20 +107,22 @@ Use this token with ``AppClient`` to access public endpoints.
 | User tokens provide access to both **public and private data** (characters, friends, clan membership).
 | They require user authorization via **OAuth 2.0**.
 
+**Flow steps:**
+
 1. **Generate Authorization URL**
 
    .. code-block:: python
 
-     import secrets
+    import secrets
 
-     # Optional (Recommended): Generate state for CSRF protection
-     # Store state securely for later verification
-     state = secrets.token_urlsafe(16)
+    # Optional (Recommended): Generate state for CSRF protection
+    # Store state securely for later verification
+    state = secrets.token_urlsafe(16)
 
-     auth_url = oauth.get_authorize_url(state=state)
-     print(f"Open in browser: {auth_url}")
+    auth_url = oauth.get_authorize_url(state=state)
+    print(f"Open in browser: {auth_url}")
 
-   The ``state`` parameter prevents `CSRF attacks <https://en.wikipedia.org/wiki/Cross-site_request_forgery>`_. Verify it matches when handling the callback.
+   The ``state`` parameter prevents `CSRF attacks <https://en.wikipedia.org/wiki/Cross-site_request_forgery>`_. Verify it matches when handling user callback.
 
 2. **Handle Callback and Exchange Code**
 
@@ -127,15 +131,16 @@ Use this token with ``AppClient`` to access public endpoints.
 
    .. code-block:: python
 
-     # For demonstration: Manually paste the code
-     # In production extract code automatically from callback URL
-     code = input("Enter authorization code from URL: ")
+    # For demonstration: Manually paste the code
+    # In production extract code automatically from callback URL
+    code = input("Enter authorization code from URL: ")
 
-     user_token = await oauth.get_user_token(code=code)
+    # Exchange code to token (immediately)
+    user_token = await oauth.get_user_token(code=code)
 
-     print(f"Access Token: {user_token.access_token}")
-     print(f"Refresh Token: {user_token.refresh_token}")
-     print(f"Expires In: {user_token.expires_in}")
+    print(f"Access Token: {user_token.access_token}")
+    print(f"Refresh Token: {user_token.refresh_token}")
+    print(f"Expires In: {user_token.expires_in}")
 
 
 Use this token with ``UserClient`` to access public and player-specific endpoints.
@@ -195,12 +200,12 @@ Use this to verify token validity and identify the authenticated user.
   * - **Application not approved**
     - Production access requires manual approval. Use Demo API while waiting.
   * - **Token stops working**
-    - New tokens invalidate previous ones. Check for recent token generation.
+    - New created tokens invalidate previous ones. Ensure you not published your application credentials.
 
 
 .. seealso::
 
-  For detailed troubleshooting, see :doc:`Authentication Issues <../issues/auth>`.
+  For more details, see :doc:`Troubleshooting <../issues>`.
 
 
 ----------------------------------------

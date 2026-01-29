@@ -30,8 +30,8 @@ This guide covers practical usage of the API clients. You'll learn how to access
 .. admonition:: Before You Begin
   :class: hint
 
-  | To follow the examples, you'll need authentication credentials or tokens.
-  | See :doc:`OAuth Guide <oauth>` to register an application and obtain credentials.
+  | To follow the examples, you'll need application credentials or tokens.
+  | See :doc:`Authentication Guide <oauth>` to register an application and obtain your credentials.
 
   | **For testing:**
   | Use Demo API (``https://dapi.stalcraft.net``) with tokens provided in `official documentation <https://eapi.stalcraft.net/overview.html#demo-api>`_.
@@ -57,19 +57,20 @@ Start by creating an ``AppClient``. You can authenticate either with **Applicati
   :caption: App Client Initialization
 
   from scapi import AppClient, Region
+  import os
 
   # Option 1: Using application credentials
   client = AppClient(
-    client_id="YOUR_CLIENT_ID",
-    client_secret="YOUR_CLIENT_SECRET"
+    client_id=os.getenv("CLIENT_ID"),
+    client_secret=os.getenv("CLIENT_SECRET")
   )
 
-  # Option 2: Using created app token
-  client = AppClient(token="YOUR_APP_TOKEN")
+  # Option 2: Using created app token from OAuthClient
+  client = AppClient(token=os.getenv("APP_TOKEN"))
 
   # And you can set defaults for this client instance
   client = AppClient(
-    token="YOUR_APP_TOKEN",
+    token=os.getenv("APP_TOKEN"),
     region=Region.EU,  # Default region in requests
     json=True          # Return raw json instead of typed models
   )
@@ -85,7 +86,7 @@ API calls are asynchronous (``async``/``await``). You need to run them inside an
 
 .. note::
 
-  For simplicity, examples in this guide show only the relevant ``await`` calls. Assume they're inside an ``async`` function, typically called from ``asyncio.run()``.
+  For simplicity, examples in guides show only the relevant ``await`` calls. Assume they're inside an ``async`` function, typically called from ``asyncio.run()``.
 
   If you're new to **async Python**, check the `official asyncio documentation <https://docs.python.org/3/library/asyncio.html>`_.
 
@@ -93,10 +94,12 @@ API calls are asynchronous (``async``/``await``). You need to run them inside an
 .. code-block:: python
   :caption: Basic Usage Example
 
-  import asyncio
   from scapi import AppClient
+  import asyncio
+  import os
 
-  client = AppClient(token="YOUR_APP_TOKEN")
+  # Create api client instance with created token
+  client = AppClient(token=os.getenv("APP_TOKEN"))
 
   async def main():
     # List available api regions
@@ -137,9 +140,10 @@ Use Different Regions
   :caption: Different Regions Usage
 
   from scapi import AppClient, Region, Config
+  import os
 
   # Client with default region (EU)
-  client = AppClient(token="YOUR_APP_TOKEN", region=Region.EU)
+  client = AppClient(token=os.getenv("APP_TOKEN"), region=Region.EU)
 
   # Uses client default (EU)
   emission = await client.emission()
@@ -151,7 +155,7 @@ Use Different Regions
   Config.REGION = Region.NA
 
   # Create client with no default region
-  client = AppClient(token="YOUR_APP_TOKEN")
+  client = AppClient(token=os.getenv("APP_TOKEN"))
 
   # No client region default → uses Config.REGION (NA)
   emission = await client.emission()
@@ -173,7 +177,7 @@ Auction Methods
   API uses internal identifiers (like ``"zyv9"``) instead of item names.
 
   For production use, the library provides ``DatabaseLookup``, a built-in system that syncs item names to IDs automatically.
-  See :doc:`Database Guide <database>` for setup and usage.
+  See :doc:`Database Lookup <database>` for setup and usage.
 
   .. code-block:: python
     :caption: Usage Example
@@ -237,7 +241,7 @@ The ``operations_sessions()`` method returns listing including participants, wea
   for session in sessions:
     print(f"Map: {session.map}, Duration: {session.duration_seconds // 60} minutes")
 
-  # Filter by map and date
+  # Filter by map and date (ISO format or datetime object)
   sessions = await client.operations_sessions(
     map=OperationsMap.SHOCK_THERAPY,
     after="2025-12-01T00:00:00Z",
@@ -266,7 +270,7 @@ The ``operations_sessions()`` method returns listing including participants, wea
   from scapi import UserClient
 
   # Initialize with OAuth user token
-  client = UserClient(token="USER_OAUTH_TOKEN")
+  client = UserClient(token=os.getenv("USER_TOKEN"))
 
   # Public data works identically to AppClient
   emission = await client.emission()
@@ -310,18 +314,13 @@ Clan Methods
 | API errors raise specific exceptions.
 | Rate limit information is available through the client.
 
-
-.. seealso::
-
-  For more details refer to :doc:`Error Handling <errors>`.
-
-
 .. code-block:: python
   :caption: Error Handling
 
   from scapi import AppClient, exceptions
+  import os
 
-  client = AppClient(token="YOUR_APP_TOKEN")
+  client = AppClient(token=os.getenv("APP_TOKEN"))
 
   try:
     clans = await client.clans()
@@ -335,6 +334,11 @@ Clan Methods
     print("Invalid or expired token.")
 
 
+.. seealso::
+
+  For more details refer to :doc:`Error Handling <errors>`.
+
+
 --------------------------------------------------
 🚨 Common Issues
 --------------------------------------------------
@@ -346,6 +350,11 @@ Clan Methods
     - Solution
   * - Problem
     - Solution
+
+
+.. seealso::
+
+  For more details, see :doc:`Troubleshooting <../issues>`.
 
 
 ----------------------------------------

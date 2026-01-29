@@ -8,7 +8,7 @@ Index
 
   guides/index
   examples/index
-  issues/index
+  issues
   api/index
 
 ----------------------------------------
@@ -46,14 +46,15 @@ Overview
 
 .. code-block:: python
 
-  import asyncio
   from scapi import AppClient, Region
+  import asyncio
+  import os
 
-  # Initialize app client
-  # WARN: Store credentials in environment variables, NOT in source code
-  client = AppClient(client_id="YOUR_CLIENT_ID", client_secret="YOUR_CLIENT_SECRET")
-  # OR
-  client = AppClient(token="YOUR_APP_TOKEN")
+  # Initialize app client with your credentials
+  client = AppClient(client_id=os.getenv("CLIENT_ID"), client_secret=os.getenv("CLIENT_SECRET"))
+
+  # OR use generated token from OAuthClient
+  client = AppClient(token=os.getenv("APP_TOKEN"))
 
   async def main():
       # Get emission status for current region

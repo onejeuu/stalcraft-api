@@ -53,17 +53,3 @@ napoleon_numpy_docstring = True
 
 autodoc_member_order = "bysource"
 add_module_names = False
-
-
-# -- Remove "Bases: object" from classes -------------------------------------
-
-useless_bases = _("Bases: %s") % ":py:class:`object`"
-
-
-class MockedClassDocumenter(autodoc.ClassDocumenter):
-    def add_line(self, line: str, source: str, *lineno: int) -> None:
-        if useless_bases not in line:
-            super().add_line(line, source, *lineno)
-
-
-autodoc.ClassDocumenter = MockedClassDocumenter

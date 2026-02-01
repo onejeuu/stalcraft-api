@@ -1,4 +1,4 @@
-Working with API Clients
+API Clients
 ==================================================
 
 This guide covers practical usage of the API clients. You'll learn how to access **public** game data with ``AppClient`` and **private** player data with ``UserClient``.

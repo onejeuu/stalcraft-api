@@ -1,4 +1,4 @@
-Authentication Guide
+Authentication
 ==================================================
 
 | This guide explains how to obtain authentication tokens for the STALCRAFT API.

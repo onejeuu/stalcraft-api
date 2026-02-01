@@ -1,2 +1,2 @@
-Authentications Flow
+Authentication
 ==================================================

@@ -9,7 +9,7 @@ from scapi.config import Config
 from scapi.enums import IndexFile, Realm
 
 from .github import GitHubClient
-from .index.search import Entity, Lookup, SearchIndex
+from .index.search import Entities, Entity, Lookup, SearchIndex
 from .state import CommitState
 
 
@@ -82,6 +82,27 @@ class DatabaseLookup:
 
         index = await self._get_index(path)
         return index.get(entity_id)
+
+    async def get_all(
+        self,
+        filename: IndexFile | str = IndexFile.LISTING,
+        realm: Optional[Realm | str] = None,
+    ) -> Entities:
+        """
+        Retrieve all entities from index file.
+
+        Args:
+            filename (optional): Index file name. Defaults to `listing.json`.
+            realm (optional): Game version realm. Defaults to `ru`.
+
+        Returns:
+            Dictionary mapping entity IDs to their data {id: entity}.
+        """
+        realm = (realm or self._realm or Config.REALM).lower()
+        path = f"{realm}/{filename}"
+
+        index = await self._get_index(path)
+        return index._entities.copy()
 
     async def search(
         self,

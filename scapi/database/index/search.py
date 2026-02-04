@@ -32,35 +32,36 @@ class SearchIndex:
         self._counts: Counts = {}
         """N-gram Counts, mapping Entity ID to total unique N-grams."""
 
-    def get(self, entity_id: str) -> Entity | None:
-        """Retrieve entity data by ID."""
-
-        return self._entities.get(entity_id)
-
     def build(self, path: str, data: Any):
         """Build index from structured data at given path."""
 
-        # TODO: multilang fix
         index: Index = defaultdict(set)
         counts: dict[str, set[str]] = defaultdict(set)
         entities: Entities = defaultdict(lambda: defaultdict(dict))
 
         parser = parsing.get(path)
 
-        for item, entity_id, text in parser(data):
+        for entity_id, entity, texts in parser(data):
             # collect translations for entity id
-            entities[entity_id] = item
+            entities[entity_id] = entity
 
             # tokenize & indexing, store mapping I[ngram] -> {entity_id}
-            ngrams = tokenize.ngramize(text)
+            for text in texts:
+                ngrams = tokenize.ngramize(text)
 
-            for ngram in ngrams:
-                index[ngram].add(entity_id)
-                counts[entity_id].add(ngram)
+                for ngram in ngrams:
+                    index[ngram].add(entity_id)
+                    counts[entity_id].add(ngram)
 
+        # update instance values
         self._index = dict(index)
         self._entities = dict(entities)
         self._counts = {entity_id: len(ngrams) for entity_id, ngrams in counts.items()}
+
+    def get(self, entity_id: str) -> Entity | None:
+        """Retrieve entity data by ID."""
+
+        return self._entities.get(entity_id)
 
     def search(self, query: str, threshold: float) -> list[Lookup]:
         """
@@ -108,8 +109,6 @@ class SearchIndex:
 
             # |Q ∩ I| / (|Q| + |I| - |Q ∩ I|)
             union = q_num_ngrams + e_num_ngrams - count
-
-            # TODO: consider length fix
             score = round(count / union, 2) if union != 0 else 0.0
 
             # filter by threshold

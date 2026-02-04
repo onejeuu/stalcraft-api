@@ -5,10 +5,9 @@ from typing import Any, Callable, Iterator, TypeAlias
 from scapi.enums import IndexFile
 
 
-Item: TypeAlias = dict[str, Any]
-Data: TypeAlias = list[Item]
-
-Rows: TypeAlias = Iterator[tuple[Item, str, str]]
+Entity: TypeAlias = dict[str, Any]
+Data: TypeAlias = list[Entity]
+Rows: TypeAlias = Iterator[tuple[str, Entity, list[str]]]
 Parser: TypeAlias = Callable[[Any], Rows]
 
 _PARSERS: dict[str, Parser] = {}
@@ -43,39 +42,36 @@ def _listings(data: Data):
     for item in data:
         path = item["data"]
         entity_id = path.split("/")[-1].replace(".json", "")
-        yield from _extract_translations(item, entity_id, fields=["name"])
+        yield (entity_id, item, _extract(item, "name"))
 
 
 @_register(IndexFile.STATS)
 def _stats(data: Data):
     for item in data:
         entity_id = item["id"]
-        yield from _extract_translations(item, entity_id, fields=["name"])
+        yield (entity_id, item, _extract(item, "name"))
 
 
 @_register(IndexFile.ACHIEVEMENTS)
 def _achievements(data: Data):
     for item in data:
         entity_id = item["id"]
-        yield from _extract_translations(item, entity_id, fields=["title"])
+        yield (entity_id, item, _extract(item, "title"))  # "description"
 
 
-def _extract_translations(item: Any, entity_id: str, fields: list[str]):
-    for field_name in fields:
-        for lang, text in _translations(item, field_name):
-            if text:
-                yield (item, entity_id, text)
+def _extract(item: Any, *fields: str):
+    return [text for field in fields for text in _translations(item, field)]
 
 
-def _translations(item: Any, field_name: str) -> Iterator[tuple[str, str]]:
-    translation = item.get(field_name, {})
+def _translations(item: Any, field: str) -> list[str]:
+    translation = item.get(field, {})
 
     match translation.get("type"):
         case "translation":
-            texts = translation["lines"].items()
+            lines: dict[str, str] = translation.get("lines", {})
+            return [text for text in lines.values() if text]
         case "text":
-            texts = [("any", translation["text"])]
-        case _:
-            return
+            text = translation.get("text", "")
+            return [text] if text else []
 
-    yield from texts
+    return []

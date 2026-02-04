@@ -1,5 +1,6 @@
 from typing import Any, Optional
 
+from scapi import __repo__, __version__
 from scapi.consts import DatabaseRepository as Repo
 from scapi.http.api import APIClient
 from scapi.http.auth.token import TokenHTTPClient
@@ -8,11 +9,10 @@ from scapi.http.client import Headers
 
 TIMEOUT = 300
 
-# TODO: update headers
 HEADERS = {
-    "Connection": "keep-alive",
+    "Accept": "application/vnd.github+json",
     "Accept-Encoding": "gzip, deflate, br",
-    "Accept": "*/*",
+    "User-Agent": f"scapi/{__version__} (+{__repo__})",
 }
 
 

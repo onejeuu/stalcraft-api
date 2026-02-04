@@ -93,6 +93,8 @@ class HTTPClient:
         # Create session
         session = await self._use_session()
 
+        print(rheaders)
+
         # Send http request
         async with session.request(method=method, url=url, params=rparams, headers=rheaders, data=data) as response:
             # Update ratelimit by response headers

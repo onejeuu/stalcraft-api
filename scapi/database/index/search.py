@@ -1,12 +1,12 @@
 from collections import defaultdict
-from typing import Any, NamedTuple, TypeAlias
+from typing import Any, ClassVar, NamedTuple, TypeAlias
 
 from . import parsing, tokenize
 
 
 Index: TypeAlias = dict[str, set[str]]
+Keys: TypeAlias = set[str]
 Counts: TypeAlias = dict[str, int]
-
 Entity: TypeAlias = dict[str, Any]
 Entities: TypeAlias = dict[str, Entity]
 
@@ -17,20 +17,30 @@ class Lookup(NamedTuple):
     id: str
     data: dict[str, Any]
     score: float = 0.0
+    """Similarity score between query and entity (`0.0`-`1.0`)."""
 
 
 class SearchIndex:
     """In-memory search index for entity lookup with N-gram tokenization."""
 
+    SCORE_ROUND: ClassVar[int] = 2
+    """Number of decimals for score rounding."""
+
+    JACCARD_WEIGHT: ClassVar[float] = 0.8
+    """Weight factor for Jaccard similarity in scoring."""
+
     def __init__(self):
         self._index: Index = {}
-        """Inverted Index, mapping from N-grams (tokens) to Entity IDs."""
+        """Inverted index mapping N-grams to entity IDs."""
+
+        self._keys: Keys = set()
+        """Unique entity IDs."""
 
         self._entities: Entities = {}
-        """Entity Storage, stores all data (Entity ID -> JSON{})."""
+        """Entity storage (ID -> JSON{})."""
 
         self._counts: Counts = {}
-        """N-gram Counts, mapping Entity ID to total unique N-grams."""
+        """N-gram counts per entity ID."""
 
     def build(self, path: str, data: Any):
         """Build index from structured data at given path."""
@@ -55,6 +65,7 @@ class SearchIndex:
 
         # update instance values
         self._index = dict(index)
+        self._keys = set(self._index.keys())
         self._entities = dict(entities)
         self._counts = {entity_id: len(ngrams) for entity_id, ngrams in counts.items()}
 
@@ -89,15 +100,15 @@ class SearchIndex:
         hits: dict[str, int] = defaultdict(int)
 
         # soft matching (OR) collect entity ids for all matching N-grams
-        for ngram in ngrams & self._index.keys():
+        for ngram in ngrams & self._keys:
             for entity_id in self._index[ngram]:
                 hits[entity_id] += 1
 
-        # create search results
-        results: list[Lookup] = []
-
         # query ngrams count
         q_num_ngrams = len(ngrams)
+
+        # create search results
+        results: list[Lookup] = []
 
         # scoring & filtering hits
         for entity_id, count in hits.items():
@@ -107,9 +118,12 @@ class SearchIndex:
             if e_num_ngrams <= 0:
                 continue
 
-            # |Q ∩ I| / (|Q| + |I| - |Q ∩ I|)
-            union = q_num_ngrams + e_num_ngrams - count
-            score = round(count / union, 2) if union != 0 else 0.0
+            # score: max(|Q ∩ I| / min(|Q|, |I|), w × |Q ∩ I| / (|Q| + |I| − |Q ∩ I|))
+            min_size = min(q_num_ngrams, e_num_ngrams)
+            union_size = q_num_ngrams + e_num_ngrams - count
+            overlap = count / min_size if min_size > 0 else 0.0
+            jaccard = count / union_size if union_size > 0 else 0.0
+            score = round(max(overlap, jaccard * self.JACCARD_WEIGHT), self.SCORE_ROUND)
 
             # filter by threshold
             if score >= threshold:

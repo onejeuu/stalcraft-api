@@ -24,7 +24,7 @@ class DatabaseLookup:
         self,
         github: Optional[GitHubClient] = None,
         realm: Optional[Realm | str] = None,
-        threshold: float = 0.1,
+        threshold: float = 0.2,
         stale_time: float = 900,
         asset_ttl: float = 86400,
         asset_capacity: int = 128,
@@ -36,7 +36,7 @@ class DatabaseLookup:
         Args:
             github (optional): GitHub client instance.
             realm (optional): Default game version realm. Defaults to `ru`.
-            threshold (optional): Default search similarity threshold (`0.0`-`1.0`). Defaults to `0.1`.
+            threshold (optional): Default search similarity threshold (`0.0`-`1.0`). Defaults to `0.2`.
             stale_time (optional): Remote commit cache TTL seconds (`0` to disable). Defaults to `900s` (`15 minute`).
             asset_ttl (optional): Files cache TTL seconds. Defaults to `86400s` (`1 day`).
             asset_capacity (optional): Files cache size limit. Defaults to `128`.
@@ -118,7 +118,7 @@ class DatabaseLookup:
             query: Search text.
             filename (optional): Index file name. Defaults to `listing.json`.
             realm (optional): Game version realm. Defaults to `ru`.
-            threshold (optional): Override similarity threshold (`0.0`-`1.0`). Defaults to `0.1`.
+            threshold (optional): Override similarity threshold (`0.0`-`1.0`). Defaults to `0.2`.
 
         Returns:
             List of search results sorted by relevance.
@@ -146,7 +146,7 @@ class DatabaseLookup:
             query: Search text.
             filename (optional): Index file name. Defaults to `listing.json`.
             realm (optional): Game version realm. Defaults to `ru`.
-            threshold (optional): Override similarity threshold (`0.0`-`1.0`). Defaults to `0.1`.
+            threshold (optional): Override similarity threshold (`0.0`-`1.0`). Defaults to `0.2`.
 
         Returns:
             Best match result or None.

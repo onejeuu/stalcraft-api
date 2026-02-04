@@ -54,7 +54,7 @@ Fuzzy Search
 
 Search uses N‑gram tokenization to handle typos, partial names, and different languages.
 The ``threshold`` parameter (``0.0`` -- ``1.0``) controls match strictness lower values return more results, higher values only close matches.
-Defaults to ``0.1``.
+Defaults to ``0.2``.
 
 
 Caching & Synchronization

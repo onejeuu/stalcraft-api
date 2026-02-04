@@ -348,13 +348,12 @@ Clan Methods
 
   * - Problem
     - Solution
-  * - Problem
-    - Solution
-
-
-.. seealso::
-
-  For more details, see :doc:`Troubleshooting <../issues>`.
+  * - **Rate limit exceeded**
+    - Each user token has independent rate limits. Check ``retry_after`` or implement exponential backoff.
+  * - **Data appears outdated**
+    - Most endpoints require a region parameter. Data is isolated per region. E.g. auction lots in ``EU`` differ from ``NA``.
+  * - **Clan members endpoint returns 401**
+    - The authenticated user must be a member of that clan.
 
 
 ----------------------------------------

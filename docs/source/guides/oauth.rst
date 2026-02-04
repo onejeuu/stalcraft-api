@@ -203,11 +203,6 @@ Use this to verify token validity and identify the authenticated user.
     - New created tokens invalidate previous ones. Ensure you not published your application credentials.
 
 
-.. seealso::
-
-  For more details, see :doc:`Troubleshooting <../issues>`.
-
-
 ----------------------------------------
 ⏩ What's Next
 ----------------------------------------

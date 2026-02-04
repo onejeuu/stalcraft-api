@@ -7,8 +7,6 @@ Index
   :maxdepth: 1
 
   guides/index
-  examples/index
-  issues
   api/index
 
 ----------------------------------------

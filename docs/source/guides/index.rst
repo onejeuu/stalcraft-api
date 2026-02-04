@@ -8,4 +8,3 @@
   client
   oauth
   database
-  errors

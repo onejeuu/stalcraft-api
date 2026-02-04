@@ -244,6 +244,26 @@ Use ``get_entity()`` when you already have an internal ID (e.g., from an API res
     print(f"Stat: {name}")  # Arrived in the Zone
 
 
+Retrieving All Entities
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Use ``get_all()`` to fetch the complete dictionary of entities for batch processing or analysis.
+
+.. code-block:: python
+
+  # Get all stats entities
+  stats = await lookup.get_all(filename="stats.json")
+
+  grouped = {}
+  for stat in stats.values():
+    category = stat.get("category", "UNCATEGORIZED")
+    grouped.setdefault(category, []).append(stat)
+
+  for category in sorted(grouped):
+    names = sorted([stat["name"]["lines"]["ru"] for stat in grouped[category]])
+    print(f"{category}: {', '.join(names)}")
+
+
 Item Detailed Information
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -354,10 +374,6 @@ Settings should match your applications access pattern. Consider three dimension
     - Expected for first sync (1‑10 seconds). Provide a GitHub token to increase download speed by reducing authentication checks and lift rate limits.
   * - **Methods** ``item_info()`` / ``item_icon()`` **are slow**
     - These methods download files from GitHub. Ensure a token is provided and consider caching results in your application.
-
-.. seealso::
-
-  For more details, see :doc:`Troubleshooting <../issues>`.
 
 
 ----------------------------------------

@@ -156,8 +156,8 @@ class SharedClient(ABC, APIClient):
             order (optional): Sorting direction. Defaults to `ascending`.
             map (optional): Filter by operations map name.
             username (optional): Filter by character name.
-            before (optional): Filter sessions finished before date.
-            after (optional): Filter sessions finished after date.
+            before (optional): Filter sessions finished before ISO date (`%Y-%m-%dT%H:%M:%SZ`).
+            after (optional): Filter sessions finished after ISO date (`%Y-%m-%dT%H:%M:%SZ`).
             region (optional): Game server region. Defaults to `ru`.
 
         Returns:
@@ -171,13 +171,22 @@ class SharedClient(ABC, APIClient):
         map = map.lower() if map else None
         region = (region or self._region or Config.REGION).lower()
 
-        if before and isinstance(before, datetime):
-            before = before.strftime("%Y-%m-%dT%H:%M:%SZ")
+        def _format_date(value: Optional[datetime | str]):
+            if value and isinstance(value, datetime):
+                return value.strftime("%Y-%m-%dT%H:%M:%SZ")
 
-        if after and isinstance(after, datetime):
-            after = after.strftime("%Y-%m-%dT%H:%M:%SZ")
+            if value and isinstance(value, str):
+                try:
+                    dt = datetime.fromisoformat(value.replace("Z", "+00:00"))
+                    return dt.strftime("%Y-%m-%dT%H:%M:%SZ")
 
-        # TODO: parse and validate datetime string
+                except ValueError:
+                    return value
+
+            return value
+
+        before = _format_date(before)
+        after = _format_date(after)
 
         response = await self._http.GET(
             url=f"{region}/operations/sessions",

@@ -94,8 +94,7 @@ class StatType(UpStrEnum):
 
 
 class IndexFile(StrEnum):
-    # TODO: update docstring
-    """Index files supporting entity search."""
+    """JSON index files available for entity search."""
 
     LISTING = "listing.json"
     ACHIEVEMENTS = "achievements.json"

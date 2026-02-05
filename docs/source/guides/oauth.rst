@@ -211,5 +211,3 @@ Continue with:
 
 - :doc:`API Clients Guide <client>` – Use tokens with AppClient and UserClient.
 - :doc:`Database Lookup <database>` – Find items IDs by name
-- :doc:`Error Handling <errors>` – Handle exceptions and rate limits
-- :doc:`Examples <../examples/index>` – Complete usage examples

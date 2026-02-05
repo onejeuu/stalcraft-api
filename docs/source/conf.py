@@ -4,9 +4,6 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
 
-from sphinx.ext import autodoc
-from sphinx.locale import _
-
 import scapi
 
 
@@ -46,7 +43,8 @@ language = "en"
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 html_theme = "sphinx_book_theme"
-html_extra_path = ["data"]
+html_static_path = ["_static"]
+html_css_files = ["custom.css"]
 
 napoleon_google_docstring = True
 napoleon_numpy_docstring = True

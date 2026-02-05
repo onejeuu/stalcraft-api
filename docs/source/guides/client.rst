@@ -334,11 +334,6 @@ Clan Methods
     print("Invalid or expired token.")
 
 
-.. seealso::
-
-  For more details refer to :doc:`Error Handling <errors>`.
-
-
 --------------------------------------------------
 🚨 Common Issues
 --------------------------------------------------
@@ -364,5 +359,3 @@ Continue with:
 
 - :doc:`Authentication Guide <oauth>` – Register application and get tokens
 - :doc:`Database Lookup <database>` – Find items IDs by name
-- :doc:`Error Handling <errors>` – Handle exceptions and rate limits
-- :doc:`Examples <../examples/index>` – Complete usage examples

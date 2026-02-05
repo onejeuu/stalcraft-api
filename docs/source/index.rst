@@ -7,7 +7,7 @@ Index
   :maxdepth: 1
 
   guides/index
-  api/index
+  lib/scapi
 
 ----------------------------------------
 Overview
@@ -68,6 +68,6 @@ Overview
       print("Actual lots:", lots)
 
       # Other methods can be know in docs:
-      # https://sc-api.readthedocs.io/api
+      # https://sc-api.readthedocs.io
 
   asyncio.run(main())

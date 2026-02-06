@@ -1,8 +1,24 @@
 # scapi: Python Client for STALCRAFT API
 
-[![PyPI](https://img.shields.io/pypi/v/stalcraft-api?color=blue)](https://pypi.org/project/scapi/) [![Python](https://img.shields.io/pypi/pyversions/stalcraft-api)](https://pypi.org/project/scapi/) [![Documentation](https://img.shields.io/badge/docs-readthedocs.io-informational)](https://sc-api.readthedocs.io/)
+<!-- Links -->
 
-**scapi** is an unofficial asynchronous wrapper for **external [STALCRAFT API](https://eapi.stalcraft.net)**.\
+[pypi]: https://pypi.org/project/stalcraft-api/
+[docs]: https://sc-api.readthedocs.io/
+[docs-api]: https://sc-api.readthedocs.io/lib
+[docs-guides]: https://sc-api.readthedocs.io/guides
+[docs-examples]: https://sc-api.readthedocs.io/examples
+[stalcraft-docs]: https://eapi.stalcraft.net
+[stalcraft-app]: https://eapi.stalcraft.net/registration.html
+
+<!-- Badges -->
+
+[badge-pypi]: https://img.shields.io/pypi/v/stalcraft-api
+[badge-python]: https://img.shields.io/pypi/pyversions/stalcraft-api
+[badge-docs]: https://img.shields.io/badge/docs-readthedocs.io-informational
+
+[![PyPI][badge-pypi]][pypi] [![Python][badge-python]][pypi] [![Documentation][badge-docs]][docs]
+
+**scapi** is an unofficial asynchronous wrapper for **external [STALCRAFT API][stalcraft-docs]**.\
 It provides access to read-only game endpoints including auction, emissions, clans, profiles, and etc.
 
 ## ✨ Features
@@ -16,7 +32,7 @@ It provides access to read-only game endpoints including auction, emissions, cla
 
 ## 📌 Before You Start
 
-To use the API, you must **[register an application](https://eapi.stalcraft.net/registration.html)** and receive approval. Use **App tokens** for public resources or **User tokens** (via OAuth) for player-specific resources like character friends. Demo API is available at `https://dapi.stalcraft.net` for testing without registration.
+To use the API, you must **[register an application][stalcraft-app]** and receive approval. Use **App tokens** for public resources or **User tokens** (via OAuth) for player-specific resources like character friends. Demo API is available at `https://dapi.stalcraft.net` for testing without registration.
 
 ## 🛠️ Installation
 
@@ -58,8 +74,8 @@ asyncio.run(main())
 
 ## 📚 Documentation
 
-Complete documentation is available at **[sc-api.readthedocs.io](https://sc-api.readthedocs.io)**, including:
+Complete documentation is available at **[sc-api.readthedocs.io][docs]**, including:
 
-- [Library API Reference](https://sc-api.readthedocs.io/api)
-- [Guides](https://sc-api.readthedocs.io/guides) – Clients, authentication, database lookup, error handling
-- [Examples](https://sc-api.readthedocs.io/examples) – Practical use cases and patterns
+- [Library API Reference][docs-api]
+- [Guides][docs-guides] – Clients, authentication, database lookup, error handling
+- [Examples][docs-examples] – Practical use cases and patterns

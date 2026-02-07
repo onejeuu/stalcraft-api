@@ -115,9 +115,6 @@ class SearchIndex:
             # entity ngrams count
             e_num_ngrams = self._counts.get(entity_id, 0)
 
-            if e_num_ngrams <= 0:
-                continue
-
             # score: max(|Q ∩ I| / min(|Q|, |I|), w × |Q ∩ I| / (|Q| + |I| − |Q ∩ I|))
             min_size = min(q_num_ngrams, e_num_ngrams)
             union_size = q_num_ngrams + e_num_ngrams - count

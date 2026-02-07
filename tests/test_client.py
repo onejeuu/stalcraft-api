@@ -1,11 +1,58 @@
+import warnings
 from datetime import datetime
 
 import pytest
+from aiohttp.test_utils import TestServer
 from pydantic_core import TzInfo
 
 from scapi.client.app import AppClient
 from scapi.client.user import UserClient
 from scapi.enums import Alliance, ClanRank
+from scapi.exceptions import CredentialsError
+
+
+@pytest.mark.asyncio
+async def test_app_client_with_token(server: TestServer):
+    base_url = f"http://{server.host}:{server.port}"
+    client = AppClient(token="test_token", base_url=base_url)
+    assert client is not None
+    await client.close()
+
+
+@pytest.mark.asyncio
+async def test_app_client_with_credentials(server: TestServer):
+    base_url = f"http://{server.host}:{server.port}"
+    client = AppClient(client_id="test_client_id", client_secret="test_client_secret", base_url=base_url)
+    assert client is not None
+    await client.close()
+
+
+@pytest.mark.asyncio
+async def test_app_client_redundant_auth():
+    with warnings.catch_warnings(record=True) as w:
+        warnings.simplefilter("always")
+
+        AppClient(
+            token="test_token",
+            client_id="test_client_id",
+            client_secret="test_client_secret",
+            base_url="http://test.com",
+        )
+
+        assert len(w) == 1
+        assert issubclass(w[0].category, UserWarning)
+
+
+@pytest.mark.asyncio
+async def test_app_client_no_auth_error():
+    with pytest.raises(CredentialsError):
+        AppClient(base_url="http://test.com")
+
+
+@pytest.mark.asyncio
+async def test_user_client_no_token_error():
+    with pytest.raises(CredentialsError):
+        UserClient(token="", base_url="http://test.com")
 
 
 @pytest.mark.asyncio
@@ -109,6 +156,59 @@ async def test_operations_sessions_sorting(client: AppClient):
 
     result_desc = await client.operations_sessions(sort="date_finish", order="descending")
     assert result_desc[0].end_time.day == 14
+
+
+@pytest.mark.asyncio
+async def test_operations_sessions_before_datetime(client: AppClient):
+    before_date = datetime(2025, 11, 13, 0, 0, 0)
+    result = await client.operations_sessions(before=before_date)
+
+    assert result.total == 1
+    assert result[0].id == 1472603904834535425
+    assert result[0].end_time.day == 12
+
+
+@pytest.mark.asyncio
+async def test_operations_sessions_after_datetime(client: AppClient):
+    after_date = datetime(2025, 11, 13, 0, 0, 0)
+    result = await client.operations_sessions(after=after_date)
+
+    assert result.total == 2
+    session_ids = {s.id for s in result}
+    assert 1472603904834535426 in session_ids
+    assert 1472603904834535427 in session_ids
+    assert 1472603904834535425 not in session_ids
+
+
+@pytest.mark.asyncio
+async def test_operations_sessions_after_string(client: AppClient):
+    result = await client.operations_sessions(after="2025-11-13T10:00:00Z")
+
+    assert result.total == 2
+    session_ids = {s.id for s in result}
+    assert 1472603904834535426 in session_ids
+    assert 1472603904834535427 in session_ids
+    assert 1472603904834535425 not in session_ids
+
+
+@pytest.mark.asyncio
+async def test_operations_sessions_before_string(client: AppClient):
+    result = await client.operations_sessions(before="2025-11-13T10:15:00Z")
+
+    assert result.total == 1
+    assert result[0].id == 1472603904834535425
+
+
+@pytest.mark.asyncio
+async def test_operations_sessions_before_after_combined(client: AppClient):
+    before_date = datetime(2025, 11, 14, 0, 0, 0)
+    after_date = datetime(2025, 11, 12, 12, 0, 0)
+
+    result = await client.operations_sessions(before=before_date, after=after_date)
+
+    assert result.total == 1
+    assert result[0].id == 1472603904834535426
+    assert result[0].end_time.day == 13
 
 
 @pytest.mark.asyncio

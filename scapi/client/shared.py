@@ -153,7 +153,7 @@ class SharedClient(ABC, APIClient):
             limit (optional): Amount of sessions to return, starting from offset, (`0`-`100`). Defaults to `20`.
             offset (optional): Amount of sessions to skip. Defaults to `0`.
             sort (optional): Sorting field. Defaults to `date_finish`.
-            order (optional): Sorting direction. Defaults to `ascending`.
+            order (optional): Sorting direction. Defaults to `descending`.
             map (optional): Filter by operations map name.
             username (optional): Filter by character name.
             before (optional): Filter sessions finished before ISO date (`%Y-%m-%dT%H:%M:%SZ`).
@@ -167,7 +167,7 @@ class SharedClient(ABC, APIClient):
         limit = max(0, min(100, limit or Config.LIMIT))
         offset = max(0, offset or Config.OFFSET)
         sort = (sort or Config.SORT_OPERATION).lower()
-        order = (order or Config.ORDER).lower()
+        order = (order or Config.ORDER_OPERATION).lower()
         map = map.lower() if map else None
         region = (region or self._region or Config.REGION).lower()
 
@@ -176,12 +176,8 @@ class SharedClient(ABC, APIClient):
                 return value.strftime("%Y-%m-%dT%H:%M:%SZ")
 
             if value and isinstance(value, str):
-                try:
-                    dt = datetime.fromisoformat(value.replace("Z", "+00:00"))
-                    return dt.strftime("%Y-%m-%dT%H:%M:%SZ")
-
-                except ValueError:
-                    return value
+                dt = datetime.fromisoformat(value.replace("Z", "+00:00"))
+                return dt.strftime("%Y-%m-%dT%H:%M:%SZ")
 
             return value
 

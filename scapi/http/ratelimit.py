@@ -20,7 +20,10 @@ class RateLimit(BaseModel):
 
     @field_validator("reset", mode="before")
     @classmethod
-    def parse_reset(cls, reset: str) -> Optional[datetime]:
+    def parse_reset(cls, reset: str | None) -> Optional[datetime]:
+        if not reset:
+            return None
+
         try:
             timestamp = int(reset)
             power = len(reset) - 10

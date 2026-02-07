@@ -21,8 +21,11 @@ class Config:
     OFFSET: ClassVar[int] = 0
     """Pagination offset. Defaults to `0`."""
 
-    ORDER: ClassVar[str | Order] = Order.ASCENDING
-    """Result ordering direction. Defaults to `ascending`."""
+    ORDER_AUCTION: ClassVar[str | Order] = Order.DESCENDING
+    """Auction ordering direction. Defaults to `descending`."""
+
+    ORDER_OPERATION: ClassVar[str | Order] = Order.DESCENDING
+    """Operations ordering direction. Defaults to `descending`."""
 
     SORT_AUCTION: ClassVar[str | SortAuction] = SortAuction.TIME_CREATED
     """Auction sorting field. Defaults to `time_created`."""

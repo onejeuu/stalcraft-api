@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from aiohttp import web
 
 
@@ -113,6 +115,16 @@ async def operations_sessions(request: web.Request) -> web.Response:
                 filtered_sessions.append(session)
         sessions = filtered_sessions
 
+    # filter dt before
+    before_filter = query.get("before")
+    if before_filter:
+        sessions = [s for s in sessions if _parse_date(s["endTime"]) < _parse_date(before_filter)]
+
+    # filter dt after
+    after_filter = query.get("after")
+    if after_filter:
+        sessions = [s for s in sessions if _parse_date(s["endTime"]) > _parse_date(after_filter)]
+
     # sorting
     sort = query.get("sort", "date_finish")
     order = query.get("order", "ascending")
@@ -129,3 +141,10 @@ async def operations_sessions(request: web.Request) -> web.Response:
     paginated_sessions = sessions[offset : offset + limit]
 
     return web.json_response({"total": total, "sessions": paginated_sessions})
+
+
+def _parse_date(date_str: str) -> datetime:
+    if date_str.endswith("Z"):
+        date_str = date_str[:-1] + "+00:00"
+
+    return datetime.fromisoformat(date_str)

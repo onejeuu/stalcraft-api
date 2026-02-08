@@ -291,17 +291,17 @@ def test_ratelimit_estimated_used():
 
 
 def test_ratelimit_parse_reset():
-    result = RateLimit.parse_reset("1672531199")
+    result = RateLimit.parse_reset("1769893200")
     assert isinstance(result, datetime)
-    assert result.year == 2023
+    assert result.year == 2026
 
-    result = RateLimit.parse_reset("1672531199000")
+    result = RateLimit.parse_reset("1769893200000")
     assert isinstance(result, datetime)
-    assert result.year == 2023
+    assert result.year == 2026
 
-    result = RateLimit.parse_reset("1672531199000000")
+    result = RateLimit.parse_reset("1769893200000000")
     assert isinstance(result, datetime)
-    assert result.year == 2023
+    assert result.year == 2026
 
     result = RateLimit.parse_reset("not-a-timestamp")
     assert result is None

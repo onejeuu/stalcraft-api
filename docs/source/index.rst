@@ -8,6 +8,7 @@ Index
 
   guides/index
   lib/scapi
+  v/index
 
 ----------------------------------------
 Overview

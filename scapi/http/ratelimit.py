@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional
 
 from pydantic import BaseModel, Field, field_validator
@@ -28,7 +28,7 @@ class RateLimit(BaseModel):
             timestamp = int(reset)
             power = len(reset) - 10
             divisor = 10 ** max(0, power)
-            return datetime.fromtimestamp(int(timestamp / divisor))
+            return datetime.fromtimestamp(int(timestamp / divisor), tz=timezone.utc)
 
         except Exception:
             return None

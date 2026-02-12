@@ -7,11 +7,11 @@ from scapi.enums import Region
 from scapi.http.auth.creds import CredentialsHTTPClient
 from scapi.http.auth.token import TokenHTTPClient
 
+from .base import SharedBaseClient
 from .clan.shared import ClanEndpoint
-from .shared import SharedClient
 
 
-class AppClient(SharedClient):
+class AppClient(SharedBaseClient):
     """API Client for application specific endpoints."""
 
     def __init__(

@@ -2,9 +2,7 @@
 ==================================================
 
 .. toctree::
-  :maxdepth: 1
-  :titlesonly:
+  :maxdepth: 2
+  :glob:
 
-  client
-  oauth
-  database
+  *

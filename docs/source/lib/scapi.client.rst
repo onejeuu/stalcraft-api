@@ -9,10 +9,10 @@
   scapi.client.clan
 
 
-Shared
+Base
 --------------------------
 
-.. automodule:: scapi.client.shared
+.. automodule:: scapi.client.base
   :members:
   :show-inheritance:
   :undoc-members:

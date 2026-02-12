@@ -14,8 +14,8 @@ from scapi.http.types import Listing
 from .auction.shared import AuctionEndpoint
 
 
-class SharedClient(ABC, APIClient):
-    """Base API client for shared endpoints."""
+class SharedBaseClient(ABC, APIClient):
+    """Abstract Base API client for shared endpoints."""
 
     def __init__(
         self,

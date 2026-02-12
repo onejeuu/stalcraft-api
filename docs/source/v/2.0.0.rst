@@ -102,7 +102,7 @@ Migration Guide (v1.x → v2.0)
    * - ``stalcraft.clan.user``
      - ``scapi.client.clan.user``
    * - ``stalcraft.utils.listing``
-     - ``scapi.client.types``
+     - ``scapi.http.types``
    * - ``stalcraft.schemas``
      - ``client.models``, ``oauth.models``, ``http.ratelimit``
 

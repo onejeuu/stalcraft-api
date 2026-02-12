@@ -82,7 +82,7 @@ Migration Guide (v1.x → v2.0)
    * - v1.x
      - v2.0
    * - ``stalcraft.api``
-     - ``scapi.client``
+     - ``scapi.http``
    * - ``stalcraft.items``
      - ``scapi.database``
 

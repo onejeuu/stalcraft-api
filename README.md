@@ -6,7 +6,6 @@
 [docs]: https://sc-api.readthedocs.io/
 [docs-api]: https://sc-api.readthedocs.io/lib
 [docs-guides]: https://sc-api.readthedocs.io/guides
-[docs-examples]: https://sc-api.readthedocs.io/examples
 [stalcraft-docs]: https://eapi.stalcraft.net
 [stalcraft-app]: https://eapi.stalcraft.net/registration.html
 
@@ -67,7 +66,7 @@ async def main():
     print("Actual lots:", lots)
 
     # Other methods can be know in docs:
-    # https://sc-api.readthedocs.io
+    # https://sc-api.rtfd.io
 
 asyncio.run(main())
 ```
@@ -76,6 +75,5 @@ asyncio.run(main())
 
 Complete documentation is available at **[sc-api.readthedocs.io][docs]**, including:
 
+- [Guides][docs-guides]: clients, oauth, database lookup
 - [Library API Reference][docs-api]
-- [Guides][docs-guides] – Clients, authentication, database lookup, error handling
-- [Examples][docs-examples] – Practical use cases and patterns

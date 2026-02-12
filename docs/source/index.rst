@@ -68,7 +68,4 @@ Overview
       lots = await client.auction("zyv9").lots(limit=3)
       print("Actual lots:", lots)
 
-      # Other methods can be know in docs:
-      # https://sc-api.readthedocs.io
-
   asyncio.run(main())

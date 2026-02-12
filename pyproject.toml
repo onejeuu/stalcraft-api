@@ -47,7 +47,7 @@ docs = [
 [project.urls]
 Homepage = "https://github.com/onejeuu/stalcraft-api"
 Repository = "https://github.com/onejeuu/stalcraft-api"
-Documentation = "https://sc-file.readthedocs.io"
+Documentation = "https://sc-api.readthedocs.io"
 
 [build-system]
 requires = ["setuptools"]

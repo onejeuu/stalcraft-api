@@ -2,8 +2,11 @@
 
 <!-- Links -->
 
-[pypi]: https://pypi.org/project/stalcraft-api/
-[docs]: https://sc-api.readthedocs.io/
+[pypi]: https://pypi.org/project/stalcraft-api
+[license]: https://opensource.org/licenses/MIT
+[tests]: https://github.com/onejeuu/stalcraft-api/actions/workflows/tests.yml
+[issues]: https://github.com/onejeuu/stalcraft-api/issues
+[docs]: https://sc-api.readthedocs.io
 [docs-api]: https://sc-api.readthedocs.io/lib
 [docs-guides]: https://sc-api.readthedocs.io/guides
 [stalcraft-docs]: https://eapi.stalcraft.net
@@ -11,11 +14,14 @@
 
 <!-- Badges -->
 
-[badge-pypi]: https://img.shields.io/pypi/v/stalcraft-api
-[badge-python]: https://img.shields.io/pypi/pyversions/stalcraft-api
-[badge-docs]: https://img.shields.io/badge/docs-readthedocs.io-informational
+[badge-pypi]: https://img.shields.io/pypi/v/stalcraft-api.svg
+[badge-license]: https://img.shields.io/github/license/onejeuu/stalcraft-api
+[badge-python]: https://img.shields.io/pypi/pyversions/stalcraft-api.svg
+[badge-docs]: https://img.shields.io/readthedocs/sc-api
+[badge-tests]: https://img.shields.io/github/actions/workflow/status/onejeuu/stalcraft-api/tests.yml?label=tests
+[badge-issues]: https://img.shields.io/github/issues/onejeuu/stalcraft-api
 
-[![PyPI][badge-pypi]][pypi] [![Python][badge-python]][pypi] [![Documentation][badge-docs]][docs]
+[![PyPI][badge-pypi]][pypi] [![Python][badge-python]][pypi] [![License][badge-license]][license] [![Docs][badge-docs]][docs] [![Tests][badge-tests]][tests] [![Issues][badge-issues]][issues]
 
 **scapi** is an unofficial asynchronous wrapper for **external [STALCRAFT API][stalcraft-docs]**.\
 It provides access to read-only game endpoints including auction, emissions, clans, profiles, and etc.

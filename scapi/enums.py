@@ -82,6 +82,7 @@ class OperationsMap(StrEnum):
 
     BIG_CLEANUP = auto()
     SHOCK_THERAPY = auto()
+    SEA_ALIENATION = auto()
 
 
 class StatType(UpStrEnum):

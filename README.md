@@ -6,9 +6,13 @@
 [license]: https://opensource.org/licenses/MIT
 [tests]: https://github.com/onejeuu/stalcraft-api/actions/workflows/tests.yml
 [issues]: https://github.com/onejeuu/stalcraft-api/issues
+[codecov]: https://codecov.io/github/onejeuu/stalcraft-api
 [docs]: https://sc-api.readthedocs.io
-[docs-api]: https://sc-api.readthedocs.io/lib
-[docs-guides]: https://sc-api.readthedocs.io/guides
+[docs-guides]: https://sc-api.readthedocs.io/en/latest/guides/
+[docs-guides-client]: https://sc-api.readthedocs.io/en/latest/guides/client.html
+[docs-guides-database]: https://sc-api.readthedocs.io/en/latest/guides/database.html
+[docs-guides-oauth]: https://sc-api.readthedocs.io/en/latest/guides/oauth.html
+[docs-api]: https://sc-api.readthedocs.io/en/latest/lib/scapi.html
 [stalcraft-docs]: https://eapi.stalcraft.net
 [stalcraft-app]: https://eapi.stalcraft.net/registration.html
 
@@ -20,8 +24,9 @@
 [badge-docs]: https://img.shields.io/readthedocs/sc-api
 [badge-tests]: https://img.shields.io/github/actions/workflow/status/onejeuu/stalcraft-api/tests.yml?label=tests
 [badge-issues]: https://img.shields.io/github/issues/onejeuu/stalcraft-api
+[badge-codecov]: https://codecov.io/github/onejeuu/stalcraft-api/graph/badge.svg?token=QZQSMOHL6G
 
-[![PyPI][badge-pypi]][pypi] [![Python][badge-python]][pypi] [![License][badge-license]][license] [![Docs][badge-docs]][docs] [![Tests][badge-tests]][tests] [![Issues][badge-issues]][issues]
+[![Python][badge-python]][pypi] [![PyPI][badge-pypi]][pypi] [![License][badge-license]][license] [![codecov][badge-codecov]][codecov] [![Issues][badge-issues]][issues] [![Docs][badge-docs]][docs] [![Tests][badge-tests]][tests]
 
 **scapi** is an unofficial asynchronous wrapper for **external [STALCRAFT API][stalcraft-docs]**.\
 It provides access to read-only game endpoints including auction, emissions, clans, profiles, and etc.
@@ -81,5 +86,8 @@ asyncio.run(main())
 
 Complete documentation is available at **[sc-api.readthedocs.io][docs]**, including:
 
-- [Guides][docs-guides]: clients, oauth, database lookup
+- [Guides][docs-guides]
+  - [API Clients][docs-guides-client]
+  - [Database Lookup][docs-guides-database]
+  - [Authentication][docs-guides-oauth]
 - [Library API Reference][docs-api]

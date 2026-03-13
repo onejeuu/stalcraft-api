@@ -36,7 +36,10 @@ jobs:
           cache-dependency-glob: "uv.lock"
 
       - name: Run Tests
-        run: uv run pytest --cov=scapi --cov-report=term-missing
+        run: uv run pytest --cov-branch --cov=scapi --cov-report=xml --cov-report=term-missing
+
+      - name: Upload Coverage to Codecov
+        uses: codecov/codecov-action@v5
 
   tests-windows:
     name: Windows
@@ -54,4 +57,7 @@ jobs:
           cache-dependency-glob: "uv.lock"
 
       - name: Run Tests
-        run: uv run pytest --cov=scapi --cov-report=term-missing
+        run: uv run pytest --cov-branch --cov=scapi --cov-report=xml --cov-report=term-missing
+
+      - name: Upload Coverage to Codecov
+        uses: codecov/codecov-action@v5
